@@ -76,32 +76,47 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Notification Panel */}
-      {showNotifications && (
-        <div className="fixed top-16 right-4 bg-gray-700 shadow-lg p-4 rounded-lg w-80 border border-green-700 z-50">
-          <div className="flex justify-between items-center border-b pb-2 mb-2 text-green-500">
-            <h3 className="font-bold">Notifications</h3>
-            <button onClick={() => setShowNotifications(false)} className="hover:text-green-400"><FaTimes /></button>
-          </div>
-          <div className="flex justify-between mb-2 text-white">
-            <button onClick={() => setActiveTab("unread")} className={`px-3 py-1 ${activeTab === "unread" ? "text-green-500" : "text-gray-500"}`}>Unread</button>
-            <button onClick={() => setActiveTab("read")} className={`px-3 py-1 ${activeTab === "read" ? "text-green-500" : "text-gray-500"}`}>Read</button>
-            <button onClick={markAllAsRead} className="text-green-400 hover:underline text-sm">Mark all as Read</button>
-          </div>
-          <ul className="max-h-56 overflow-y-auto text-white">
-            {notifications.filter(n => n.status === activeTab).length === 0 ? (
-              <p className="text-center text-gray-400">No {activeTab} notifications</p>
-            ) : (
-              notifications.filter(n => n.status === activeTab).map(notif => (
-                <li key={notif.id} onClick={() => markAsRead(notif.id)} className="py-2 px-3 bg-gray-900 rounded-lg mb-2 shadow-sm border-l-4 border-green-500 cursor-pointer flex justify-between items-center">
-                  <span className="text-sm">{notif.message}</span>
-                  {notif.status === "unread" && <span className="w-2 h-2 bg-green-500 rounded-full"></span>}
-                </li>
-              ))
-            )}
-          </ul>
-        </div>
+ {/* Notification Panel */}
+{showNotifications && (
+  <div className="fixed top-14 right-2 bg-gray-800 shadow-md p-3 rounded-lg w-72 md:w-80 border border-green-700 z-50 text-white">
+    <div className="flex justify-between items-center border-b pb-1 mb-2 text-green-500">
+      <h3 className="text-sm font-semibold">Notifications</h3>
+      <button onClick={() => setShowNotifications(false)} className="hover:text-green-400">
+        <FaTimes size={16} />
+      </button>
+    </div>
+    
+    <div className="flex justify-between text-xs mb-2">
+      <button onClick={() => setActiveTab("unread")} className={`px-2 py-1 ${activeTab === "unread" ? "text-green-500" : "text-gray-400"}`}>
+        Unread
+      </button>
+      <button onClick={() => setActiveTab("read")} className={`px-2 py-1 ${activeTab === "read" ? "text-green-500" : "text-gray-400"}`}>
+        Read
+      </button>
+      <button onClick={markAllAsRead} className="text-green-400 hover:underline text-xs sm:block hidden">
+        Mark all as Read
+      </button>
+    </div>
+
+    <ul className="max-h-48 overflow-auto">
+      {notifications.filter(n => n.status === activeTab).length === 0 ? (
+        <p className="text-center text-gray-500 text-xs">No {activeTab} notifications</p>
+      ) : (
+        notifications.filter(n => n.status === activeTab).map(notif => (
+          <li 
+            key={notif.id} 
+            onClick={() => markAsRead(notif.id)} 
+            className="py-2 px-2 bg-gray-900 rounded-lg mb-1 shadow-sm border-l-4 border-green-500 cursor-pointer flex justify-between items-center"
+          >
+            <span className="text-xs">{notif.message}</span>
+            {notif.status === "unread" && <span className="w-2 h-2 bg-green-500 rounded-full"></span>}
+          </li>
+        ))
       )}
+    </ul>
+  </div>
+)}
+
 
       {/* Sidebar */}
       <div className="flex">

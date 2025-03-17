@@ -98,7 +98,7 @@ export default function Register() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-gray-900">
+    <div className="relative min-h-screen flex items-center justify-center bg-gray-900 px-6 overflow-hidden">
       <Image
         src="/cram.png"
         alt="Task Management Background"
@@ -106,7 +106,7 @@ export default function Register() {
         objectFit="cover"
         className="absolute top-0 left-0 w-full h-full opacity-20"
       />
-      <div className="relative bg-gray-800/80 backdrop-blur-md p-8 rounded-lg shadow-lg w-full max-w-md border border-green-600">
+      <div className="relative bg-gray-800/80 backdrop-blur-md p-6 sm:p-8 rounded-lg shadow-lg w-[90%] max-w-md border border-green-600">
         <h2 className="text-2xl font-bold text-white text-center mb-6">Register</h2>
   
         {message && (
@@ -123,7 +123,7 @@ export default function Register() {
               name="username"
               value={formData.username}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg focus:ring focus:ring-green-500"
+              className="w-full px-4 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg focus:ring focus:ring-green-500 focus:outline-none"
               placeholder="Enter your username"
               required
             />
@@ -136,7 +136,7 @@ export default function Register() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg focus:ring focus:ring-green-500"
+              className="w-full px-4 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg focus:ring focus:ring-green-500 focus:outline-none"
               placeholder="Enter your email"
               required
             />
@@ -160,7 +160,7 @@ export default function Register() {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg focus:ring focus:ring-green-500"
+                className="w-full px-4 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg focus:ring focus:ring-green-500 focus:outline-none"
                 placeholder="Enter your password"
                 required
               />
@@ -183,7 +183,7 @@ export default function Register() {
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg focus:ring focus:ring-green-500"
+                className="w-full px-4 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg focus:ring focus:ring-green-500 focus:outline-none"
                 placeholder="Confirm your password"
                 required
               />
@@ -221,4 +221,5 @@ export default function Register() {
       </div>
     </div>
   );
+  
 }

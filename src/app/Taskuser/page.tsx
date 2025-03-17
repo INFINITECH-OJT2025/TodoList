@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useRouter } from "next/navigation";
 import Sidebar from "../Components/Sidebar";
 import authUser from "../utils/authUser";
+import { ChevronDownIcon } from "@heroicons/react/24/solid";
 
 interface Activity {
   id: number;
@@ -51,7 +52,8 @@ const ActivityPage = () => {
     dependencyId: undefined,
     collaborators: [] // Initialize collaborators
   });
-
+  const [open, setOpen] = useState(false);
+  const statuses = ["Pending", "Complete", "Overdue", "Archived"];
   const [isOpen, setIsOpen] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
   const [selectedStatus, setSelectedStatus] = useState("pending");
@@ -94,7 +96,12 @@ const playAlarm = () => {
       console.error("Error fetching users:", error);
     }
   };
-
+  useEffect(() => {
+    const storedTheme = localStorage.getItem("theme");
+    if (storedTheme === "light") {
+      setIsLightMode(true);
+    }
+  }, []);
   useEffect(() => {
     const checkAlarms = setInterval(async () => {
       const now = new Date();
@@ -187,7 +194,7 @@ const playAlarm = () => {
     setEditId(activity.id);
     setIsOpen(true);
   };
-
+  const [isLightMode, setIsLightMode] = useState<boolean>(false); // State for light mode
   const handleDelete = async (id: number) => {
     if (confirm('Are you sure you want to delete this activity?')) {
       try {
@@ -263,9 +270,19 @@ const playAlarm = () => {
   const totalActivities = activities.length;
   const completionPercentage = totalActivities > 0 ? (completedActivities / totalActivities) * 100 : 0;
 return (
-  <>
-    <div className="flex min-h-screen bg-gray-900 text-white items-center justify-center p-2">
+  
+ <div className={`relative flex min-h-screen ${isLightMode ? 'bg-white text-gray-900' : 'bg-gray-900 text-gray-900'}`}>
       <Sidebar />
+      <div className="flex-1 p-4 md:p-6 lg:p-8">
+        <div className="flex justify-between items-center mb-4">
+          <div className="text-lg font-bold"></div>
+          <button
+            onClick={() => setIsLightMode(!isLightMode)}
+            className={`p-2 rounded-md ${isLightMode ? 'bg-gray-800 text-white' : 'bg-gray-200 text-black'}`}
+          >
+            {isLightMode ? '☀️' : '🌙'}
+          </button>
+        </div>
       <div className="flex-1 bg-gray-900 text-white flex items-center justify-center p-10">
         <div className="p-4 border border-green-700 w-full max-w-4xl bg-gray-900 rounded-lg shadow-lg">
           <button
@@ -283,15 +300,28 @@ return (
             <ProgressBar percentage={completionPercentage} />
             <br />
 
-            <select 
-              onChange={(e) => setSelectedStatus(e.target.value)} 
-              className="w-full p-3 border-4 border-green-700 bg-gray-900 text-green-500 font-bold mb-4 rounded-lg shadow-lg focus:outline-none focus:border-green-500 hover:bg-gray-900 transition-all"
-            >
-              <option value="pending" className="bg-gray-900 text-white">Pending</option>
-              <option value="complete" className="bg-gray-900 text-white">Complete</option>
-              <option value="overdue" className="bg-gray-900 text-white">Overdue</option>
-              <option value="archived" className="bg-gray-900 text-white">Archived</option>
-            </select>
+            <button 
+  onClick={() => setOpen(!open)} 
+  className="p-2 rounded-full bg-green-700 hover:bg-green-600 relative"
+>
+  <ChevronDownIcon className="w-6 h-6 text-white" />
+</button>
+<br />
+
+{open && (
+  <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-32 bg-gray-900 text-white rounded-md shadow-lg">
+    {statuses.map((status) => (
+      <button 
+        key={status} 
+        className="block w-full text-left px-4 py-2 hover:bg-gray-700"
+        onClick={() => { setSelectedStatus(status.toLowerCase()); setOpen(false); }}
+      >
+        {status}
+      </button>
+    ))}
+  </div>
+)}
+<br />
 
             <div className="flex justify-center">
   <div className="grid grid-cols-1 gap-4 w-full">
@@ -307,46 +337,47 @@ return (
         <p className="mb-2 text-gray-400 text-lg font-semibold">Status: {currentActivities[0].status}</p>
         <p className="mb-4 text-gray-400 text-lg font-semibold">Collaborators: {currentActivities[0].collaborator_name}</p>
 
-        <div className="flex flex-row justify-center gap-3">
-          <button 
-            onClick={() => handleEdit(currentActivities[0])}
-            className="relative px-6 py-3 text-lg font-bold rounded-full text-white bg-green-600 transition transform hover:scale-105"
-          >
-            Edit
-          </button>
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
+  <button 
+    onClick={() => handleEdit(currentActivities[0])}
+    className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-green-600 transition hover:scale-105"
+  >
+    ✏️
+  </button>
 
-          {currentActivities[0].status === 'pending' && !currentActivities[0].archive && (
-            <button 
-              onClick={() => handleMarkAsDone(currentActivities[0].id)}
-              className="relative px-6 py-3 text-lg font-bold rounded-full text-white bg-blue-600 transition transform hover:scale-105"
-            >
-              Mark as Done
-            </button>
-          )}
+  {currentActivities[0].status === 'pending' && !currentActivities[0].archive && (
+    <button 
+      onClick={() => handleMarkAsDone(currentActivities[0].id)}
+      className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-blue-600 transition hover:scale-105"
+    >
+      ✅
+    </button>
+  )}
 
-          {currentActivities[0].archive ? (
-            <button 
-              onClick={() => handleRestore(currentActivities[0].id)}
-              className="relative px-6 py-3 text-lg font-bold rounded-full text-white bg-yellow-600 transition transform hover:scale-105"
-            >
-              Restore
-            </button>
-          ) : (
-            <button 
-              onClick={() => handleArchive(currentActivities[0].id)}
-              className="relative px-6 py-3 text-lg font-bold rounded-full text-white bg-yellow-600 transition transform hover:scale-105"
-            >
-              Archive
-            </button>
-          )}
+  {currentActivities[0].archive ? (
+    <button 
+      onClick={() => handleRestore(currentActivities[0].id)}
+      className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-yellow-600 transition hover:scale-105"
+    >
+      🔄
+    </button>
+  ) : (
+    <button 
+      onClick={() => handleArchive(currentActivities[0].id)}
+      className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-yellow-600 transition hover:scale-105"
+    >
+      📁
+    </button>
+  )}
 
-          <button 
-            onClick={() => handleDelete(currentActivities[0].id)}
-            className="relative px-6 py-3 text-lg font-bold rounded-full text-white bg-red-600 transition transform hover:scale-105"
-          >
-            Delete
-          </button>
-        </div>
+  <button 
+    onClick={() => handleDelete(currentActivities[0].id)}
+    className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-red-600 transition hover:scale-105"
+  >
+    🗑️
+  </button>
+</div>
+
       </div>
     )}
   </div>
@@ -467,7 +498,7 @@ return (
         </div>
       </div>
     </div>
-  </>
+  </div>
 );
 }
 
