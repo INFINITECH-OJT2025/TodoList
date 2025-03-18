@@ -264,7 +264,7 @@ class AuthController extends Controller
         $user->save();
     
         // Send notification after profile update
-        $this->sendNotification($user->username . ' updated their admin profile', $user->id);
+        
     
         return response()->json([
             'message' => 'Profile updated successfully',
@@ -308,6 +308,20 @@ class AuthController extends Controller
         return response()->json(['message' => 'Admin deleted successfully'], 200);
     }
 
+    public function checkAvailability(Request $request)
+    {
+        $request->validate([
+            'username' => 'string|min:6',
+            'email' => 'email',
+        ]);
 
+        $usernameAvailable = !User ::where('username', $request->username)->exists();
+        $emailAvailable = !User ::where('email', $request->email)->exists();
+
+        return response()->json([
+            'usernameAvailable' => $usernameAvailable,
+            'emailAvailable' => $emailAvailable,
+        ]);
+    }
 
 }

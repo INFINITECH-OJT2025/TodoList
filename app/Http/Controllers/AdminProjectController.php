@@ -286,6 +286,7 @@ class AdminProjectController extends Controller
     $task->status = $request->status;
     $task->save();
 
+    $this->sendNotification('Your Task from Admin: Overdue '. $task->user_id . ' Deadline: '.  $task->deadline . 'Title:'  . $task->title .  ' Status: '. $task->status . '', $task->user_id);
     return response()->json(['message' => 'Task status updated successfully']);
 }
 

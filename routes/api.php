@@ -53,7 +53,7 @@ Route::delete('admins/{id}', [AuthController::class, 'deleteAdmin']);
 Route::get('/users', [AuthController::class, 'getUsers']);
 Route::put('/users/{id}', [AuthController::class, 'updateUser']);
 Route::delete('/users/{id}', [AuthController::class, 'deleteUser']);
-// delete archive
+Route::post('/check-availability', [AuthController::class, 'checkAvailability']);
 
 
 

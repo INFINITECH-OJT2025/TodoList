@@ -44,7 +44,7 @@ class ActivityController extends Controller
         }
     
         // Fetch activities belonging to the authenticated user
-        $query = Activity::where('user_id', $user->id);
+        $query = Activity::where('user_id', $user->id)->orWhere('collaborator', $user->id);
     
         // Optional: Filter by status if provided
         if ($request->has('status')) {
