@@ -4,8 +4,10 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from "next/navigation";
 import Sidebar from "../Components/Sidebar";
-import authUser from "../utils/authUser";
+import authUser  from "../utils/authUser";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import { ToastContainer, toast } from 'react-toastify'; // Import toast and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Import CSS for toast notifications
 
 interface Activity {
   id: number;
@@ -18,6 +20,7 @@ interface Activity {
   archive: boolean;
   dependencyId?: number;
   collaborators?: number[]; // New field for collaborators
+  collaborator_name?: string,
 }
 
 const API_BASE_URL = "http://127.0.0.1:8000/api";
@@ -25,21 +28,22 @@ const API_BASE_URL = "http://127.0.0.1:8000/api";
 const ProgressBar = ({ percentage }: { percentage: number }) => {
   return (
     <div className="w-full bg-gray-300 rounded-full dark:bg-gray-800 shadow-inner p-1">
-    <div
-      className="bg-green-600 text-xs font-bold text-white text-center p-1 leading-none rounded-full transition-all duration-300 shadow-md"
-      style={{
-        width: `${percentage}%`,
-        background: "linear-gradient(135deg, #32CD32, #228B22)", // Green gradient
-        boxShadow: "0 4px 6px rgba(0, 128, 0, 0.5)", // Green shadow
-      }}
-    >
-      {percentage.toFixed(0)}%
+      <div
+        className="bg-green-600 text-xs font-bold text-white text-center p-1 leading-none rounded-full transition-all duration-300 shadow-md"
+        style={{
+          width: `${percentage}%`,
+          background: "linear-gradient(135deg, #32CD32, #228B22)", // Green gradient
+          boxShadow: "0 4px 6px rgba(0, 128, 0, 0.5)", // Green shadow
+        }}
+      >
+        {percentage.toFixed(0)}%
+      </div>
     </div>
-  </div>
-  
   );
 };
+
 const ActivityPage = () => {
+  const [userId, setUserId] = useState("")
   const [activities, setActivities] = useState<Activity[]>([]);
   const [formData, setFormData] = useState<Partial<Activity>>({ 
     title: "", 
@@ -65,13 +69,13 @@ const ActivityPage = () => {
 
   const alarmSound = new Audio("/alarm-sound.mp3");
 
-const playAlarm = () => {
-  alarmSound.currentTime = 0;
-  
-  alarmSound.play().catch(error => {
-    console.error("Error playing alarm sound:", error);
-  });
-};
+  const playAlarm = () => {
+    alarmSound.currentTime = 0;
+    
+    alarmSound.play().catch(error => {
+      console.error("Error playing alarm sound:", error);
+    });
+  };
 
   const fetchActivities = async () => {
     try {
@@ -96,12 +100,14 @@ const playAlarm = () => {
       console.error("Error fetching users:", error);
     }
   };
+
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme");
     if (storedTheme === "light") {
       setIsLightMode(true);
     }
   }, []);
+
   useEffect(() => {
     const checkAlarms = setInterval(async () => {
       const now = new Date();
@@ -111,16 +117,15 @@ const playAlarm = () => {
           if (activityTime < now) {
             await handleOverdue(activity.id);
           } else {
-          
-           if (
-  activityTime.getFullYear() === now.getFullYear() &&
-  activityTime.getMonth() === now.getMonth() &&
-  activityTime.getDate() === now.getDate() &&
-  activityTime.getHours() === now.getHours() &&
-  activityTime.getMinutes() - 1 === now.getMinutes()
-) {
-  playAlarm(); // Trigger alarm at exact time
-}
+            if (
+              activityTime.getFullYear() === now.getFullYear() &&
+              activityTime.getMonth() === now.getMonth() &&
+              activityTime.getDate() === now.getDate() &&
+              activityTime.getHours() === now.getHours() &&
+              activityTime.getMinutes() - 1 === now.getMinutes()
+            ) {
+              playAlarm(); // Trigger alarm at exact time
+            }
           }
         }
       }
@@ -132,7 +137,16 @@ const playAlarm = () => {
   useEffect(() => {
     fetchActivities();
     fetchUsers(); // Fetch users when the component mounts
+
+    const userIdSetter = async () => {
+      const authToken = sessionStorage.getItem("authToken");
+      const userResponse = await axios.get(`${API_BASE_URL}/user/${authToken}`);
+      setUserId(userResponse.data.id)
+    }
+    userIdSetter()
   }, []);
+
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -148,7 +162,7 @@ const playAlarm = () => {
       }
 
       const userResponse = await axios.get(`${API_BASE_URL}/user/${authToken}`);
-      const userId = userResponse.data.id;
+      setUserId(userResponse.data.id)
 
       if (!userId) {
         console.error("User  ID not found.");
@@ -159,17 +173,17 @@ const playAlarm = () => {
 
       if (editId) {
         await axios.put(`${API_BASE_URL}/activities/${editId}`, newFormData);
-        alert("Activity updated successfully!");
+        toast.success("Activity updated successfully!"); // Use toast for success message
       } else {
         await axios.post(`${API_BASE_URL}/activities`, newFormData);
-        alert("Activity created successfully!");
+        toast.success("Activity created successfully!"); // Use toast for success message
       }
 
       resetForm();
       fetchActivities();
     } catch (error: any) {
       console.error("Error submitting form:", error.response?.data || error.message);
-      alert("An error occurred while submitting the form. Please try again.");
+      toast.error("An error occurred while submitting the form. Please try again."); // Use toast for error message
     }
   };
 
@@ -194,60 +208,57 @@ const playAlarm = () => {
     setEditId(activity.id);
     setIsOpen(true);
   };
+
   const [isLightMode, setIsLightMode] = useState<boolean>(false); // State for light mode
   const handleDelete = async (id: number) => {
     if (confirm('Are you sure you want to delete this activity?')) {
       try {
         await axios.delete(`${API_BASE_URL}/activities/${id}`);
+        toast.success("Activity deleted successfully!"); // Use toast for success message
         fetchActivities();
       } catch (error) {
         console.error("Error deleting activity:", error);
+        toast.error("Error deleting activity."); // Use toast for error message
       }
     }
   };
+  
 
   const handleMarkAsDone = async (id: number) => {
     try {
       await axios.put(`${API_BASE_URL}/activities/${id}/done`);
+      toast.success("Activity marked as done!"); // Use toast for success message
       fetchActivities();
     } catch (error) {
       console.error("Error marking activity as done:", error);
+      toast.error("Error marking activity as done."); // Use toast for error message
     }
   };
 
   const handleArchive = async (id: number) => {
     try {
       await axios.put(`${API_BASE_URL}/activities/${id}/archive`);
+      toast.success("Activity archived successfully!"); // Use toast for success message
       fetchActivities();
     } catch (error) {
       console.error("Error archiving activity:", error);
+      toast.error("Error archiving activity."); // Use toast for error message
     }
   };
 
   const handleRestore = async (id: number) => {
     try {
       await axios.put(`${API_BASE_URL}/activities/${id}/restore`);
+      toast.success("Activity restored successfully!"); // Use toast for success message
       fetchActivities();
     } catch (error) {
       console.error("Error restoring activity:", error);
+      toast.error("Error restoring activity."); // Use toast for error message
     }
   };
+  
 
-  const handleLogout = async () => {
-    try {
-      const token = sessionStorage.getItem("authToken");
-      if (!token) {
-        console.error("No token found, redirecting to login.");
-        router.push("/login");
-        return;
-      }
-      await axios.post("http://127.0.0.1:8000/api/logout", {}, { headers: { Authorization: `Bearer ${token}` }, withCredentials: true });
-      sessionStorage.removeItem("authToken");
-      router.push("/login");
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
+
 
   const handleOverdue = async (id: number) => {
     try {
@@ -269,9 +280,12 @@ const playAlarm = () => {
   const completedActivities = activities.filter(activity => activity.status === 'complete').length;
   const totalActivities = activities.length;
   const completionPercentage = totalActivities > 0 ? (completedActivities / totalActivities) * 100 : 0;
-return (
-  
- <div className={`relative flex min-h-screen ${isLightMode ? 'bg-white text-gray-900' : 'bg-gray-900 text-gray-900'}`}>
+
+  console.log(userId)
+
+  return (
+    <div className={`relative flex min-h-screen ${isLightMode ? 'bg-white text-gray-900' : 'bg-gray-900 text-gray-900'}`}>
+      <ToastContainer position="top-right" autoClose={3000} />
       <Sidebar />
       <div className="flex-1 p-4 md:p-6 lg:p-8">
         <div className="flex justify-between items-center mb-4">
@@ -283,223 +297,221 @@ return (
             {isLightMode ? '☀️' : '🌙'}
           </button>
         </div>
-      <div className="flex-1 bg-gray-900 text-white flex items-center justify-center p-10">
-        <div className="p-4 border border-green-700 w-full max-w-4xl bg-gray-900 rounded-lg shadow-lg">
-          <button
-            onClick={() => setIsOpen(true)}
-            className="inline-flex items-center gap-1 px-3 py-1 text-lg font-bold text-black bg-green-500 border-2 border-black rounded-full shadow-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-gray-900 hover:text-green-500 hover:border-green-500 hover:shadow-green-700 active:bg-green-300 active:shadow-none active:translate-y-1"
-          >
-            ➕ 
-          </button>
-
-          <div className="mt-4">
-            <h1 className="text-3xl md:text-5xl font-extrabold mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 drop-shadow-lg">
-              Personal Task
-            </h1>
-            <br />
-            <ProgressBar percentage={completionPercentage} />
-            <br />
-
-            <button 
-  onClick={() => setOpen(!open)} 
-  className="p-2 rounded-full bg-green-700 hover:bg-green-600 relative"
->
-  <ChevronDownIcon className="w-6 h-6 text-white" />
-</button>
-<br />
-
-{open && (
-  <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-32 bg-gray-900 text-white rounded-md shadow-lg">
-    {statuses.map((status) => (
-      <button 
-        key={status} 
-        className="block w-full text-left px-4 py-2 hover:bg-gray-700"
-        onClick={() => { setSelectedStatus(status.toLowerCase()); setOpen(false); }}
-      >
-        {status}
-      </button>
-    ))}
-  </div>
-)}
-<br />
-
-            <div className="flex justify-center">
-  <div className="grid grid-cols-1 gap-4 w-full">
-    {currentActivities.length > 0 && (
-      <div 
-        key={currentActivities[0].id} 
-        className="p-6 border border-green-700 bg-gray-900 text-white rounded-lg shadow-lg flex flex-col items-center text-center"
-      >
-        <h3 className="text-2xl md:text-3xl font-bold mb-2">{currentActivities[0].title}</h3>
-        <h3 className="text-xl md:text-2xl font-bold mb-2">{currentActivities[0].description}</h3>
-        <p className="mb-2 text-gray-400 text-lg font-semibold">Due: {currentActivities[0].due_date}</p>
-        <p className="mb-2 text-gray-400 text-lg font-semibold">Tags: {currentActivities[0].tags}</p>
-        <p className="mb-2 text-gray-400 text-lg font-semibold">Status: {currentActivities[0].status}</p>
-        <p className="mb-4 text-gray-400 text-lg font-semibold">Collaborators: {currentActivities[0].collaborator_name}</p>
-
-        <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
-  <button 
-    onClick={() => handleEdit(currentActivities[0])}
-    className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-green-600 transition hover:scale-105"
-  >
-    ✏️
-  </button>
-
-  {currentActivities[0].status === 'pending' && !currentActivities[0].archive && (
-    <button 
-      onClick={() => handleMarkAsDone(currentActivities[0].id)}
-      className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-blue-600 transition hover:scale-105"
-    >
-      ✅
-    </button>
-  )}
-
-  {currentActivities[0].archive ? (
-    <button 
-      onClick={() => handleRestore(currentActivities[0].id)}
-      className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-yellow-600 transition hover:scale-105"
-    >
-      🔄
-    </button>
-  ) : (
-    <button 
-      onClick={() => handleArchive(currentActivities[0].id)}
-      className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-yellow-600 transition hover:scale-105"
-    >
-      📁
-    </button>
-  )}
-
-  <button 
-    onClick={() => handleDelete(currentActivities[0].id)}
-    className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-red-600 transition hover:scale-105"
-  >
-    🗑️
-  </button>
-</div>
-
-      </div>
-    )}
-  </div>
-</div>
-
-
-            {/* Pagination Controls */}
-            <div className="flex justify-between mt-4">
+        <div className="flex-1 bg-gray-900 text-white flex items-center justify-center p-10">
+          <div className="p-4 border border-green-700 w-full max-w-4xl bg-gray-900 rounded-lg shadow-lg">
+            <button
+              onClick={() => setIsOpen(true)}
+              className="inline-flex items-center gap-1 px-3 py-1 text-lg font-bold text-black bg-green-500 border-2 border-black rounded-full shadow-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-gray-900 hover:text-green-500 hover:border-green-500 hover:shadow-green-700 active:bg-green-300 active:shadow-none active:translate-y-1"
+            >
+              ➕ 
+            </button>
+  
+            <div className="mt-4">
+              <h1 className="text-3xl md:text-5xl font-extrabold mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 drop-shadow-lg">
+                Personal Task
+              </h1>
+              <br />
+              <ProgressBar percentage={completionPercentage} />
+              <br />
+  
               <button 
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} 
-                disabled={currentPage === 1} 
-                className="bg-gray-600 p-2 rounded text-white text-xs font-bold"
+                onClick={() => setOpen(!open)} 
+                className="p-1 rounded  bg-green-700 hover:bg-green-600 relative flex items-center"
               >
-                -
+                <h1 className="item-center"> Status </h1>
+                <ChevronDownIcon className="w-8 h-7 text-white" />
+                <span className="ml-1 text-white"></span>
               </button>
-              <span className="self-center text-white text-xs font-bold">Page {currentPage} of {totalPages}</span>
-              <button 
-                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} 
-                disabled={currentPage === totalPages} 
-                className="bg-gray-600 p-2 rounded text-white text-xs font-bold transform transition-transform duration-300 hover:scale-105 active:scale-95 shadow-lg"
-              >
-                +
-              </button>
+              <br />
+  
+              {open && (
+                <div className="absolute left-100 transform -translate-x-1/2 mt-1 w-32 bg-gray-900 text-white rounded-md shadow-lg">
+                  {statuses.map((status) => (
+                    <button 
+                      key={status} 
+                      className="block w-full text-center px-1 py-2 hover:bg-gray-700"
+                      onClick={() => { setSelectedStatus(status.toLowerCase()); setOpen(false); }}
+                    >
+                      {status}
+                    </button>
+                  ))}
+                </div>
+              )}
+              <br />
+  
+              <div className="flex justify-center">
+                <div className="grid grid-cols-1 gap-4 w-full">
+                  {currentActivities.length > 0 && (
+                    <div 
+                      key={currentActivities[0].id} 
+                      className="p-6 border border-green-700 bg-gray-900 text-white rounded-lg shadow-lg flex flex-col items-center text-center"
+                    >
+                      <h3 className="text-2xl md:text-3xl font-bold mb-2">{currentActivities[0].title}</h3>
+                      <h3 className="text-xl md:text-2xl font-bold mb-2">{currentActivities[0].description}</h3>
+                      <p className="mb-2 text-gray-400 text-lg font-semibold">Due: {currentActivities[0].due_date}</p>
+                      <p className="mb-2 text-gray-400 text-lg font-semibold">Tags: {currentActivities[0].tags}</p>
+                      <p className="mb-2 text-gray-400 text-lg font-semibold">Status: {currentActivities[0].status}</p>
+                      <p className="mb-4 text-gray-400 text-lg font-semibold">Collaborators: {currentActivities[0].collaborator_name}</p> {/* Adjusted to display collaborators */}
+  
+                      <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
+                        <button 
+                          onClick={() => handleEdit(currentActivities[0])}
+                          className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-green-600 transition hover:scale-105"
+                        >
+                          ✏️ Edit
+                        </button>
+  
+                        {currentActivities[0].status === 'pending' && !currentActivities[0].archive && (
+                          <button 
+                            onClick={() => handleMarkAsDone(currentActivities[0].id)}
+                            className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-blue-600 transition hover:scale-105"
+                          >
+                            ✅ Done
+                          </button>
+                        )}
+  
+                        {currentActivities[0].archive ? (
+                          <button 
+                            onClick={() => handleRestore(currentActivities[0].id)}
+                            className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-yellow-600 transition hover:scale-105"
+                          >
+                            🔄 Restore
+                          </button>
+                        ) : (
+                          <button 
+                            onClick={() => handleArchive(currentActivities[0].id)}
+                            className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-yellow-600 transition hover:scale-105"
+                          >
+                            📁 Archive
+                          </button>
+                        )}
+  
+                        <button 
+                          onClick={() => handleDelete(currentActivities[0].id)}
+                          className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-red-600 transition hover:scale-105"
+                        >
+                          🗑️ Delete
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+  
+              {/* Pagination Controls */}
+              <div className="flex justify-between mt-4">
+                <button 
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} 
+                  disabled={currentPage === 1} 
+                  className="bg-gray-600 p-2 rounded text-white text-xs font-bold"
+                >
+                  -
+                </button>
+                <span className="self-center text-white text-xs font-bold">Page {currentPage} of {totalPages}</span>
+                <button 
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} 
+                  disabled={currentPage === totalPages} 
+                  className="bg-gray-600 p-2 rounded text-white text-xs font-bold transform transition-transform duration-300 hover:scale-105 active:scale-95 shadow-lg"
+                >
+                  +
+                </button>
+              </div>
             </div>
+            {isOpen && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4">
+                <div className="bg-green-900 p-6 rounded-lg shadow-lg w-full max-w-md relative flex flex-col items-center">
+                  <button 
+                    onClick={() => resetForm()} 
+                    className="absolute top-2 right-2 text-white font-bold text-xl"
+                  >
+                    ×
+                  </button>
+                  <h2 className="text-xl font-bold mb-4 text-center">
+                    {editId ? "Edit" : "Add"} Activity
+                  </h2>
+                  <form 
+                    onSubmit={handleSubmit} 
+                    className="w-full flex flex-col items-center gap-4"
+                  >
+                    <input 
+                      type="text" 
+                      name="title" 
+                      placeholder="Title" 
+                      value={formData.title} 
+                      onChange={handleChange} 
+                      className="border-4 border-black p-2 bg-gray-200 text-black text-lg font-bold rounded shadow-md w-full" 
+                      required 
+                    />
+                    <textarea 
+                      name="description" 
+                      placeholder="Description" 
+                      value={formData.description} 
+                      onChange={handleChange} 
+                      className="border-4 border-black p-2 bg-gray-200 text-black text-lg font-bold rounded shadow-md w-full"
+                    ></textarea>
+                    <input 
+                      type="date" 
+                      name="date_started" 
+                      value={formData.date_started} 
+                      onChange={handleChange} 
+                      className="border-4 border-black p-2 bg-gray-200 text-black text-lg font-bold rounded shadow-md w-full" 
+                      required 
+                    />
+                    <input 
+                      type="datetime-local" 
+                      name="due_date" 
+                      value={formData.due_date} 
+                      onChange={handleChange} 
+                      className="border-4 border-black p-2 bg-gray-200 text-black text-lg font-bold rounded shadow-md w-full" 
+                      required 
+                    />
+                    <input 
+                      type="text" 
+                      name="tags" 
+                      placeholder="Tags" 
+                      value={formData.tags} 
+                      onChange={handleChange} 
+                      className="border-4 border-black p-2 bg-gray-200 text-black text-lg font-bold rounded shadow-md w-full" 
+                    />
+                    
+                    <div className="flex flex-col items-center w-full">
+                      <h1 className="text-1xl md:text-2xl text-center text-black drop-shadow-lg">
+                        Collaborators
+                      </h1>
+                      <br />
+                      <select
+                        name="collaborators"
+                        multiple
+                        value={formData.collaborators || []}
+                        onChange={(e) => {
+                          const selectedOptions = Array.from(e.target.selectedOptions, option => parseInt(option.value));
+                          setFormData({ ...formData, collaborators: selectedOptions });
+                        }}
+                        className="border-4 border-black p-2 bg-gray-200 text-black text-lg font-bold rounded shadow-md w-full"
+                      >
+                        {users.filter((user) => user.id != Number(userId)).map(user => (
+                          <option key={user.id} value={user.id}>
+                            {user.username}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+  
+                    <button 
+                      type="submit" 
+                      className="bg-blue-800 border-4 border-black shadow-md p-2 text-lg font-bold cursor-pointer hover:bg-blue-900 w-full"
+                    >
+                      {editId ? "Update" : "Add"} Activity
+                    </button>
+                  </form>
+                </div>
+              </div>
+            )}
           </div>
-          {isOpen && (
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4">
-    <div className="bg-green-900 p-6 rounded-lg shadow-lg w-full max-w-md relative flex flex-col items-center">
-      <button 
-        onClick={() => resetForm()} 
-        className="absolute top-2 right-2 text-white font-bold text-xl"
-      >
-        ×
-      </button>
-      <h2 className="text-xl font-bold mb-4 text-center">
-        {editId ? "Edit" : "Add"} Activity
-      </h2>
-      <form 
-        onSubmit={handleSubmit} 
-        className="w-full flex flex-col items-center gap-4"
-      >
-        <input 
-          type="text" 
-          name="title" 
-          placeholder="Title" 
-          value={formData.title} 
-          onChange={handleChange} 
-          className="border-4 border-black p-2 bg-gray-200 text-black text-lg font-bold rounded shadow-md w-full" 
-          required 
-        />
-        <textarea 
-          name="description" 
-          placeholder="Description" 
-          value={formData.description} 
-          onChange={handleChange} 
-          className="border-4 border-black p-2 bg-gray-200 text-black text-lg font-bold rounded shadow-md w-full"
-        ></textarea>
-        <input 
-          type="date" 
-          name="date_started" 
-          value={formData.date_started} 
-          onChange={handleChange} 
-          className="border-4 border-black p-2 bg-gray-200 text-black text-lg font-bold rounded shadow-md w-full" 
-          required 
-        />
-        <input 
-          type="datetime-local" 
-          name="due_date" 
-          value={formData.due_date} 
-          onChange={handleChange} 
-          className="border-4 border-black p-2 bg-gray-200 text-black text-lg font-bold rounded shadow-md w-full" 
-          required 
-        />
-        <input 
-          type="text" 
-          name="tags" 
-          placeholder="Tags" 
-          value={formData.tags} 
-          onChange={handleChange} 
-          className="border-4 border-black p-2 bg-gray-200 text-black text-lg font-bold rounded shadow-md w-full" 
-        />
-        
-        <div className="flex flex-col items-center w-full">
-          <h1 className="text-1xl md:text-2xl text-center text-black drop-shadow-lg">
-            Collaborators
-          </h1>
-          <br />
-          <select
-            name="collaborators"
-            multiple
-            value={formData.collaborators || []}
-            onChange={(e) => {
-              const selectedOptions = Array.from(e.target.selectedOptions, option => parseInt(option.value));
-              setFormData({ ...formData, collaborators: selectedOptions });
-            }}
-            className="border-4 border-black p-2 bg-gray-200 text-black text-lg font-bold rounded shadow-md w-full"
-          >
-            {users.map(user => (
-              <option key={user.id} value={user.id}>
-                {user.username}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <button 
-          type="submit" 
-          className="bg-blue-800 border-4 border-black shadow-md p-2 text-lg font-bold cursor-pointer hover:bg-blue-900 w-full"
-        >
-          {editId ? "Update" : "Add"} Activity
-        </button>
-      </form>
-    </div>
-  </div>
-)}
-
-
         </div>
       </div>
     </div>
-  </div>
-);
+  );
 }
 
 export default authUser (ActivityPage);

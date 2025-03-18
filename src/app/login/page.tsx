@@ -6,23 +6,24 @@ import axios from "axios";
 import Head from "next/head";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import Image from "next/image";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Toast notifications
+import { motion } from "framer-motion";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showModal, setShowModal] = useState(false); // Success modal state
   const router = useRouter();
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     setLoading(true);
-    setMessage("");
 
-    // Basic input validation
     if (!username || !password) {
-      setMessage("Username and password are required.");
+      toast.error("Username and password are required.");
       setLoading(false);
       return;
     }
@@ -36,29 +37,38 @@ export default function Login() {
 
       if (response.data.token) {
         sessionStorage.setItem("authToken", response.data.token);
-        response.data.usertype === "admin" ? router.push("/DashBoard") : router.push("/todolist");
+        toast.success("Login successful!");
+        
+        // Show modal before redirect
+        setShowModal(true);
+
+        setTimeout(() => {
+          response.data.usertype === "admin"
+            ? router.push("/DashBoard")
+            : router.push("/todolist");
+        }, 3000); // Delay for 3 seconds to show success modal
       } else {
-        setMessage("Invalid credentials. Please try again.");
+        toast.error("Invalid credentials. Please try again.");
+        setLoading(false);
       }
     } catch (error: any) {
-      // Handle specific error messages
       if (error.response?.status === 401) {
-        setMessage("Invalid credentials. Please check your username and password.");
+        toast.error("Invalid credentials. Please check your username and password.");
       } else {
-        setMessage("Login failed. Please try again later.");
+        toast.error("Login failed. Please try again later.");
       }
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
     <>
+      <ToastContainer position="top-right" autoClose={3000} />
       <Head>
         <title>Login | Infinitech</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-  
+
       {/* Background Image */}
       <div className="relative min-h-screen flex flex-col items-center justify-center bg-gray-900 px-4 sm:px-0">
         <Image
@@ -68,13 +78,13 @@ export default function Login() {
           objectFit="cover"
           className="absolute top-0 left-0 w-full h-full opacity-20"
         />
-  
+
         {/* Login Box */}
         <div className="relative bg-gray-900/80 backdrop-blur-md p-6 sm:p-8 rounded-lg shadow-lg w-full max-w-sm border border-green-600">
           <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-4 sm:mb-6">
             Infini-Sign In
           </h2>
-  
+
           <form onSubmit={handleLogin} className="space-y-4 sm:space-y-5">
             <div>
               <label className="block text-gray-300 text-sm sm:text-lg font-medium mb-2">
@@ -89,7 +99,7 @@ export default function Login() {
                 required
               />
             </div>
-  
+
             {/* Password Field with Toggle */}
             <div className="relative">
               <label className="block text-gray-300 text-sm sm:text-lg font-medium mb-2">
@@ -111,19 +121,24 @@ export default function Login() {
                 {showPassword ? <EyeOffIcon size={22} /> : <EyeIcon size={22} />}
               </button>
             </div>
-  
-            {message && <p className="text-red-500 text-sm sm:text-lg mt-2 text-center">{message}</p>}
-  
+
             {/* Buttons */}
             <div className="flex flex-col items-center space-y-3">
               <button
                 type="submit"
-                className="w-full bg-green-600 hover:bg-green-500 text-white py-2 sm:py-3 rounded-lg text-sm sm:text-lg transition font-semibold"
+                className="w-full bg-green-600 hover:bg-green-500 text-white py-2 sm:py-3 rounded-lg text-sm sm:text-lg transition font-semibold flex items-center justify-center"
                 disabled={loading}
               >
-                {loading ? "Signing in..." : "Sign in"}
+                {loading ? (
+                  <>
+                    <div className="animate-spin rounded-full border-4 border-white border-t-transparent h-5 w-5 mr-2"></div>
+                    Signing in...
+                  </>
+                ) : (
+                  "Sign in"
+                )}
               </button>
-  
+
               <button
                 type="button"
                 className="w-full bg-gray-600 hover:bg-gray-500 text-white py-2 sm:py-3 rounded-lg text-sm sm:text-lg transition"
@@ -133,13 +148,31 @@ export default function Login() {
               </button>
             </div>
           </form>
-  
+
           <p className="text-sm sm:text-lg text-center text-gray-400 mt-4">
-            New here? <a href="/Signup" className="text-green-400 hover:underline">Create an account</a>
+            New here?{" "}
+            <a href="/Signup" className="text-green-400 hover:underline">
+              Create an account
+            </a>
           </p>
         </div>
       </div>
+
+      {/* Success Modal */}
+      {/* {showModal && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center"
+        >
+          <div className="bg-white p-8 rounded-xl text-center w-80 shadow-lg">
+            <div className="w-16 h-16 mx-auto border-4 border-green-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <h2 className="text-xl font-bold text-gray-800">Login Successful!</h2>
+            <p className="text-gray-600 mt-2">Redirecting to your dashboard...</p>
+          </div>
+        </motion.div>
+      )} */}
     </>
   );
-  
 }

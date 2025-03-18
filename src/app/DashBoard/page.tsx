@@ -17,7 +17,7 @@ import {
   Tooltip as RechartsTooltip,
   Legend,
 } from "recharts";
-
+import { ToastContainer } from "react-toastify";
 import authUser from "../utils/authUser";
 
 const API_BASE_URL = "http://127.0.0.1:8000/api";
@@ -33,6 +33,7 @@ const TaskList = ({ tasks = {} }) => {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Title</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Due Date</th>
+              
             </tr>
           </thead>
           <tbody className="bg-gray-700 divide-y divide-gray-600">
@@ -108,6 +109,7 @@ const Dashboard = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-900 text-white">
+      <ToastContainer />
       <Adminbar />
 
       <main className="flex-1 flex flex-col items-center p-5 w-full">

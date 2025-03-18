@@ -116,7 +116,7 @@ const TaskForm: React.FC<{
         </div>
   
         <div className="relative">
-          <label htmlFor="time_started" className="block text-gray-200 text-lg mb-2 font-bold">Time Started</label>
+          <label htmlFor="time_started" className="block text-gray-200 text-lg mb-2 font-bold">Target Time</label>
           <input id="time_started" type="datetime-local" {...register("time_started", { required: true })} className="text-green-100 p-3 w-full bg-gray-700 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-300 text-lg font-bold" />
         </div>
   

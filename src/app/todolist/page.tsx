@@ -13,6 +13,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import authUser from "../utils/authUser";
+import { ToastContainer, toast } from "react-toastify";
 
 interface Activity {
   id: number;
@@ -108,6 +109,7 @@ const TodoList = () => {
 
   return (
     <div className={`relative flex min-h-screen ${isLightMode ? 'bg-white text-gray-900' : 'bg-gray-900 text-gray-900'}`}>
+      <ToastContainer />
       <Sidebar />
       <div className="flex-1 p-4 md:p-6 lg:p-8">
         <div className="flex justify-between items-center mb-4">

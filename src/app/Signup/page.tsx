@@ -4,6 +4,41 @@ import { useState } from "react";
 import axios from "axios";
 import Image from "next/image";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for toast notifications
+
+const TermsModal = ({ isOpen, onClose }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div className="bg-white rounded-lg p-6 w-11/12 max-w-lg">
+        <h2 className="text-xl font-bold mb-4">Terms and Conditions</h2>
+        <p className="mb-4">
+          Please read these terms and conditions carefully before using our service.
+        </p>
+        <p className="mb-4">
+          By accessing or using the service, you agree to be bound by these terms. If you do not agree to the terms, you may not use the service.
+        </p>
+        <p className="mb-4">
+          <strong>1. User Accounts:</strong> You are responsible for maintaining the confidentiality of your account and password.
+        </p>
+        <p className="mb-4">
+          <strong>2. User Conduct:</strong> You agree not to use the service for any unlawful purpose or in a way that could damage, disable, or impair the service.
+        </p>
+        <p className="mb-4">
+          <strong>3. Limitation of Liability:</strong> We are not liable for any damages arising from your use of the service.
+        </p>
+        <p className="mb-4">
+          <strong>4. Changes to Terms:</strong> We may update these terms from time to time. You are advised to review these terms periodically for any changes.
+        </p>
+        <button onClick={onClose} className="mt-4 bg-green-600 hover:bg-green-500 text-white py-2 px-4 rounded">
+          Close
+        </button>
+      </div>
+    </div>
+  );
+};
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -14,28 +49,65 @@ export default function Register() {
   });
 
   const [profileImage, setProfileImage] = useState<File | null>(null);
-  const [message, setMessage] = useState("");
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
   const [isTermsChecked, setIsTermsChecked] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [usernameWarning, setUsernameWarning] = useState("");
+  const [emailWarning, setEmailWarning] = useState("");
   const [passwordWarning, setPasswordWarning] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    if (e.target.name === "password") {
-      validatePassword(e.target.value);
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    // Validate username
+    if (name === "username") {
+      if (value.length >= 6) {
+        try {
+          const checkRes = await axios.post("http://localhost:8000/api/check-availability", {
+            username: value,
+          });
+
+          if (!checkRes.data.usernameAvailable) {
+            setUsernameWarning("Username is already taken.");
+          } else {
+            setUsernameWarning(""); // Clear warning if username is available
+          }
+        } catch (error) {
+          toast.error("Error checking username availability. Please try again.");
+        }
+      } else {
+        setUsernameWarning(""); // Clear warning if username is less than 6 characters
+      }
     }
-  };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setProfileImage(e.target.files[0]);
+    // Validate email
+    if (name === "email") {
+      if (value.includes("@")) {
+        try {
+          const checkRes = await axios.post("http://localhost:8000/api/check-availability", {
+            email: value,
+          });
+
+          if (!checkRes.data.emailAvailable) {
+            setEmailWarning("Email is already taken.");
+          } else {
+            setEmailWarning(""); // Clear warning if email is available
+          }
+        } catch (error) {
+          toast.error("Error checking email availability. Please try again.");
+        }
+      } else {
+        setEmailWarning("Email must contain '@' character.");
+      }
     }
-  };
 
-  const handleTermsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsTermsChecked(e.target.checked);
+    // Validate password
+    if (name === "password") {
+      validatePassword(value);
+    }
   };
 
   const validatePassword = (password: string) => {
@@ -48,29 +120,42 @@ export default function Register() {
     if (password.length < minLength) {
       setPasswordWarning(`Password must be at least ${minLength} characters long.`);
     } else if (!hasUpperCase || !hasLowerCase || !hasNumbers || !hasSpecialChars) {
-      setPasswordWarning("Password must contain uppercase, lowercase, numbers, and special characters.");
+      setPasswordWarning("Password must include uppercase, lowercase, numbers, and special characters.");
     } else {
-      setPasswordWarning("");
+      setPasswordWarning(""); // Clear warning if password is valid
     }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setProfileImage(file);
+      setProfileImageUrl(URL.createObjectURL(file)); // Set the image URL for preview
+    }
+  };
+
+  const handleTermsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsTermsChecked(e.target.checked);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setMessage("");
-    setIsSuccess(false);
 
+    // Check if passwords match
     if (formData.password !== formData.confirmPassword) {
-      setMessage("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
 
+    // Check if terms are accepted
     if (!isTermsChecked) {
-      setMessage("You must agree to the terms and conditions.");
+      toast.error("You must agree to the terms and conditions.");
       return;
     }
 
-    if (passwordWarning) {
-      setMessage(passwordWarning);
+    // Final check before registration
+    if (usernameWarning || emailWarning || passwordWarning) {
+      toast.error("Please fix the errors before submitting.");
       return;
     }
 
@@ -87,18 +172,19 @@ export default function Register() {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      setMessage(res.data.message);
-      setIsSuccess(true);
+      toast.success(res.data.message);
       setFormData({ username: "", email: "", password: "", confirmPassword: "" });
       setProfileImage(null);
+      setProfileImageUrl(null); // Reset the image URL
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Registration failed. Please try again.";
-      setMessage(errorMessage);
+      toast.error(errorMessage);
     }
   };
 
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-gray-900 px-6 overflow-hidden">
+      <ToastContainer />
       <Image
         src="/cram.png"
         alt="Task Management Background"
@@ -106,17 +192,11 @@ export default function Register() {
         objectFit="cover"
         className="absolute top-0 left-0 w-full h-full opacity-20"
       />
-      <div className="relative bg-gray-800/80 backdrop-blur-md p-6 sm:p-8 rounded-lg shadow-lg w-[90%] max-w-md border border-green-600">
+      <div className="relative bg-gray-800/80 backdrop-blur-md p-6 sm:p-8 rounded-lg shadow-lg w-[90%] max-w-2xl border border-green-600">
         <h2 className="text-2xl font-bold text-white text-center mb-6">Register</h2>
-  
-        {message && (
-          <p className={`text-center text-sm font-bold mb-4 p-2 rounded-lg ${isSuccess ? "text-green-500 bg-green-900/20 border border-green-500" : "text-red-400"}`}>
-            {message}
-          </p>
-        )}
-  
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
+
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="col-span-1">
             <label className="block text-gray-300 text-sm font-medium mb-2">Username</label>
             <input
               type="text"
@@ -127,9 +207,10 @@ export default function Register() {
               placeholder="Enter your username"
               required
             />
+            {usernameWarning && <p className="text-red-400 text-sm">{usernameWarning}</p>}
           </div>
-  
-          <div>
+
+          <div className="col-span-1">
             <label className="block text-gray-300 text-sm font-medium mb-2">Email</label>
             <input
               type="email"
@@ -140,19 +221,35 @@ export default function Register() {
               placeholder="Enter your email"
               required
             />
+            {emailWarning && <p className="text-red-400 text-sm">{emailWarning}</p>}
           </div>
-  
-          <div>
-            <label className="block text-gray-300 text-sm font-medium mb-2">Profile Image</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="w-full px-4 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg cursor-pointer"
-            />
+
+
+          <div className="col-span-1">
+            <label className="block text-gray-300 text-sm font-medium mb-2">Confirm Password</label>
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg focus:ring focus:ring-green-500 focus:outline-none"
+                placeholder="Confirm your password"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-white"
+              >
+                {showConfirmPassword ? <EyeOffIcon size={18} /> : <EyeIcon size={18} />}
+              </button>
+            </div>
           </div>
-  
-          <div>
+
+         
+
+          <div className="col-span-1">
             <label className="block text-gray-300 text-sm font-medium mb-2">Password</label>
             <div className="relative">
               <input
@@ -174,30 +271,31 @@ export default function Register() {
             </div>
             {passwordWarning && <p className="text-red-400 text-sm">{passwordWarning}</p>}
           </div>
-  
-          <div>
-            <label className="block text-gray-300 text-sm font-medium mb-2">Confirm Password</label>
-            <div className="relative">
-              <input
-                type={showConfirmPassword ? "text" : "password"}
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg focus:ring focus:ring-green-500 focus:outline-none"
-                placeholder="Confirm your password"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-white"
-              >
-                {showConfirmPassword ? <EyeOffIcon size={18} /> : <EyeIcon size={18} />}
-              </button>
-            </div>
+
+          <div className="col-span-1 flex flex-col items-center">
+            <label className="block text-gray-300 text-sm font-medium mb-2">Profile Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="w-full px-4 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg cursor-pointer"
+            />
+            {profileImageUrl && (
+              <div className="mt-4 flex items-center justify-center w-32 h-32 border-2 border-green-500 rounded-full overflow-hidden shadow-lg">
+                <Image
+                  src={profileImageUrl}
+                  alt="Profile Preview"
+                  width={128}
+                  height={128}
+                  className="object-cover"
+                />
+              </div>
+            )}
           </div>
-  
-          <div className="flex items-center">
+
+          
+
+          <div className="col-span-2 flex items-center">
             <input
               type="checkbox"
               id="terms"
@@ -206,20 +304,24 @@ export default function Register() {
               className="h-4 w-4 text-green-500 focus:ring focus:ring-green-500"
             />
             <label htmlFor="terms" className="ml-2 text-gray-300 text-sm">
-              I agree to the terms and conditions
+              I agree to the <button type="button" onClick={() => setIsModalOpen(true)} className="text-green-400 hover:underline">terms and conditions</button>
             </label>
           </div>
-  
-          <button type="submit" className="w-full bg-green-600 hover:bg-green-500 text-white py-2 rounded-lg transition">
-            Register
-          </button>
-  
-          <p className="text-lg text-center text-gray-400 mt-4">
+
+          <div className="col-span-2">
+            <button type="submit" className="w-full bg-green-600 hover:bg-green-500 text-white py-2 rounded-lg transition">
+              Register
+            </button>
+          </div>
+
+          <p className="text-lg text-center text-gray-400 mt-4 col-span-2">
             I have an Account! <a href="/login" className="text-green-400 hover:underline">Back to Login</a>
           </p>
         </form>
       </div>
+
+      {/* Terms and Conditions Modal */}
+      <TermsModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
-  
 }
