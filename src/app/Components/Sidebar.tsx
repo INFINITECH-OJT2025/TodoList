@@ -66,25 +66,6 @@ export default function Sidebar() {
     sessionStorage.removeItem("authToken");
     router.push("/login");
   };
-  const markAsRead = async (id) => {
-    try {
-      await axios.put(`http://127.0.0.1:8000/api/notifications/${id}/markAsRead`);
-      setNotifications(notifications.map(n => n.id === id ? { ...n, status: "read" } : n));
-    } catch (error) {
-      console.error("Error updating notification:", error);
-    }
-  };
-
-  const markAllAsRead = async () => {
-    try {
-      const token = sessionStorage.getItem("authToken");
-      if (!token) return;
-      await axios.put(`http://127.0.0.1:8000/api/notifications/markAllAsRead?authToken=${token}`);
-      setNotifications(notifications.map(n => ({ ...n, status: "read" })));
-    } catch (error) {
-      console.error("Error marking all notifications as read:", error);
-    }
-  };
 
 
   return (
@@ -148,7 +129,7 @@ export default function Sidebar() {
             <img 
               src="/infini.png" 
               alt="Logo" 
-              className={`transition-all duration-300 ${isOpen ? "w-57" : "w-10"}`} 
+              className={`transition-all duration-300 ${isOpen ? "w-32" : "w-10"}`} 
             />
           </div>
 
@@ -190,7 +171,7 @@ export default function Sidebar() {
             >
               <FaSignOutAlt className="mr-0.5 text-green-500" />
               <span className={`${isOpen ? "block" : "hidden"}`}>Logout</span>
-            </button> 
+            </button>
           </div>
         </aside>
 
