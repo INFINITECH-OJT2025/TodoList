@@ -125,7 +125,7 @@ class ActivityController extends Controller
                 'status' => 'sometimes|required|in:pending,complete,overdue',
                 'archive' => 'boolean',
                 'user_id' => 'required|exists:users,id',// Ensure user exists
-                  'collaborator' => 'required|exists:users,id'
+                // 'collaborator' => 'required|exists:users,id'
             ]);
     
             if ($validator->fails()) {
