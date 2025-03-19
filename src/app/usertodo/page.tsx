@@ -8,6 +8,8 @@ import TaskForm from "./form"; // Import TaskForm component
 import Archive from "./Archive";
 import Adminbar from "../Components/adminsidebar";
 import authUser  from "../utils/authUser";
+import { ToastContainer, toast } from "react-toastify"; // Import toast and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Import CSS for toast notifications
 
 const API_BASE_URL = "http://127.0.0.1:8000/api";
 
@@ -58,6 +60,7 @@ const Dashboard = () => {
         setTasks(response.data);
       } catch (error) {
         console.error("Error fetching tasks:", error);
+        toast.error("Error fetching tasks."); // Show error toast
       } finally {
         setLoading(false);
       }
@@ -82,14 +85,14 @@ const Dashboard = () => {
     try {
       const response = await axios.put(`${API_BASE_URL}/tasks/${taskId}/archive`);
       if (response.status === 200) {
-        alert("Task archived successfully!");
+        toast.success("Task archived successfully!"); // Show success toast
         setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
         setArchivedTasks((prevArchived) => [...prevArchived, response.data]);
         setShowArchiveConfirmation(false); // Close the confirmation modal
       }
     } catch (error) {
       console.error("Error archiving task:", error);
-      alert("Failed to archive task.");
+      toast.error("Failed to archive task."); // Show error toast
     }
   };
 
@@ -98,8 +101,10 @@ const Dashboard = () => {
       await axios.delete(`${API_BASE_URL}/tasks/${taskId}`);
       setTasks(tasks.filter((task) => task.id !== taskId));
       setShowDeleteConfirmation(false); // Close the confirmation modal
+      toast.success("Task deleted successfully!"); // Show success toast
     } catch (error) {
       console.error("Error deleting task:", error);
+      toast.error("Failed to delete task."); // Show error toast
     }
   };
 
@@ -119,8 +124,10 @@ const Dashboard = () => {
       await axios.put(`${API_BASE_URL}/tasks/${taskId}/toggle-visibility`);
       const updatedTasks = await axios.get(`${API_BASE_URL}/notArchive`);
       setTasks(updatedTasks.data);
+      toast.success("Task visibility updated!"); // Show success toast
     } catch (error) {
       console.error("Error updating visibility:", error);
+      toast.error("Failed to update visibility."); // Show error toast
     } finally {
       setLoading(false);
     }
@@ -146,6 +153,7 @@ const Dashboard = () => {
       </Head>
   
       <div className="flex min-h-screen bg-gray-800 text-white">
+        <ToastContainer position="top-right" autoClose={3000} />
         <Adminbar />
         <div className="container mx-auto p-4">
           <div className="w-full space-y-10 z-40 rounded-lg shadow-lg">

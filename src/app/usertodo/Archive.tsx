@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import toast from "react-hot-toast";
-
+import { ToastContainer, toast } from "react-toastify"; // Import toast here
+import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for toast notifications
 
 interface ArchivedTask {
   id: number;
@@ -35,6 +35,7 @@ export default function Archive() {
     } catch (error) {
       setError("Failed to fetch archived tasks.");
       console.error("Error fetching archived tasks:", error);
+      toast.error("Failed to fetch archived tasks."); // Show error toast
     } finally {
       setLoading(false);
     }
@@ -45,9 +46,11 @@ export default function Archive() {
       const response = await axios.put(`http://127.0.0.1:8000/api/tasks/restore/${taskId}`);
       if (response.status === 200 && response.data.task.archived === 0) {
         setArchivedTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+        toast.success("Task restored successfully!"); // Show success toast
       }
     } catch (error) {
       console.error("Error restoring task:", error);
+      toast.error("Failed to restore task."); // Show error toast
     }
   };
 
@@ -57,6 +60,7 @@ export default function Archive() {
   return (
     <section className="p-4 text-center bg-gray-700 text-white rounded-lg shadow-lg max-w-full mx-auto">
       <h3 className="text-lg font-bold bg-gray-800 p-3 rounded">Archived Tasks</h3>
+      <ToastContainer position="top-right" autoClose={3000} />
       {loading ? (
         <p>Loading archived tasks...</p>
       ) : error ? (
@@ -99,10 +103,7 @@ export default function Archive() {
                     <td className="p-2 border border-gray-600 md:border-none block md:table-cell text-sm">{task.deadline}</td>
                     <td className="p-2 border border-gray-600 md:border-none block md:table-cell">
                       <button 
-                        onClick={() => {
-                          restoreTask(task.id);
-                          toast.success("Task restored successfully!");
-                        }}
+                        onClick={() => restoreTask(task.id)}
                         className="bg-green-600 text-white text-xs p-1 rounded hover:bg-green-500 w-full md:w-auto">
                         Restore
                       </button>

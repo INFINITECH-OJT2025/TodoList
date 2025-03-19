@@ -8,11 +8,24 @@ import Pusher from 'pusher-js';
 
 export default function Sidebar() {
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false); // Sidebar is closed by default
+  const [isOpen, setIsOpen] = useState(() => window.innerWidth >= 768); // Default open if screen is large
   const [activeTab, setActiveTab] = useState("unread");
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
+
+  useEffect(() => {
+    const updateSidebarState = () => {
+      setIsOpen(window.innerWidth >= 768); // Open sidebar if screen is large
+    };
+
+    updateSidebarState(); // Set initial state
+    window.addEventListener("resize", updateSidebarState);
+
+    return () => {
+      window.removeEventListener("resize", updateSidebarState);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -49,6 +62,10 @@ export default function Sidebar() {
     };
   }, []);
 
+  const handleLogout = () => {
+    sessionStorage.removeItem("authToken");
+    router.push("/login");
+  };
   const markAsRead = async (id) => {
     try {
       await axios.put(`http://127.0.0.1:8000/api/notifications/${id}/markAsRead`);
@@ -69,10 +86,6 @@ export default function Sidebar() {
     }
   };
 
-  const handleLogout = () => {
-    sessionStorage.removeItem("authToken");
-    router.push("/login");
-  };
 
   return (
     <>
@@ -119,14 +132,26 @@ export default function Sidebar() {
 
 
       {/* Sidebar */}
+        
+
       <div className="flex">
         <aside className={`fixed top-0 left-0 h-screen bg-gray-700 p-2 flex flex-col justify-between border-r border-green-700 shadow-xl transition-all duration-300 ${isOpen ? "w-64" : "w-16"} z-50`}>
-          <div className="flex items-center justify-between">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-green-500 text-2xl focus:outline-none">
+          <div className="flex items-center p-2 justify-between">
+            <button onClick={() => setIsOpen(!isOpen)} className="text-green-500 text-3xl focus:outline-none">
               {isOpen ? <FaTimes /> : <FaBars />}
             </button>
             {isOpen && <h2 className="text-white text-lg font-bold ml-6"></h2>}
           </div>
+
+           {/* Logo Container */}
+         <div className="flex items-center justify-center p-3">
+            <img 
+              src="/infini.png" 
+              alt="Logo" 
+              className={`transition-all duration-300 ${isOpen ? "w-57" : "w-10"}`} 
+            />
+          </div>
+
 
           <nav className="mt-6 space-y-3">
             {[
@@ -165,14 +190,14 @@ export default function Sidebar() {
             >
               <FaSignOutAlt className="mr-0.5 text-green-500" />
               <span className={`${isOpen ? "block" : "hidden"}`}>Logout</span>
-            </button>
+            </button> 
           </div>
         </aside>
 
         {/* Main Content Area */}
         <main className={`ml-${isOpen ? "64" : "16"} transition-all duration-300 p-4 h-screen`}>
           {/* Your main content goes here */}
-          <h1 className="text-2xl text-white">Wel</h1>
+          <h1 className="text-2xl text-white"></h1>
           {/* Add more content as needed */}
         </main>
       </div>

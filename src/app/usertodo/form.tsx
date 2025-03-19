@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 interface User {
   id: number;
@@ -79,14 +81,17 @@ const TaskForm: React.FC<{
         await axios.put(`http://127.0.0.1:8000/api/tasks/${editingTask.id}`, taskData);
         setTasks(tasks.map((task) => (task.id === editingTask.id ? { ...task, ...taskData } : task)));
         setEditingTask(null);
+        toast.success("Task updated successfully!");
       } else {
         const response = await axios.post("http://127.0.0.1:8000/api/tasks", taskData);
         setTasks([...tasks, response.data]);
+        toast.success("Task created successfully!");
       }
 
       reset();
     } catch (error) {
       console.error("Error saving task:", error);
+      toast.error("Error saving task. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -96,12 +101,14 @@ const TaskForm: React.FC<{
     setEditingTask(null);
     reset();
   };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="p-8 bg-gray-800 rounded-lg shadow-lg max-w-4xl mx-auto">
+      <ToastContainer position="top-right" autoClose={3000} />
       <h2 className="text-2xl text-white mb-6 text-center font-bold">Task Management Form</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <div className="relative">
-          <label htmlFor="user_id" className="block text-gray-200 text-lg mb-2 font-bold">User  </label>
+          <label htmlFor="user_id" className="block text-gray-200 text-lg mb-2 font-bold">User </label>
           <select id="user_id" {...register("user_id", { required: true })} className="text-green-100 p-3 w-full bg-gray-700 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-300 text-lg font-bold">
             <option value="">Select User</option>
             {users.map((user) => (
@@ -109,27 +116,27 @@ const TaskForm: React.FC<{
             ))}
           </select>
         </div>
-  
+
         <div className="relative">
           <label htmlFor="title" className="block text-gray-200 text-lg mb-2 font-bold">Title</label>
           <input id="title" type="text" {...register("title", { required: true })} className="text-green-100 p-3 w-full bg-gray-700 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-300 text-lg font-bold" />
         </div>
-  
+
         <div className="relative">
           <label htmlFor="time_started" className="block text-gray-200 text-lg mb-2 font-bold">Target Time</label>
           <input id="time_started" type="datetime-local" {...register("time_started", { required: true })} className="text-green-100 p-3 w-full bg-gray-700 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-300 text-lg font-bold" />
         </div>
-  
+
         <div className="relative">
           <label htmlFor="time_ended" className="block text-gray-200 text-lg mb-2 font-bold">Time Ended</label>
           <input id="time_ended" type="datetime-local" {...register("time_ended", { required: true })} className="text-green-100 p-3 w-full bg-gray-700 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-300 text-lg font-bold" />
         </div>
-  
+
         <div className="relative">
           <label htmlFor="deadline" className="block text-gray-200 text-lg mb-2 font-bold">Deadline</label>
           <input id="deadline" type="datetime-local" {...register("deadline", { required: true })} className="text-green-100 p-3 w-full bg-gray-700 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-300 text-lg font-bold" />
         </div>
-  
+
         <div className="relative">
           <label htmlFor="status" className="block text-gray-200 text-lg mb-2 font-bold">Status</label>
           <select id="status" {...register("status", { required: true })} className="text-green-100 p-3 w-full bg-gray-700 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-300 text-lg font-bold">
@@ -139,7 +146,7 @@ const TaskForm: React.FC<{
             <option value="overdue">Overdue</option>
           </select>
         </div>
-  
+
         <div className="relative">
           <label htmlFor="tags" className="block text-gray-200 text-lg mb-2 font-bold">Tags</label>
           <select 
@@ -153,12 +160,12 @@ const TaskForm: React.FC<{
           </select>
         </div>
       </div>
-  
+
       <div className="relative mt-6">
         <label htmlFor="description" className="block text-gray-200 text-lg mb-2 font-bold">Description</label>
         <textarea id="description" {...register("description", { required: true })} className="text-green-100 p-4 w-full bg-gray-700 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-300 text-lg font-bold"></textarea>
       </div>
-  
+
       <div className="flex gap-6 mt-6 justify-between flex-wrap">
         <button
           type="submit"
@@ -167,7 +174,7 @@ const TaskForm: React.FC<{
         >
           {loading ? "Saving..." : editingTask ? "Update Task" : "Submit"}
         </button>
-  
+
         {editingTask && (
           <button type="button" onClick={cancelEdit} className="bg-gray-600 hover:bg-gray-500 text-white py-3 px-6 rounded-md shadow-md transition duration-300 transform hover:scale-105 text-lg font-bold">
             Cancel Edit
@@ -176,7 +183,6 @@ const TaskForm: React.FC<{
       </div>
     </form>
   );
-  
 };
 
 export default TaskForm;

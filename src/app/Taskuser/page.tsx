@@ -315,21 +315,20 @@ const ActivityPage = () => {
               <br />
   
               <button 
-                onClick={() => setOpen(!open)} 
-                className="p-1 rounded  bg-green-700 hover:bg-green-600 relative flex items-center"
-              >
-                <h1 className="item-center"> Status </h1>
-                <ChevronDownIcon className="w-8 h-7 text-white" />
-                <span className="ml-1 text-white"></span>
-              </button>
+  onClick={() => setOpen(!open)} 
+  className="w-12 h-12 rounded-full bg-green-700 hover:bg-green-600 flex justify-center items-center relative"
+>
+  <h1 className="text-white text-sm">Status</h1>
+</button>
+
               <br />
   
               {open && (
-                <div className="absolute left-100 transform -translate-x-1/2 mt-1 w-32 bg-gray-900 text-white rounded-md shadow-lg">
+                <div className="absolute left-100 transform -translate-x-1/2 mt-1 w-32 bg-white text-green-900 rounded-md shadow-lg">
                   {statuses.map((status) => (
                     <button 
                       key={status} 
-                      className="block w-full text-center px-1 py-2 hover:bg-gray-700"
+                      className="block w-full text-center px-1 py-2 hover:bg-white"
                       onClick={() => { setSelectedStatus(status.toLowerCase()); setOpen(false); }}
                     >
                       {status}
@@ -340,7 +339,7 @@ const ActivityPage = () => {
               <br />
   
               <div className="flex justify-center">
-                <div className="grid grid-cols-1 gap-4 w-full">
+                <div className="grid grid-cols-1 gap-4 w-full rounded-lg shadow-lg">
                   {currentActivities.length > 0 && (
                     <div 
                       key={currentActivities[0].id} 
