@@ -43,7 +43,7 @@ const SidebarNavigation = () => {
 
   return (
     <>
-      <aside className="bg-gray-700 min-h-screen w-20 flex flex-col items-center py-4 justify-between">
+      <aside className="bg-gray-700 min-h-screen w-20 flex flex-col items-center py-4 justify-between ">
         <ul className="text-white space-y-6">
           {menuItems.map((item) => (
             <li key={item.name} className="group relative flex flex-col items-center">

@@ -63,12 +63,7 @@ const TodoList = () => {
     }
   };
 
-  const toggleLightMode = () => {
-    const newMode = !isLightMode;
-    setIsLightMode(newMode);
-    localStorage.setItem("isLightMode", JSON.stringify(newMode));
-  };
-
+ 
   const pendingCount = activities.filter((activity) => activity.status === "pending" && !activity.archive).length;
   const completeCount = activities.filter((activity) => activity.status === "complete" && !activity.archive).length;
   const overdueCount = activities.filter((activity) => activity.status === "overdue" && !activity.archive).length;
@@ -98,7 +93,8 @@ const TodoList = () => {
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
 
   return (
-    <div className={`relative flex min-h-screen ${isLightMode ? "bg-white text-gray-900" : "bg-gray-900 text-gray-900"}`}>
+    <div className="relative flex min-h-screen bg-gray-900 text-gray-900">
+
       {/* Sidebar */}
 
         <Sidebar />
@@ -108,15 +104,7 @@ const TodoList = () => {
         <ToastContainer />
   
         {/* Header Section */}
-        <div className="flex justify-between items-center mb-4">
-          <div className="text-lg font-bold"></div>
-          <button
-            onClick={toggleLightMode}
-            className={`p-2 rounded-md ${isLightMode ? "bg-gray-800 text-white" : "bg-gray-200 text-black"}`}
-          >
-            {isLightMode ? "☀️" : "🌙"}
-          </button>
-        </div>
+      
   
         {/* Overview Section */}
         <div className={`w-full ${isLightMode ? "bg-gray-200" : "bg-gradient-to-r from-green-500 to-gray-400"} rounded-xl p-4 mb-6 flex flex-col sm:flex-row justify-between items-center shadow-lg`}>
@@ -162,7 +150,7 @@ const TodoList = () => {
         {/* Task Status Chart */}
         <div className="w-full bg-gray-300 rounded-xl p-4 mb-3 shadow-lg">
           <div className="text-lg font-bold mb-4">Task Status Over Time</div>
-          <ResponsiveContainer width="100%" height={250}>
+          <ResponsiveContainer width="100%" height={330}>
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
               <XAxis dataKey="date" stroke="#333" />

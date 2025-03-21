@@ -5,11 +5,12 @@ import axios from 'axios';
 import { useRouter } from "next/navigation";
 import Sidebar from "../Components/Sidebar";
 import authUser  from "../utils/authUser";
-import { ChevronDownIcon } from "@heroicons/react/24/solid";
+
 import { ToastContainer, toast } from 'react-toastify'; // Import toast and ToastContainer
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS for toast notifications
-import { FaCheckCircle, FaExclamationCircle, FaTimesCircle } from 'react-icons/fa';
+
 import { ChevronLeft, ChevronRight } from "lucide-react";
+
 
 interface Activity {
   id: number;
@@ -222,7 +223,7 @@ const ActivityPage = () => {
     setIsOpen(true);
   };
 
-  const [isLightMode, setIsLightMode] = useState<boolean>(false); // State for light mode
+ 
   const handleDelete = async (id: number) => {
     if (confirm('Are you sure you want to delete this activity?')) {
       try {
@@ -307,7 +308,8 @@ const ActivityPage = () => {
 
   console.log(userId)
   return (
-    <div className={`relative flex min-h-screen ${isLightMode ? 'bg-gray-100 text-gray-900' : 'bg-gray-900 text-gray-100'}`}>
+    <div className="relative flex min-h-screen bg-gray-900 text-gray-100">
+
       <ToastContainer position="top-right" autoClose={3000} />
       
       {/* Parent Div for Sidebar and Main Content */}
@@ -321,36 +323,61 @@ const ActivityPage = () => {
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center space-x-3">
                 <div className="flex items-center justify-between w-full px-4 gap-4">
-                  {/* Hamburger Menu Button on the Left */}
-                  <div className="relative inline-block">
-                    <button
-                      onClick={() => setOpen(!open)}
-                      className={`transition-all duration-300 rounded-full bg-gray-700 hover:bg-gray-600 flex justify-center items-center ${open ? "w-14 h-14 text-2xl" : "w-12 h-12 text-xl"} shadow-md`}
-                    >
-                      <span className="text-white font-bold">☰</span>
-                    </button>
-  
-                    {/* Dropdown / Grid View based on screen size */}
-                    {open && (
-                      <div className={`absolute bg-gray-800 p-4 rounded-lg shadow-lg w-96 z-50 transition-transform duration-300 ease-in-out ${isMobile ? "top-full left-1/2 transform -translate-x-1/2 mt-3 w-full" : "top-0 left-full ml-3"}`}>
-                        <div className={`grid ${isMobile ? "grid-cols-1" : "grid-cols-2 md:grid-cols-4"} gap-3`}>
-                          {statuses.map((status) => (
-                            <button
-                              key={status}
-                              className="py-2 px-3 w-full text-sm rounded-md bg-gray-600 text-white hover:bg-gray-500 transition text-left"
-                              onClick={() => {
-                                setSelectedStatus(status.toLowerCase());
-                                setOpen(false);
-                              }}
-                            >
-                              {status}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-  
+                {/* // Hamburger Menu Button on the Left */}
+                <div className="relative inline-block">
+  <button
+    onClick={() => setOpen(!open)}
+    className={`transition-all duration-300 rounded-full bg-gray-700 hover:bg-gray-600 flex justify-center items-center ${open ? "w-14 h-14 text-2xl" : "w-12 h-12 text-xl"} shadow-md`}
+  >
+    {isMobile ? (
+      <span className="text-white text-lg">🔽</span> // Use an icon for mobile view
+    ) : (
+      <span className="text-white font-bold">☰</span> // Hamburger icon for larger screens
+    )}
+  </button>
+
+  {/* Dropdown / Grid View based on screen size */}
+  {open && (
+    <div className={`absolute  bg-gray-600 p-1 rounded-lg shadow-lg w-96 z-auto transition-transform duration-300 ease-in-out ${isMobile ? "top-full left-1/2 transform -translate-x-1/2 mt-3 w-full" : "top-0 left-full ml-3"}`}>
+      <div className={`grid ${isMobile ? "grid-cols-1" : "grid-cols-2 md:grid-cols-4"} gap-3`}>
+        {statuses.map((status) => (
+          <button
+            key={status}
+            className="py-2 px-2 w-9 text-lg rounded-md bg-gray-600 text-green-500 hover:bg-gray-600 transition text-left "
+
+            onClick={() => {
+              setSelectedStatus(status.toLowerCase());
+              setOpen(false);
+            }}
+          >
+            <span className="flex items-right justify-right">
+              {isMobile ? (
+                <span role="img" aria-label={`${status.toLowerCase()} icon`} className="text-xl mr-2">
+                  {status === 'Pending' ? '⏳' : 
+                   status === 'Complete' ? '✅' : 
+                   status === 'Overdue' ? '❌' : 
+                   status === 'Archived' ? '📦' : 
+                   '❓'} {/* Default emoji for unknown status */}
+                </span>
+              ) : (
+                <>
+                  <span role="img" aria-label={`${status.toLowerCase()} icon`} className="text-xl mr-2">
+                    {/* {status === 'Pending' ? '⏳' : 
+                     status === 'Complete' ? '✅' : 
+                     status === 'Overdue' ? '❌' : 
+                     status === 'Archived' ? '📦' : 
+                     '❓'} Default emoji for unknown status */}
+                  </span>
+                  <span>{status}</span>
+                </>
+              )}
+            </span>
+          </button>
+        ))}
+      </div>
+    </div>
+  )}
+</div>
                   {/* Plus Button (Circular, Small, Gray-Green Theme) */}
                   <button
         onClick={() => setIsOpen((prev) => !prev)}
@@ -471,93 +498,93 @@ const ActivityPage = () => {
     </div>
           </div>
   
-       {/* Right Sidebar for Adding/Editing Activity */}
- <div className={`fixed inset-y-0 right-0 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'} bg-gray-900 w-[450px] p-8 shadow-2xl rounded-l-lg z-50`}>  
-  
-  <button
-    onClick={() => resetForm()}
-    className="absolute top-4 right-4 text-white text-2xl font-bold hover:text-gray-400"
-  >
-    ×
-  </button>
+      {/* Right Sidebar for Adding/Editing Activity */}
+      <div className={`fixed inset-y-0 right-0 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'} bg-gray-700 w-[430px] p-10 shadow-2xl rounded-l-lg z-50  border border-green-500`}>
 
-  <h2 className="text-2xl font-bold mb-6 text-center text-white">
-    {editId ? "Edit" : "Add"} Activity
-  </h2>
 
-  <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-    <input
-      type="text"
-      name="title"
-      placeholder="Title"
-      value={formData.title}
-      onChange={handleChange}
-      className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500"
-      required
-    />
-
-    <textarea
-      name="description"
-      placeholder="Description"
-      value={formData.description}
-      onChange={handleChange}
-      className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500"
-    ></textarea>
-
-    <input
-      type="date"
-      name="date_started"
-      value={formData.date_started}
-      onChange={handleChange}
-      className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500"
-      required
-    />
-
-    <input
-      type="datetime-local"
-      name="due_date"
-      value={formData.due_date}
-      onChange={handleChange}
-      className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500"
-      required
-    />
-
-    <input
-      type="text"
-      name="tags"
-      placeholder="Tags"
-      value={formData.tags}
-      onChange={handleChange}
-      className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500"
-    />
-
-    <div className="flex flex-col gap-2">
-      <label className="text-white text-lg">Collaborators</label>
-      <select
-  name="collaborators"
-  value={formData.collaborators?.[0] || ""}
-  onChange={(e) =>
-    setFormData({ ...formData, collaborators: [parseInt(e.target.value)] })
-  }
-  className="bg-gray-800 text-white text-lg p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+<button
+  onClick={() => resetForm()}
+  className="absolute top-4 right-4 text-white text-2xl font-bold hover:text-gray-400"
 >
+  ×
+</button>
 
-        <option value="" disabled>Select a collaborator</option>
-        {users.filter((user) => user.id !== Number(userId)).map(user => (
-          <option key={user.id} value={user.id}>
-            {user.username}
-          </option>
-        ))}
-      </select>
-    </div>
+<h2 className="text-2xl font-bold mb-6 text-center text-green-500">
+  {editId ? "Edit" : "Add"} Task
+</h2>
 
-    <button
-      type="submit"
-      className="bg-green-600 text-white text-lg font-bold py-3 rounded-lg shadow-md hover:bg-green-700 transition-all"
+<form onSubmit={handleSubmit} className="flex flex-col gap-6">
+  <input
+    type="text"
+    name="title"
+    placeholder="Title"
+    value={formData.title}
+    onChange={handleChange}
+    className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
+    required
+  />
+
+  <textarea
+    name="description"
+    placeholder="Description"
+    value={formData.description}
+    onChange={handleChange}
+    className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
+  ></textarea>
+
+  <input
+    type="date"
+    name="date_started"
+    value={formData.date_started}
+    onChange={handleChange}
+    className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
+    required
+  />
+
+  <input
+    type="datetime-local"
+    name="due_date"
+    value={formData.due_date}
+    onChange={handleChange}
+    className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
+    required
+  />
+
+  <input
+    type="text"
+    name="tags"
+    placeholder="Tags"
+    value={formData.tags}
+    onChange={handleChange}
+    className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
+  />
+
+  <div className="flex flex-col gap-2">
+    <label className="text-white text-lg font-bold">Collaborators</label>
+    <select
+      name="collaborators"
+      value={formData.collaborators?.[0] || ""}
+      onChange={(e) =>
+        setFormData({ ...formData, collaborators: [parseInt(e.target.value)] })
+      }
+      className="bg-gray-800 text-white text-lg p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 font-bold"
     >
-      {editId ? "Update" : "Add"} Activity
-    </button>
-  </form>
+      <option value="" disabled>Select a collaborator</option>
+      {users.filter((user) => user.id !== Number(userId)).map(user => (
+        <option key={user.id} value={user.id}>
+          {user.username}
+        </option>
+      ))}
+    </select>
+  </div>
+
+  <button
+    type="submit"
+    className="bg-green-600 text-white text-lg font-bold py-3 rounded-lg shadow-md hover:bg-green-700 transition-all"
+  >
+    {editId ? "Update" : "Add"} Activity
+  </button>
+</form>
 </div>
 
         </div>

@@ -12,7 +12,7 @@ const Home = () => {
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme) {
-      setIsDarkMode(savedTheme === "light");
+      setIsDarkMode(savedTheme === "dark");
     }
   }, []);
 
@@ -86,9 +86,7 @@ const Home = () => {
   };
 
   return (
-    <div
-      className={`min-h-screen flex flex-col items-center justify-center relative overflow-hidden ${isDarkMode ? "bg-gray-900 text-white" : "bg-gradient-to-br from-gray-200 to-white text-gray-800"}`}
-    >
+    <div className={`min-h-screen flex flex-col items-center justify-center relative overflow-hidden ${isDarkMode ? "bg-gray-900 text-white" : "bg-gradient-to-br from-gray-200 to-white text-gray-800"}`}>
       <Image
         src="/cram.png"
         alt="Task Management Background"
@@ -118,11 +116,11 @@ const Home = () => {
       </header>
 
       <main className="flex flex-col items-center justify-center w-full max-w-7xl px-4 sm:px-6 py-8 sm:py-16 mx-auto text-center">
-        <div className="w-full max-w-4xl">
+        <div className="w-full max-w-4xl mb-8">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-green-600 mb-6 leading-tight">
             Cramming? Organize Your Tasks, Achieve Your Goals
           </h1>
-          <p className="text-gray-300 text-base sm:text-lg md:text-xl mb-8">
+          <p className="text-gray-300 text-base sm:text-lg md:text-xl">
             InfiniTask is your all-in-one task management solution, designed to streamline your workflow and boost productivity.
           </p>
         </div>

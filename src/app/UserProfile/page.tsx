@@ -15,22 +15,7 @@ const TodoPage = () => {
   const [email, setEmail] = useState("");
   const [profileImage, setProfileImage] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isLightMode, setIsLightMode] = useState<boolean>(false);
-
-  // Load theme preference from localStorage on mount
-  useEffect(() => {
-    const storedTheme = localStorage.getItem("theme");
-    if (storedTheme === "light") {
-      setIsLightMode(true);
-    }
-  }, []);
-
-  // Handle theme toggle and persist in localStorage
-  const toggleTheme = () => {
-    const newMode = !isLightMode;
-    setIsLightMode(newMode);
-    localStorage.setItem("theme", newMode ? "light" : "dark");
-  };
+ 
 
   useEffect(() => {
     const authToken = sessionStorage.getItem("authToken");
@@ -95,120 +80,109 @@ const TodoPage = () => {
   };
 
   return (
-    <div
-      className={`flex min-h-screen ${
-        isLightMode ? "bg-white text-black" : "bg-gray-900 text-white"
-      }`}
-    >
-      {/* Sidebar */}
- 
-        <Sidebar />
-   
+    <div className="flex min-h-screen bg-gray-900 text-gray-900">
+      <Sidebar />
+      <div className="flex-1 flex items-center justify-center p-4 md:p-6">
+        
+        <div className="card w-full max-w-4xl h-auto bg-gray-900 rounded-xl shadow-2xl p-6 flex flex-col md:flex-row border-4 border-green-900 relative">
+          
+          {/* Title Centered at the Top */}
+          <h1 className="absolute top-[-96px] left-1/2 transform -translate-x-1/2 text-3xl md:text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 drop-shadow-lg">
+            USER PROFILE
+          </h1>
   
-      {/* Main Content */}
-      <div
-        className={`flex-1 p-6 flex flex-col items-center ${
-          isLightMode ? "bg-white text-black" : "bg-gray-900 text-white"
-        }`}
-      >
-        <br />
-        <br />
-        <h1 className="text-4xl font-extrabold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-600 drop-shadow-lg">
-          User Profile
-        </h1>
+          {/* Profile Image Container */}
+          <div className="img-container w-full md:w-2/4 h-auto p-4 bg-gray-900 rounded-xl overflow-hidden flex items-center justify-center border-4 border-gray-700 mt-8">
   
-  <br />
-        {/* Light Mode Toggle Button */}
-        <button
-          onClick={toggleTheme}
-          className={`absolute top-4 right-4 px-4 py-2 rounded-md ${
-            isLightMode ? "bg-gray-800 text-white" : "bg-gray-200 text-black"
-          }`}
-        >
-          {isLightMode ? "☀️" : "🌙"}
-        </button>
-
-  
-        <br />
-        <div className="container max-w-6xl w-full flex flex-col lg:flex-row gap-6">
-          {/* Left Card - Profile Image & Name */}
-          <div className="bg-gray-200 p-5 rounded-lg border border-green-600 flex flex-col items-center w-full lg:w-1/4">
-            <div className="h-32 w-32 overflow-hidden rounded-full border-2 border-green-600">
-              {user?.profile_image ? (
-                <img
-                  className="w-full h-full object-cover"
-                  src={`http://127.0.0.1:8000/${user.profile_image}`}
-                  alt="Profile"
-                />
-              ) : (
-                <div className="flex items-center justify-center w-full h-full bg-gray-300 text-gray-600 text-sm">
-                  No Image
-                </div>
-              )}
-            </div>
-            <h2 className="text-gray-800 text-xl font-bold mt-3">
-              {user?.username}
-            </h2>
-  
-            <button
-              onClick={() => setEditing(true)}
-              className="w-full bg-green-500 hover:bg-green-400 py-2 px-4 rounded-md mt-4 flex items-center justify-center text-sm"
-            >
-              <FaEdit className="mr-1" /> Edit Profile
-            </button>
+            {user?.profile_image ? (
+              <img
+                className="w-full h-full object-cover rounded-xl"
+                src={`http://127.0.0.1:8000/${user.profile_image}`}
+                alt="Profile"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                No Image
+              </div>
+            )}
           </div>
   
-          {/* Right Card - User Details */}
-          <div className="bg-gray-300 p-5 rounded-lg border border-green-600 w-full lg:w-2/3">
-            <div className="h-40 overflow-hidden rounded-md">
-              <img className="w-auto h-56 object-cover" src="/infini.png" alt="Cover" />
-            </div>
+          {/* Profile Information Container */}
+          <div className="info-container w-full md:w-2/3 flex flex-col items-center justify-center text-center pl-0 md:pl-6 mt-4 md:mt-0">
   
-            <div className="text-center px-4 py-4">
-              {loading ? (
-                <p className="text-gray-600 mt-2 text-sm">Loading user data...</p>
-              ) : editing ? (
-                <>
-                  <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="w-full p-2 rounded-md bg-gray-200 text-gray-800 border border-green-600 focus:ring focus:ring-green-500 text-sm"
-                    placeholder="Username"
-                  />
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full p-2 mt-2 rounded-md bg-gray-200 text-gray-800 border border-green-600 focus:ring focus:ring-green-500 text-sm"
-                    placeholder="Email"
-                  />
-                  <input
-                    type="file"
-                    onChange={(e) => setProfileImage(e.target.files[0])}
-                    className="w-full p-2 mt-2 rounded-md bg-gray-200 text-gray-800 border border-green-600 text-sm"
-                  />
+            {editing ? (
+              <>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full p-3 mt-3 rounded-md bg-gray-900 text-gray-300 text-lg border border-green-400 focus:outline-none focus:ring focus:ring-green-500"
+                  placeholder="Username"
+                />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full p-3 mt-3 rounded-md bg-gray-900 text-gray-300 text-lg border border-green-400 focus:outline-none focus:ring focus:ring-green-500"
+                  placeholder="Email"
+                />
+                <input
+                  type="file"
+                  onChange={(e) => setProfileImage(e.target.files[0])}
+                  className="w-full p-3 mt-3 rounded-md bg-gray-900 text-gray-300 text-lg border border-green-400 focus:outline-none focus:ring focus:ring-green-500"
+                />
+                <div className="flex mt-4">
                   <button
                     onClick={handleSave}
-                    className="w-full bg-green-500 hover:bg-green-400 py-2 px-4 rounded-md mt-3 flex items-center justify-center text-sm"
+                    className="bg-green-500 hover:bg-green-400 py-2 px-5 rounded-md text-lg font-bold transition duration-200 mr-2"
                   >
-                    <FaSave className="mr-1" /> Save
+                    <FaSave className="mr-2 inline" /> Save
                   </button>
-                </>
-              ) : (
-                <>
-                  <p className="text-gray-600 mt-1 text-sm">{user?.email}</p>
-                  <p className="text-gray-600 mt-2 text-sm">
-                    Joined: {formatDateTime(user?.created_at)}
-                  </p>
-                </>
-              )}
-            </div>
+                  <button
+                    onClick={() => setEditing(false)}
+                    className="bg-red-500 hover:bg-red-400 py-2 px-5 rounded-md text-lg font-bold transition duration-200"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Logo Container */}
+                <div className="logo-container mb-4">
+                  <img
+                    src="/infini.png" // Replace with your logo path
+                    alt="Logo"
+                    className="place-items-right w-full h-24 object-contain"
+                  />
+                </div>
+  
+                <span className="mt-4 text-gray-300 text-2xl md:text-3xl font-bold">{user?.username}</span>
+                <p className="job text-lg text-gray-400 mt-1">{user?.email}</p>
+                <br />
+                <div className="flex justify-center items-center w-full">
+                  <button
+                    onClick={() => setEditing(true)}
+                    className="w-[120px] h-[40px] rounded-full border border-white/40 bg-black flex items-center justify-center cursor-pointer transition-all duration-300 overflow-hidden relative group"
+                  >
+                    <span className="w-[110px] h-[30px] bg-gradient-to-b from-green-400 to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 group-hover:w-[100px]">
+                      <FaEdit className="text-white text-lg mr-2 transition-all duration-300" />
+                      <span className="text-white text-sm transition-all duration-300">
+                        Edit
+                      </span>
+                    </span>
+                  </button>
+                </div>
+  
+              </>
+            )}
           </div>
         </div>
       </div>
     </div>
   );
+  
+  
   
 };
 
