@@ -5,7 +5,7 @@ import axios from "axios";
 import Image from "next/image";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for toast notifications
+import 'react-toastify/dist/ReactToastify.css';
 
 const TermsModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
@@ -14,24 +14,8 @@ const TermsModal = ({ isOpen, onClose }) => {
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white rounded-lg p-6 w-11/12 max-w-lg">
         <h2 className="text-xl font-bold mb-4">Terms and Conditions</h2>
-        <p className="mb-4">
-          Please read these terms and conditions carefully before using our service.
-        </p>
-        <p className="mb-4">
-          By accessing or using the service, you agree to be bound by these terms. If you do not agree to the terms, you may not use the service.
-        </p>
-        <p className="mb-4">
-          <strong>1. User Accounts:</strong> You are responsible for maintaining the confidentiality of your account and password.
-        </p>
-        <p className="mb-4">
-          <strong>2. User Conduct:</strong> You agree not to use the service for any unlawful purpose or in a way that could damage, disable, or impair the service.
-        </p>
-        <p className="mb-4">
-          <strong>3. Limitation of Liability:</strong> We are not liable for any damages arising from your use of the service.
-        </p>
-        <p className="mb-4">
-          <strong>4. Changes to Terms:</strong> We may update these terms from time to time. You are advised to review these terms periodically for any changes.
-        </p>
+        <p className="mb-4">Please read these terms and conditions carefully before using our service.</p>
+        <p className="mb-4">By accessing or using the service, you agree to be bound by these terms. If you do not agree to the terms, you may not use the service.</p>
         <button onClick={onClose} className="mt-4 bg-green-600 hover:bg-green-500 text-white py-2 px-4 rounded">
           Close
         </button>
@@ -56,7 +40,7 @@ export default function Register() {
   const [usernameWarning, setUsernameWarning] = useState("");
   const [emailWarning, setEmailWarning] = useState("");
   const [passwordWarning, setPasswordWarning] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -73,13 +57,13 @@ export default function Register() {
           if (!checkRes.data.usernameAvailable) {
             setUsernameWarning("Username is already taken.");
           } else {
-            setUsernameWarning(""); // Clear warning if username is available
+            setUsernameWarning("");
           }
         } catch (error) {
           toast.error("Error checking username availability. Please try again.");
         }
       } else {
-        setUsernameWarning(""); // Clear warning if username is less than 6 characters
+        setUsernameWarning("");
       }
     }
 
@@ -94,7 +78,7 @@ export default function Register() {
           if (!checkRes.data.emailAvailable) {
             setEmailWarning("Email is already taken.");
           } else {
-            setEmailWarning(""); // Clear warning if email is available
+            setEmailWarning("");
           }
         } catch (error) {
           toast.error("Error checking email availability. Please try again.");
@@ -122,7 +106,7 @@ export default function Register() {
     } else if (!hasUpperCase || !hasLowerCase || !hasNumbers || !hasSpecialChars) {
       setPasswordWarning("Password must include uppercase, lowercase, numbers, and special characters.");
     } else {
-      setPasswordWarning(""); // Clear warning if password is valid
+      setPasswordWarning("");
     }
   };
 
@@ -130,7 +114,7 @@ export default function Register() {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       setProfileImage(file);
-      setProfileImageUrl(URL.createObjectURL(file)); // Set the image URL for preview
+      setProfileImageUrl(URL.createObjectURL(file));
     }
   };
 
@@ -141,19 +125,16 @@ export default function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Check if passwords match
     if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords do not match");
       return;
     }
 
-    // Check if terms are accepted
     if (!isTermsChecked) {
       toast.error("You must agree to the terms and conditions.");
       return;
     }
 
-    // Final check before registration
     if (usernameWarning || emailWarning || passwordWarning) {
       toast.error("Please fix the errors before submitting.");
       return;
@@ -175,7 +156,7 @@ export default function Register() {
       toast.success(res.data.message);
       setFormData({ username: "", email: "", password: "", confirmPassword: "" });
       setProfileImage(null);
-      setProfileImageUrl(null); // Reset the image URL
+      setProfileImageUrl(null);
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Registration failed. Please try again.";
       toast.error(errorMessage);
@@ -183,7 +164,7 @@ export default function Register() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-gray-900 px-6 overflow-hidden">
+    <div className="relative min-h-screen flex items-center justify-center bg-gray-900 px-4 overflow-hidden">
       <ToastContainer />
       <Image
         src="/cram.png"
@@ -192,11 +173,32 @@ export default function Register() {
         objectFit="cover"
         className="absolute top-0 left-0 w-full h-full opacity-20"
       />
-      <div className="relative bg-gray-800/80 backdrop-blur-md p-6 sm:p-8 rounded-lg shadow-lg w-[90%] max-w-2xl border border-green-600">
+      <div className="relative bg-gray-800/80 backdrop-blur-md p-6 rounded-lg shadow-lg w-full max-w-md border border-green-600">
         <h2 className="text-2xl font-bold text-white text-center mb-6">Register</h2>
 
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="col-span-1">
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
+          
+        <div className="flex flex-col items-center">
+            <label className="block text-gray-300 text-sm font-medium mb-2">Profile Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="w-full px-4 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg cursor-pointer"
+            />
+            {profileImageUrl && (
+              <div className="mt-4 flex items-center justify-center w-32 h-32 border-2 border-green-500 rounded-full overflow-hidden shadow-lg">
+                <Image
+                  src={profileImageUrl}
+                  alt="Profile Preview"
+                  width={128}
+                  height={128}
+                  className="object-cover"
+                />
+              </div>
+            )}
+          </div>
+          <div>
             <label className="block text-gray-300 text-sm font-medium mb-2">Username</label>
             <input
               type="text"
@@ -210,7 +212,7 @@ export default function Register() {
             {usernameWarning && <p className="text-red-400 text-sm">{usernameWarning}</p>}
           </div>
 
-          <div className="col-span-1">
+          <div>
             <label className="block text-gray-300 text-sm font-medium mb-2">Email</label>
             <input
               type="email"
@@ -224,32 +226,7 @@ export default function Register() {
             {emailWarning && <p className="text-red-400 text-sm">{emailWarning}</p>}
           </div>
 
-
-          <div className="col-span-1">
-            <label className="block text-gray-300 text-sm font-medium mb-2">Confirm Password</label>
-            <div className="relative">
-              <input
-                type={showConfirmPassword ? "text" : "password"}
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg focus:ring focus:ring-green-500 focus:outline-none"
-                placeholder="Confirm your password"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-white"
-              >
-                {showConfirmPassword ? <EyeOffIcon size={18} /> : <EyeIcon size={18} />}
-              </button>
-            </div>
-          </div>
-
-         
-
-          <div className="col-span-1">
+          <div>
             <label className="block text-gray-300 text-sm font-medium mb-2">Password</label>
             <div className="relative">
               <input
@@ -272,30 +249,30 @@ export default function Register() {
             {passwordWarning && <p className="text-red-400 text-sm">{passwordWarning}</p>}
           </div>
 
-          <div className="col-span-1 flex flex-col items-center">
-            <label className="block text-gray-300 text-sm font-medium mb-2">Profile Image</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="w-full px-4 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg cursor-pointer"
-            />
-            {profileImageUrl && (
-              <div className="mt-4 flex items-center justify-center w-32 h-32 border-2 border-green-500 rounded-full overflow-hidden shadow-lg">
-                <Image
-                  src={profileImageUrl}
-                  alt="Profile Preview"
-                  width={128}
-                  height={128}
-                  className="object-cover"
-                />
-              </div>
-            )}
+          <div>
+            <label className="block text-gray-300 text-sm font-medium mb-2">Confirm Password</label>
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg focus:ring focus:ring-green-500 focus:outline-none"
+                placeholder="Confirm your password"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-white"
+              >
+                {showConfirmPassword ? <EyeOffIcon size={18} /> : <EyeIcon size={18} />}
+              </button>
+            </div>
           </div>
 
-          
 
-          <div className="col-span-2 flex items-center">
+          <div className="flex items-center">
             <input
               type="checkbox"
               id="terms"
@@ -308,19 +285,18 @@ export default function Register() {
             </label>
           </div>
 
-          <div className="col-span-2">
+          <div>
             <button type="submit" className="w-full bg-green-600 hover:bg-green-500 text-white py-2 rounded-lg transition">
               Register
             </button>
           </div>
 
-          <p className="text-lg text-center text-gray-400 mt-4 col-span-2">
+          <p className="text-lg text-center text-gray-400 mt-4">
             I have an Account! <a href="/login" className="text-green-400 hover:underline">Back to Login</a>
           </p>
         </form>
       </div>
 
-      {/* Terms and Conditions Modal */}
       <TermsModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );

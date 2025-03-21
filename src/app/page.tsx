@@ -12,7 +12,7 @@ const Home = () => {
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme) {
-      setIsDarkMode(savedTheme === "dark");
+      setIsDarkMode(savedTheme === "light");
     }
   }, []);
 
@@ -25,7 +25,7 @@ const Home = () => {
   }, []);
 
   const handleThemeSwitch = () => {
-    const newTheme = !isDarkMode ? "dark" : "light";
+    const newTheme = isDarkMode ? "dark" : "light";
     setIsDarkMode(!isDarkMode);
     localStorage.setItem("theme", newTheme);
   };
@@ -92,26 +92,25 @@ const Home = () => {
       <Image
         src="/cram.png"
         alt="Task Management Background"
-        layout="fill"
-        objectFit="cover"
+        fill
+        style={{ objectFit: "cover" }}
         className="absolute top-0 left-0 w-full h-full opacity-20"
       />
 
       <header className="w-full p-4 sm:p-8 flex flex-col sm:flex-row justify-between items-center border-b border-gray-600 relative z-10 text-lg sm:text-xl">
         <div className="flex items-center">
-        
           <span className="text-2xl sm:text-3xl font-bold text-green-600">InfiniTask</span>
         </div>
 
         <nav className="flex flex-col sm:flex-row items-center mt-4 sm:mt-0">
           <div className="inline-flex rounded-md shadow-xs" role="group">
-            <a href="/login" className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-gray-800 border border-green-600 rounded-tl-lg sm:rounded-l-lg hover:bg-green-600 focus:z-10 focus:ring-2 focus:ring-green-500">
+            <a href="/login" aria-label="My Tasks" className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-gray-800 border border-green-600 rounded-tl-lg sm:rounded-l-lg hover:bg-green-600 focus:z-10 focus:ring-2 focus:ring-green-500">
               My Tasks
             </a>
-            <a href="/login" className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-gray-800 border border-green-600 hover:bg-green-600 focus:z-10 focus:ring-2 focus:ring-green-500">
+            <a href="/login" aria-label="Login" className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-gray-800 border border-green-600 hover:bg-green-600 focus:z-10 focus:ring-2 focus:ring-green-500">
               Login
             </a>
-            <a href="/Signup" className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-gray-800 border border-green-600 rounded-tr-lg sm:rounded-r-lg hover:bg-green-600 focus:z-10 focus:ring-2 focus:ring-green-500">
+            <a href="/Signup" aria-label="Sign Up" className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-gray-800 border border-green-600 rounded-tr-lg sm:rounded-r-lg hover:bg-green-600 focus:z-10 focus:ring-2 focus:ring-green-500">
               Sign Up
             </a>
           </div>

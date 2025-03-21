@@ -98,18 +98,26 @@ const TodoPage = () => {
     <div
       className={`flex min-h-screen ${
         isLightMode ? "bg-white text-black" : "bg-gray-900 text-white"
-      } items-center justify-center p-2`}
+      }`}
     >
-      <Sidebar />
+      {/* Sidebar */}
+ 
+        <Sidebar />
+   
+  
+      {/* Main Content */}
       <div
         className={`flex-1 p-6 flex flex-col items-center ${
           isLightMode ? "bg-white text-black" : "bg-gray-900 text-white"
         }`}
       >
+        <br />
+        <br />
         <h1 className="text-4xl font-extrabold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-600 drop-shadow-lg">
           User Profile
         </h1>
-
+  
+  <br />
         {/* Light Mode Toggle Button */}
         <button
           onClick={toggleTheme}
@@ -120,6 +128,7 @@ const TodoPage = () => {
           {isLightMode ? "☀️" : "🌙"}
         </button>
 
+  
         <br />
         <div className="container max-w-6xl w-full flex flex-col lg:flex-row gap-6">
           {/* Left Card - Profile Image & Name */}
@@ -140,7 +149,7 @@ const TodoPage = () => {
             <h2 className="text-gray-800 text-xl font-bold mt-3">
               {user?.username}
             </h2>
-
+  
             <button
               onClick={() => setEditing(true)}
               className="w-full bg-green-500 hover:bg-green-400 py-2 px-4 rounded-md mt-4 flex items-center justify-center text-sm"
@@ -148,17 +157,13 @@ const TodoPage = () => {
               <FaEdit className="mr-1" /> Edit Profile
             </button>
           </div>
-
+  
           {/* Right Card - User Details */}
           <div className="bg-gray-300 p-5 rounded-lg border border-green-600 w-full lg:w-2/3">
             <div className="h-40 overflow-hidden rounded-md">
-              <img
-                className="w-full h-full object-cover"
-                src="https://images.unsplash.com/photo-1605379399642-870262d3d051?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80"
-                alt="Cover"
-              />
+              <img className="w-auto h-56 object-cover" src="/infini.png" alt="Cover" />
             </div>
-
+  
             <div className="text-center px-4 py-4">
               {loading ? (
                 <p className="text-gray-600 mt-2 text-sm">Loading user data...</p>
@@ -204,6 +209,7 @@ const TodoPage = () => {
       </div>
     </div>
   );
+  
 };
 
 export default authUser(TodoPage);

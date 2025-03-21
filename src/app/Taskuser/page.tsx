@@ -8,6 +8,8 @@ import authUser  from "../utils/authUser";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { ToastContainer, toast } from 'react-toastify'; // Import toast and ToastContainer
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS for toast notifications
+import { FaCheckCircle, FaExclamationCircle, FaTimesCircle } from 'react-icons/fa';
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Activity {
   id: number;
@@ -41,6 +43,7 @@ const ProgressBar = ({ percentage }: { percentage: number }) => {
     </div>
   );
 };
+
 
 const ActivityPage = () => {
   const [userId, setUserId] = useState("")
@@ -106,6 +109,16 @@ const ActivityPage = () => {
     if (storedTheme === "light") {
       setIsLightMode(true);
     }
+  }, []);
+
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 430); // iPhone 14 width is 430px
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
@@ -274,242 +287,282 @@ const ActivityPage = () => {
     }
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const totalPages = Math.ceil((selectedStatus !== "archived" ? activities.filter(activity => activity.status === selectedStatus && !activity.archive).length : activities.filter(activity => activity.archive).length) / itemsPerPage);
   const currentActivities = (selectedStatus !== "archived" ? activities.filter(activity => activity.status === selectedStatus && !activity.archive) : activities.filter(activity => activity.archive)).slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const completedActivities = activities.filter(activity => activity.status === 'complete').length;
   const totalActivities = activities.length;
   const completionPercentage = totalActivities > 0 ? (completedActivities / totalActivities) * 100 : 0;
+  const [isMobile, setIsMobile] = useState(false);
 
   console.log(userId)
-
   return (
-    <div className={`relative flex min-h-screen ${isLightMode ? 'bg-white text-gray-900' : 'bg-gray-900 text-gray-900'}`}>
+    <div className={`relative flex min-h-screen ${isLightMode ? 'bg-gray-100 text-gray-900' : 'bg-gray-900 text-gray-100'}`}>
       <ToastContainer position="top-right" autoClose={3000} />
-      <Sidebar />
-      <div className="flex-1 p-4 md:p-6 lg:p-8">
-        <div className="flex justify-between items-center mb-4">
-          <div className="text-lg font-bold"></div>
-          <button
-            onClick={() => setIsLightMode(!isLightMode)}
-            className={`p-2 rounded-md ${isLightMode ? 'bg-gray-800 text-white' : 'bg-gray-200 text-black'}`}
-          >
-            {isLightMode ? '☀️' : '🌙'}
-          </button>
-        </div>
-        <div className="flex-1 bg-gray-900 text-white flex items-center justify-center p-10">
-          <div className="p-4 border border-green-700 w-full max-w-4xl bg-gray-900 rounded-lg shadow-lg">
-            <button
-              onClick={() => setIsOpen(true)}
-              className="inline-flex items-center gap-1 px-3 py-1 text-lg font-bold text-black bg-green-500 border-2 border-black rounded-full shadow-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-gray-900 hover:text-green-500 hover:border-green-500 hover:shadow-green-700 active:bg-green-300 active:shadow-none active:translate-y-1"
-            >
-              ➕ 
-            </button>
-  
-            <div className="mt-4">
-              <h1 className="text-3xl md:text-5xl font-extrabold mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 drop-shadow-lg">
-                Personal Task
-              </h1>
-              <br />
-              <ProgressBar percentage={completionPercentage} />
-              <br />
-  
-              <button 
-  onClick={() => setOpen(!open)} 
-  className="w-12 h-12 rounded-full bg-green-700 hover:bg-green-600 flex justify-center items-center relative"
->
-  <h1 className="text-white text-sm">Status</h1>
-</button>
+      
+      {/* Parent Div for Sidebar and Main Content */}
 
-              <br />
-  
-              {open && (
-                <div className="absolute left-100 transform -translate-x-1/2 mt-1 w-32 bg-white text-green-900 rounded-md shadow-lg">
-                  {statuses.map((status) => (
-                    <button 
-                      key={status} 
-                      className="block w-full text-center px-1 py-2 hover:bg-white"
-                      onClick={() => { setSelectedStatus(status.toLowerCase()); setOpen(false); }}
+             <Sidebar />
+     
+        
+        {/* Main Content Div */}
+        <div className="flex-1 p-4 md:p-6 lg:p-8">
+          <div className="mt-4">
+            <div className="flex justify-between items-center mb-4">
+              <div className="flex items-center space-x-3">
+                <div className="flex items-center justify-between w-full px-4 gap-4">
+                  {/* Hamburger Menu Button on the Left */}
+                  <div className="relative inline-block">
+                    <button
+                      onClick={() => setOpen(!open)}
+                      className={`transition-all duration-300 rounded-full bg-gray-700 hover:bg-gray-600 flex justify-center items-center ${open ? "w-14 h-14 text-2xl" : "w-12 h-12 text-xl"} shadow-md`}
                     >
-                      {status}
+                      <span className="text-white font-bold">☰</span>
                     </button>
-                  ))}
-                </div>
-              )}
-              <br />
   
-              <div className="flex justify-center">
-                <div className="grid grid-cols-1 gap-4 w-full rounded-lg shadow-lg">
-                  {currentActivities.length > 0 && (
-                    <div 
-                      key={currentActivities[0].id} 
-                      className="p-6 border border-green-700 bg-gray-900 text-white rounded-lg shadow-lg flex flex-col items-center text-center"
-                    >
-                      <h3 className="text-2xl md:text-3xl font-bold mb-2">{currentActivities[0].title}</h3>
-                      <h3 className="text-xl md:text-2xl font-bold mb-2">{currentActivities[0].description}</h3>
-                      <p className="mb-2 text-gray-400 text-lg font-semibold">Due: {currentActivities[0].due_date}</p>
-                      <p className="mb-2 text-gray-400 text-lg font-semibold">Tags: {currentActivities[0].tags}</p>
-                      <p className="mb-2 text-gray-400 text-lg font-semibold">Status: {currentActivities[0].status}</p>
-                      <p className="mb-4 text-gray-400 text-lg font-semibold">Collaborators: {currentActivities[0].collaborator_name}</p> {/* Adjusted to display collaborators */}
-  
-                      <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
-                        <button 
-                          onClick={() => handleEdit(currentActivities[0])}
-                          className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-green-600 transition hover:scale-105"
-                        >
-                          ✏️ Edit
-                        </button>
-  
-                        {currentActivities[0].status === 'pending' && !currentActivities[0].archive && (
-                          <button 
-                            onClick={() => handleMarkAsDone(currentActivities[0].id)}
-                            className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-blue-600 transition hover:scale-105"
-                          >
-                            ✅ Done
-                          </button>
-                        )}
-  
-                        {currentActivities[0].archive ? (
-                          <button 
-                            onClick={() => handleRestore(currentActivities[0].id)}
-                            className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-yellow-600 transition hover:scale-105"
-                          >
-                            🔄 Restore
-                          </button>
-                        ) : (
-                          <button 
-                            onClick={() => handleArchive(currentActivities[0].id)}
-                            className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-yellow-600 transition hover:scale-105"
-                          >
-                            📁 Archive
-                          </button>
-                        )}
-  
-                        <button 
-                          onClick={() => handleDelete(currentActivities[0].id)}
-                          className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-red-600 transition hover:scale-105"
-                        >
-                          🗑️ Delete
-                        </button>
+                    {/* Dropdown / Grid View based on screen size */}
+                    {open && (
+                      <div className={`absolute bg-gray-800 p-4 rounded-lg shadow-lg w-96 z-50 transition-transform duration-300 ease-in-out ${isMobile ? "top-full left-1/2 transform -translate-x-1/2 mt-3 w-full" : "top-0 left-full ml-3"}`}>
+                        <div className={`grid ${isMobile ? "grid-cols-1" : "grid-cols-2 md:grid-cols-4"} gap-3`}>
+                          {statuses.map((status) => (
+                            <button
+                              key={status}
+                              className="py-2 px-3 w-full text-sm rounded-md bg-gray-600 text-white hover:bg-gray-500 transition text-left"
+                              onClick={() => {
+                                setSelectedStatus(status.toLowerCase());
+                                setOpen(false);
+                              }}
+                            >
+                              {status}
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
+  
+                  {/* Plus Button (Circular, Small, Gray-Green Theme) */}
+                  <button
+        onClick={() => setIsOpen((prev) => !prev)}
+        className="flex items-center justify-center w-10 h-10 text-xl font-bold text-white bg-gray-600 border-2 border-gray-500 rounded-full shadow-md transition-all duration-300 ease-in-out cursor-pointer hover:bg-gray-500 hover:border-gray-400 hover:shadow-lg active:bg-gray-400 active:shadow-none active:translate-y-1"
+      >
+        {isOpen ? "➖" : "➕"}
+      </button>
+
+      {isOpen && (
+        <div className="mt-3 p-4 border border-green-300 bg-gray-900 shadow-md rounded-lg">
+          <p>You can now add a task</p>
+        </div>
+      )}
+   
                 </div>
               </div>
   
-              {/* Pagination Controls */}
-              <div className="flex justify-between mt-4">
-                <button 
-                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} 
-                  disabled={currentPage === 1} 
-                  className="bg-gray-600 p-2 rounded text-white text-xs font-bold"
+              {/* Centered Title */}
+              <div className="text-lg font-bold"></div>
+  
+              {/* Right Side Buttons */}
+              <div className="flex items-center gap-2">
+                {/* Light Mode Button */}
+                {/* <button
+                  onClick={() => setIsLightMode(!isLightMode)}
+                  className={`p-2 rounded-md transition-all duration-300 ${isLightMode ? "bg-gray-800 text-white" : "bg-gray-200 text-black"}`}
                 >
-                  -
-                </button>
-                <span className="self-center text-white text-xs font-bold">Page {currentPage} of {totalPages}</span>
-                <button 
-                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} 
-                  disabled={currentPage === totalPages} 
-                  className="bg-gray-600 p-2 rounded text-white text-xs font-bold transform transition-transform duration-300 hover:scale-105 active:scale-95 shadow-lg"
-                >
-                  +
-                </button>
+                  {isLightMode ? "☀️" : "🌙"}
+                </button> */}
               </div>
             </div>
-            {isOpen && (
-              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4">
-                <div className="bg-green-900 p-6 rounded-lg shadow-lg w-full max-w-md relative flex flex-col items-center">
-                  <button 
-                    onClick={() => resetForm()} 
-                    className="absolute top-2 right-2 text-white font-bold text-xl"
-                  >
-                    ×
-                  </button>
-                  <h2 className="text-xl font-bold mb-4 text-center">
-                    {editId ? "Edit" : "Add"} Activity
-                  </h2>
-                  <form 
-                    onSubmit={handleSubmit} 
-                    className="w-full flex flex-col items-center gap-4"
-                  >
-                    <input 
-                      type="text" 
-                      name="title" 
-                      placeholder="Title" 
-                      value={formData.title} 
-                      onChange={handleChange} 
-                      className="border-4 border-black p-2 bg-gray-200 text-black text-lg font-bold rounded shadow-md w-full" 
-                      required 
-                    />
-                    <textarea 
-                      name="description" 
-                      placeholder="Description" 
-                      value={formData.description} 
-                      onChange={handleChange} 
-                      className="border-4 border-black p-2 bg-gray-200 text-black text-lg font-bold rounded shadow-md w-full"
-                    ></textarea>
-                    <input 
-                      type="date" 
-                      name="date_started" 
-                      value={formData.date_started} 
-                      onChange={handleChange} 
-                      className="border-4 border-black p-2 bg-gray-200 text-black text-lg font-bold rounded shadow-md w-full" 
-                      required 
-                    />
-                    <input 
-                      type="datetime-local" 
-                      name="due_date" 
-                      value={formData.due_date} 
-                      onChange={handleChange} 
-                      className="border-4 border-black p-2 bg-gray-200 text-black text-lg font-bold rounded shadow-md w-full" 
-                      required 
-                    />
-                    <input 
-                      type="text" 
-                      name="tags" 
-                      placeholder="Tags" 
-                      value={formData.tags} 
-                      onChange={handleChange} 
-                      className="border-4 border-black p-2 bg-gray-200 text-black text-lg font-bold rounded shadow-md w-full" 
-                    />
-                    
-                    <div className="flex flex-col items-center w-full">
-                      <h1 className="text-1xl md:text-2xl text-center text-black drop-shadow-lg">
-                        Collaborators
-                      </h1>
-                      <br />
-                      <select
-                        name="collaborators"
-                        multiple
-                        value={formData.collaborators || []}
-                        onChange={(e) => {
-                          const selectedOptions = Array.from(e.target.selectedOptions, option => parseInt(option.value));
-                          setFormData({ ...formData, collaborators: selectedOptions });
-                        }}
-                        className="border-4 border-black p-2 bg-gray-200 text-black text-lg font-bold rounded shadow-md w-full"
-                      >
-                        {users.filter((user) => user.id != Number(userId)).map(user => (
-                          <option key={user.id} value={user.id}>
-                            {user.username}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
   
-                    <button 
-                      type="submit" 
-                      className="bg-blue-800 border-4 border-black shadow-md p-2 text-lg font-bold cursor-pointer hover:bg-blue-900 w-full"
-                    >
-                      {editId ? "Update" : "Add"} Activity
-                    </button>
-                  </form>
-                </div>
+            <h1 className="text-3xl md:text-5xl font-extrabold mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 drop-shadow-lg">
+              Personal Task
+            </h1>
+            <br />
+            <ProgressBar percentage={completionPercentage} />
+            <br />
+  
+            <div className="flex justify-center">
+              <div className="grid grid-cols-1 gap-4 w-full rounded-lg shadow-lg">
+                {currentActivities.length > 0 && (
+                  <div
+                    key={currentActivities[0].id}
+                    className="p-6 border border-gray-700 bg-gray-800 text-white rounded-lg shadow-lg flex flex-col items-center text-center"
+                  >
+                    <h3 className="text-2xl md:text-3xl font-bold mb-2">{currentActivities[0].title}</h3>
+                    <h3 className="text-xl md:text-2xl font-bold mb-2">{currentActivities[0].description}</h3>
+                    <p className="mb-2 text-gray-400 text-lg font-semibold">Due: {currentActivities[0].due_date}</p>
+                    <p className="mb-2 text-gray-400 text-lg font-semibold">Tags: {currentActivities[0].tags}</p>
+                    <p className="mb-2 text-gray-400 text-lg font-semibold">Status: {currentActivities[0].status}</p>
+                    <p className="mb-4 text-gray-400 text-lg font-semibold">Collaborators: {currentActivities[0].collaborator_name}</p>
+  
+                    <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
+                      <button
+                        onClick={() => handleEdit(currentActivities[0])}
+                        className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-gray-600 transition hover:scale-105"
+                      >
+                        ✏️ Edit
+                      </button>
+  
+                      {currentActivities[0].status === 'pending' && !currentActivities[0].archive && (
+                        <button
+                          onClick={() => handleMarkAsDone(currentActivities[0].id)}
+                          className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-blue-600 transition hover:scale-105"
+                        >
+                          ✅ Done
+                        </button>
+                      )}
+  
+                      {currentActivities[0].archive ? (
+                        <button
+                          onClick={() => handleRestore(currentActivities[0].id)}
+                          className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-yellow-600 transition hover:scale-105"
+                        >
+                          🔄 Restore
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => handleArchive(currentActivities[0].id)}
+                          className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-yellow-600 transition hover:scale-105"
+                        >
+                          📁 Archive
+                        </button>
+                      )}
+  
+                      <button
+                        onClick={() => handleDelete(currentActivities[0].id)}
+                        className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-red-600 transition hover:scale-105"
+                      >
+                        🗑️ Delete
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
+  
+            {/* Pagination Controls */}
+            <div className="flex justify-between items-center mt-4">
+      <button
+        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+        disabled={currentPage === 1}
+        className="bg-gray-600 p-2 rounded text-white text-xs font-bold flex items-center gap-1 transition-transform duration-300 hover:scale-105 active:scale-95 shadow-lg disabled:opacity-50"
+      >
+        <ChevronLeft size={16} /> Prev
+      </button>
+      <span className="self-center text-white text-xs font-bold">
+        Page {currentPage} of {totalPages}
+      </span>
+      <button
+        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+        disabled={currentPage === totalPages}
+        className="bg-gray-600 p-2 rounded text-white text-xs font-bold flex items-center gap-1 transition-transform duration-300 hover:scale-105 active:scale-95 shadow-lg disabled:opacity-50"
+      >
+        Next <ChevronRight size={16} />
+      </button>
+    </div>
           </div>
+  
+       {/* Right Sidebar for Adding/Editing Activity */}
+ <div className={`fixed inset-y-0 right-0 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'} bg-gray-900 w-[450px] p-8 shadow-2xl rounded-l-lg z-50`}>  
+  
+  <button
+    onClick={() => resetForm()}
+    className="absolute top-4 right-4 text-white text-2xl font-bold hover:text-gray-400"
+  >
+    ×
+  </button>
+
+  <h2 className="text-2xl font-bold mb-6 text-center text-white">
+    {editId ? "Edit" : "Add"} Activity
+  </h2>
+
+  <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+    <input
+      type="text"
+      name="title"
+      placeholder="Title"
+      value={formData.title}
+      onChange={handleChange}
+      className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500"
+      required
+    />
+
+    <textarea
+      name="description"
+      placeholder="Description"
+      value={formData.description}
+      onChange={handleChange}
+      className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500"
+    ></textarea>
+
+    <input
+      type="date"
+      name="date_started"
+      value={formData.date_started}
+      onChange={handleChange}
+      className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500"
+      required
+    />
+
+    <input
+      type="datetime-local"
+      name="due_date"
+      value={formData.due_date}
+      onChange={handleChange}
+      className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500"
+      required
+    />
+
+    <input
+      type="text"
+      name="tags"
+      placeholder="Tags"
+      value={formData.tags}
+      onChange={handleChange}
+      className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500"
+    />
+
+    <div className="flex flex-col gap-2">
+      <label className="text-white text-lg">Collaborators</label>
+      <select
+  name="collaborators"
+  value={formData.collaborators?.[0] || ""}
+  onChange={(e) =>
+    setFormData({ ...formData, collaborators: [parseInt(e.target.value)] })
+  }
+  className="bg-gray-800 text-white text-lg p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+>
+
+        <option value="" disabled>Select a collaborator</option>
+        {users.filter((user) => user.id !== Number(userId)).map(user => (
+          <option key={user.id} value={user.id}>
+            {user.username}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    <button
+      type="submit"
+      className="bg-green-600 text-white text-lg font-bold py-3 rounded-lg shadow-md hover:bg-green-700 transition-all"
+    >
+      {editId ? "Update" : "Add"} Activity
+    </button>
+  </form>
+</div>
+
         </div>
       </div>
-    </div>
+  
   );
 }
 

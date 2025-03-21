@@ -108,7 +108,9 @@ const TodoPage = () => {
   return (
     <div className="flex min-h-screen bg-gray-900 text-gray-100">
       <ToastContainer position="top-right" autoClose={3000} /> {/* ToastContainer for notifications */}
-      <Sidebar />
+     
+                <Sidebar />
+           
       <div className="flex-1 p-9 flex flex-col items-center">
         <h1 className="text-2xl font-extrabold mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-gray-500 drop-shadow-lg">
           ADMIN TASK

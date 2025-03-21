@@ -95,92 +95,89 @@ const TodoList = () => {
   );
 
   const chartData = Object.values(groupedData);
-  const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const [sidebarExpanded, setSidebarExpanded] = useState(true);
 
   return (
-    <>
-      <div className={`relative flex min-h-screen ${isLightMode ? "bg-white text-gray-900" : "bg-gray-900 text-gray-900"}`}>
-        {/* Sidebar */}
+    <div className={`relative flex min-h-screen ${isLightMode ? "bg-white text-gray-900" : "bg-gray-900 text-gray-900"}`}>
+      {/* Sidebar */}
+
         <Sidebar />
-
-        {/* Main Content Area with flex-grow */}
-        <div className="flex-grow p-4 md:p-4 lg:p-8">
-          <ToastContainer />
-
-          {/* Header Section */}
-          <div className="flex justify-between items-center mb-4">
-            <div className="text-lg font-bold"></div>
-            <button
-              onClick={toggleLightMode}
-              className={`p-2 rounded-md ${isLightMode ? "bg-gray-800 text-white" : "bg-gray-200 text-black"}`}
-            >
-              {isLightMode ? "☀️" : "🌙"}
-            </button>
+  
+      {/* Main Content */}
+      <div className="flex-grow p-4 md:p-4 lg:p-8">
+        <ToastContainer />
+  
+        {/* Header Section */}
+        <div className="flex justify-between items-center mb-4">
+          <div className="text-lg font-bold"></div>
+          <button
+            onClick={toggleLightMode}
+            className={`p-2 rounded-md ${isLightMode ? "bg-gray-800 text-white" : "bg-gray-200 text-black"}`}
+          >
+            {isLightMode ? "☀️" : "🌙"}
+          </button>
+        </div>
+  
+        {/* Overview Section */}
+        <div className={`w-full ${isLightMode ? "bg-gray-200" : "bg-gradient-to-r from-green-500 to-gray-400"} rounded-xl p-4 mb-6 flex flex-col sm:flex-row justify-between items-center shadow-lg`}>
+          <div className="text-lg font-bold text-white px-4 py-2 rounded-md bg-gradient-to-r from-green-500 to-green-400 shadow-md">
+            Overview
           </div>
-
-          {/* Overview Section */}
-          <div className={`w-full ${isLightMode ? "bg-gray-200" : "bg-gradient-to-r from-green-500 to-gray-400"} rounded-xl p-4 mb-6 flex flex-col sm:flex-row justify-between items-center shadow-lg`}>
-            <div className="text-lg font-bold text-white px-4 py-2 rounded-md bg-gradient-to-r from-green-500 to-green-400 shadow-md">
-              Overview
-            </div>
-            <br />
-            <div className="text-lg font-bold text-center sm:text-right">
-              📅 {currentDate} | ⏰ {currentTime}
-            </div>
-          </div>
-
-          {/* Task Completion Bar */}
-          <div className="w-full bg-gray-300 rounded-xl p-4 mb-6 shadow-lg">
-            <div className="text-lg font-bold mb-2">Task Completion</div>
-            <div className="w-full bg-gray-400 rounded-full h-6 overflow-hidden">
-              <div className="h-full bg-green-900 transition-all" style={{ width: `${completionPercentage}%` }}></div>
-            </div>
-            <div className="text-right text-sm text-gray-700 mt-1">
-              {completionPercentage.toFixed(2)}% Completed
-            </div>
-          </div>
-
-          {/* Task Status Overview */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xl">
-            {[
-              { label: "Pending", count: pendingCount, icon: "🕒" },
-              { label: "Complete", count: completeCount, icon: "✅" },
-              { label: "Overdue", count: overdueCount, icon: "⚠️" },
-              { label: "Archived", count: archiveCount, icon: "📦" },
-            ].map((item, index) => (
-              <div key={index} className="p-4 bg-gray-300 rounded-2xl shadow-md flex items-center space-x-4">
-                <div className="p-4 bg-green-900 rounded-full flex items-center justify-center">
-                  <span className="text-white text-2xl">{item.icon}</span>
-                </div>
-                <div>
-                  <div className="text-xl font-bold">{item.count}</div>
-                  <div className="text-gray-700 text-lg">{item.label}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <br />
-
-          {/* Task Status Chart */}
-          <div className="w-full bg-gray-300 rounded-xl p-4 mb-3 shadow-lg">
-            <div className="text-lg font-bold mb-4">Task Status Over Time</div>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
-                <XAxis dataKey="date" stroke="#333" />
-                <YAxis stroke="#333" />
-                <Tooltip />
-                <Line type="monotone" dataKey="pending" stroke="#FFD700" strokeWidth={2} />
-                <Line type="monotone" dataKey="complete" stroke="#98FF98" strokeWidth={2} />
-                <Line type="monotone" dataKey="overdue" stroke="#FF6347" strokeWidth={2} />
-              </LineChart>
-            </ResponsiveContainer>
+          <div className="text-lg font-bold text-center sm:text-right">
+            📅 {currentDate} | ⏰ {currentTime}
           </div>
         </div>
+  
+        {/* Task Completion Bar */}
+        <div className="w-full bg-gray-300 rounded-xl p-4 mb-6 shadow-lg">
+          <div className="text-lg font-bold mb-2">Task Completion</div>
+          <div className="w-full bg-gray-400 rounded-full h-6 overflow-hidden">
+            <div className="h-full bg-green-900 transition-all" style={{ width: `${completionPercentage}%` }}></div>
+          </div>
+          <div className="text-right text-sm text-gray-700 mt-1">
+            {completionPercentage.toFixed(2)}% Completed
+          </div>
+        </div>
+  
+        {/* Task Status Overview */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xl">
+          {[{ label: "Pending", count: pendingCount, icon: "🕒" },
+            { label: "Complete", count: completeCount, icon: "✅" },
+            { label: "Overdue", count: overdueCount, icon: "⚠️" },
+            { label: "Archived", count: archiveCount, icon: "📦" },
+          ].map((item, index) => (
+            <div key={index} className="p-4 bg-gray-300 rounded-2xl shadow-md flex items-center space-x-4">
+              <div className="p-4 bg-green-900 rounded-full flex items-center justify-center">
+                <span className="text-white text-2xl">{item.icon}</span>
+              </div>
+              <div>
+                <div className="text-xl font-bold">{item.count}</div>
+                <div className="text-gray-700 text-lg">{item.label}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <br />
+  
+        {/* Task Status Chart */}
+        <div className="w-full bg-gray-300 rounded-xl p-4 mb-3 shadow-lg">
+          <div className="text-lg font-bold mb-4">Task Status Over Time</div>
+          <ResponsiveContainer width="100%" height={250}>
+            <LineChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
+              <XAxis dataKey="date" stroke="#333" />
+              <YAxis stroke="#333" />
+              <Tooltip />
+              <Line type="monotone" dataKey="pending" stroke="#FFD700" strokeWidth={2} />
+              <Line type="monotone" dataKey="complete" stroke="#98FF98" strokeWidth={2} />
+              <Line type="monotone" dataKey="overdue" stroke="#FF6347" strokeWidth={2} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
       </div>
-    </>
+    </div>
   );
+  
 };
 
 export default authUser(TodoList);
