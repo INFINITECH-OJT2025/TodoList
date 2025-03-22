@@ -5,6 +5,8 @@ import axios from 'axios';
 import { useRouter } from "next/navigation";
 import Sidebar from "../Components/Sidebar";
 import authUser  from "../utils/authUser";
+import Confirmation from "./Confirmation"; // Import the modal component
+import Archive from "./Archive"; // Import the archive modal component
 
 import { ToastContainer, toast } from 'react-toastify'; // Import toast and ToastContainer
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS for toast notifications
@@ -70,6 +72,10 @@ const ActivityPage = () => {
   const router = useRouter();
   const [dependencies, setDependencies] = useState<Activity[]>([]);
   const [users, setUsers] = useState<{ id: number; username: string }[]>([]); // New state for users
+  const [activityData, setActivityData] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
 
   const alarmSound = new Audio("/alarm-sound.mp3");
 
@@ -105,12 +111,8 @@ const ActivityPage = () => {
     }
   };
 
-  useEffect(() => {
-    const storedTheme = localStorage.getItem("theme");
-    if (storedTheme === "light") {
-      setIsLightMode(true);
-    }
-  }, []);
+  
+  
 
 
   useEffect(() => {
@@ -224,16 +226,22 @@ const ActivityPage = () => {
   };
 
  
-  const handleDelete = async (id: number) => {
-    if (confirm('Are you sure you want to delete this activity?')) {
+  const handleDeleteClick = (id: number) => {
+    setSelectedId(id);
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (selectedId !== null) {
       try {
-        await axios.delete(`${API_BASE_URL}/activities/${id}`);
-        toast.success("Activity deleted successfully!"); // Use toast for success message
+        await axios.delete(`${API_BASE_URL}/activities/${selectedId}`);
+        toast.success("Activity deleted successfully!");
         fetchActivities();
       } catch (error) {
         console.error("Error deleting activity:", error);
-        toast.error("Error deleting activity."); // Use toast for error message
+        toast.error("Error deleting activity.");
       }
+      setIsModalOpen(false);
     }
   };
   
@@ -249,14 +257,22 @@ const ActivityPage = () => {
     }
   };
 
-  const handleArchive = async (id: number) => {
-    try {
-      await axios.put(`${API_BASE_URL}/activities/${id}/archive`);
-      toast.success("Activity archived successfully!"); // Use toast for success message
-      fetchActivities();
-    } catch (error) {
-      console.error("Error archiving activity:", error);
-      toast.error("Error archiving activity."); // Use toast for error message
+  const handleArchiveClick = (id: number) => {
+    setSelectedId(id);
+    setIsArchiveModalOpen(true);
+  };
+
+  const handleArchiveConfirm = async () => {
+    if (selectedId !== null) {
+      try {
+        await axios.put(`${API_BASE_URL}/activities/${selectedId}/archive`);
+        toast.success("Activity archived successfully!");
+        fetchActivities();
+      } catch (error) {
+        console.error("Error archiving activity:", error);
+        toast.error("Error archiving activity.");
+      }
+      setIsArchiveModalOpen(false);
     }
   };
 
@@ -324,73 +340,79 @@ const ActivityPage = () => {
               <div className="flex items-center space-x-3">
                 <div className="flex items-center justify-between w-full px-4 gap-4">
                 {/* // Hamburger Menu Button on the Left */}
+          
                 <div className="relative inline-block">
-  <button
-    onClick={() => setOpen(!open)}
-    className={`transition-all duration-300 rounded-full bg-gray-700 hover:bg-gray-600 flex justify-center items-center ${open ? "w-14 h-14 text-2xl" : "w-12 h-12 text-xl"} shadow-md`}
+                <button
+  onClick={() => setOpen(!open)}
+  className="flex items-center justify-center px-5 py-2 text-lg font-bold text-white bg-green-700 border-2 border-gray-500 shadow-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-green-600 hover:border-gray-400 hover:shadow-xl active:bg-green-500 active:shadow-none active:translate-y-1"
+  style={{
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4), inset 0 2px 5px rgba(255, 255, 255, 0.2)",
+    borderRadius: "8px",
+  }}
+>
+  Status
+</button>
+
+
+
+{/* Dropdown / Grid View based on screen size */}
+{open && (
+  <div
+  className={`absolute bg-gray-800 p-2 rounded-lg shadow-lg z-50 border border-green-500 transition-transform duration-300 ease-in-out 
+    ${isMobile 
+      ? "top-full left-1/2 transform -translate-x-1/2 mt-3 w-full"  // Mobile: Centered dropdown
+      : "top-0 left-full w-[500px] translate-x-3"}  // Full Screen: Wider & Slides Right
+  `}
   >
-    {isMobile ? (
-      <span className="text-white text-lg">🔽</span> // Use an icon for mobile view
-    ) : (
-      <span className="text-white font-bold">☰</span> // Hamburger icon for larger screens
-    )}
-  </button>
-
-  {/* Dropdown / Grid View based on screen size */}
-  {open && (
-    <div className={`absolute  bg-gray-600 p-1 rounded-lg shadow-lg w-96 z-auto transition-transform duration-300 ease-in-out ${isMobile ? "top-full left-1/2 transform -translate-x-1/2 mt-3 w-full" : "top-0 left-full ml-3"}`}>
-      <div className={`grid ${isMobile ? "grid-cols-1" : "grid-cols-2 md:grid-cols-4"} gap-3`}>
-        {statuses.map((status) => (
-          <button
-            key={status}
-            className="py-2 px-2 w-9 text-lg rounded-md bg-gray-600 text-green-500 hover:bg-gray-600 transition text-left "
-
-            onClick={() => {
-              setSelectedStatus(status.toLowerCase());
-              setOpen(false);
-            }}
-          >
-            <span className="flex items-right justify-right">
-              {isMobile ? (
-                <span role="img" aria-label={`${status.toLowerCase()} icon`} className="text-xl mr-2">
-                  {status === 'Pending' ? '⏳' : 
-                   status === 'Complete' ? '✅' : 
-                   status === 'Overdue' ? '❌' : 
-                   status === 'Archived' ? '📦' : 
-                   '❓'} {/* Default emoji for unknown status */}
-                </span>
-              ) : (
-                <>
-                  <span role="img" aria-label={`${status.toLowerCase()} icon`} className="text-xl mr-2">
-                    {/* {status === 'Pending' ? '⏳' : 
-                     status === 'Complete' ? '✅' : 
-                     status === 'Overdue' ? '❌' : 
-                     status === 'Archived' ? '📦' : 
-                     '❓'} Default emoji for unknown status */}
-                  </span>
-                  <span>{status}</span>
-                </>
-              )}
-            </span>
-          </button>
-        ))}
-      </div>
+    {/* Grid: 1 item per row on mobile, 4 items per row on full screen */}
+    <div className={`grid ${isMobile ? "grid-cols-1" : "grid-cols-4"} gap-2`}>
+      {statuses.map((status) => (
+        <button
+          key={status}
+          className={`p-3 rounded-md bg-gray-800 text-green-500 hover:bg-gray-800 transition flex items-center justify-center 
+            ${isMobile ? "w-full" : "w-[120px]"}`}  // Full screen: Wider buttons
+          onClick={() => {
+            setSelectedStatus(status.toLowerCase());
+            setOpen(false);
+          }}
+        >
+          {/* Show only icons on mobile */}
+          <span className="text-2xl">
+            {status === "Pending"
+              ? "⏳"
+              : status === "Complete"
+              ? "✅"
+              : status === "Overdue"
+              ? "❌"
+              : status === "Archived"
+              ? "📦"
+              : "❓"}
+          </span>
+          {/* Show text only on larger screens */}
+          {!isMobile && <span className="ml-2">{status}</span>}
+        </button>
+      ))}
     </div>
-  )}
+  </div>
+)}
+
+
+
 </div>
                   {/* Plus Button (Circular, Small, Gray-Green Theme) */}
                   <button
-        onClick={() => setIsOpen((prev) => !prev)}
-        className="flex items-center justify-center w-10 h-10 text-xl font-bold text-white bg-gray-600 border-2 border-gray-500 rounded-full shadow-md transition-all duration-300 ease-in-out cursor-pointer hover:bg-gray-500 hover:border-gray-400 hover:shadow-lg active:bg-gray-400 active:shadow-none active:translate-y-1"
-      >
-        {isOpen ? "➖" : "➕"}
-      </button>
+  onClick={() => setIsOpen((prev) => !prev)}
+  className="flex items-center justify-center px-5 py-2 text-lg font-bold text-white bg-green-700 border-2 border-gray-500 shadow-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-green-600 hover:border-gray-400 hover:shadow-xl active:bg-green-500 active:shadow-none active:translate-y-1"
+  style={{
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.2)",
+    borderRadius: "6px",
+  }}
+>
+  {isOpen ? "Add Task" : "Add Task"}
+</button>
 
-      {isOpen && (
-        <div className="mt-3 p-4 border border-green-300 bg-gray-900 shadow-md rounded-lg">
-          <p>You can now add a task</p>
-        </div>
-      )}
+
+    
    
                 </div>
               </div>
@@ -417,64 +439,126 @@ const ActivityPage = () => {
             <ProgressBar percentage={completionPercentage} />
             <br />
   
-            <div className="flex justify-center">
-              <div className="grid grid-cols-1 gap-4 w-full rounded-lg shadow-lg">
-                {currentActivities.length > 0 && (
-                  <div
-                    key={currentActivities[0].id}
-                    className="p-6 border border-gray-700 bg-gray-800 text-white rounded-lg shadow-lg flex flex-col items-center text-center"
-                  >
-                    <h3 className="text-2xl md:text-3xl font-bold mb-2">{currentActivities[0].title}</h3>
-                    <h3 className="text-xl md:text-2xl font-bold mb-2">{currentActivities[0].description}</h3>
-                    <p className="mb-2 text-gray-400 text-lg font-semibold">Due: {currentActivities[0].due_date}</p>
-                    <p className="mb-2 text-gray-400 text-lg font-semibold">Tags: {currentActivities[0].tags}</p>
-                    <p className="mb-2 text-gray-400 text-lg font-semibold">Status: {currentActivities[0].status}</p>
-                    <p className="mb-4 text-gray-400 text-lg font-semibold">Collaborators: {currentActivities[0].collaborator_name}</p>
-  
-                    <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
-                      <button
-                        onClick={() => handleEdit(currentActivities[0])}
-                        className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-gray-600 transition hover:scale-105"
-                      >
-                        ✏️ Edit
-                      </button>
-  
-                      {currentActivities[0].status === 'pending' && !currentActivities[0].archive && (
-                        <button
-                          onClick={() => handleMarkAsDone(currentActivities[0].id)}
-                          className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-blue-600 transition hover:scale-105"
-                        >
-                          ✅ Done
-                        </button>
-                      )}
-  
-                      {currentActivities[0].archive ? (
-                        <button
-                          onClick={() => handleRestore(currentActivities[0].id)}
-                          className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-yellow-600 transition hover:scale-105"
-                        >
-                          🔄 Restore
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => handleArchive(currentActivities[0].id)}
-                          className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-yellow-600 transition hover:scale-105"
-                        >
-                          📁 Archive
-                        </button>
-                      )}
-  
-                      <button
-                        onClick={() => handleDelete(currentActivities[0].id)}
-                        className="px-3 py-2 text-sm sm:text-base rounded-full text-white bg-red-600 transition hover:scale-105"
-                      >
-                        🗑️ Delete
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
+            <div className="flex justify-center w-full">
+            <div className="flex justify-center w-full px-4 sm:px-6">
+  <div className="w-full max-w-6xl p-4 sm:p-6 rounded-lg shadow-lg">
+    {currentActivities.length > 0 && (
+      <div
+        key={currentActivities[0].id}
+        className="relative p-6 sm:p-8 bg-gray-900 text-white rounded-lg shadow-lg flex flex-col items-center text-center w-full"
+      >
+        {/* Status Tag in the Top Right Corner */}
+        <span
+          className={`absolute top-4 right-4 px-3 py-1 sm:px-4 sm:py-2 text-sm sm:text-lg font-semibold rounded-full ${
+            currentActivities[0].status === 'pending'
+              ? 'bg-yellow-500 text-gray-900'
+              : currentActivities[0].status === 'complete'
+              ? 'bg-green-500 text-gray-900'
+              : 'bg-red-500 text-gray-900'
+          }`}
+        >
+          📌 {currentActivities[0].status}
+        </span>
+
+        <br />
+
+        {/* Centered Title */}
+        <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-green-400">
+          {currentActivities[0].title}
+        </h3>
+
+        {/* Responsive Grid Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 p-4 sm:p-6 bg-gray-800 rounded-lg shadow-lg w-full">
+          {/* Description */}
+          <div className="p-4 sm:p-6">
+            <h3 className="text-sm sm:text-lg font-semibold text-gray-300 text-center break-words">
+              {currentActivities[0].description}
+            </h3>
+          </div>
+
+          {/* Due Date & Tags */}
+          <div className="p-4 sm:p-6">
+            <p className="mb-2 sm:mb-4 text-green-300 text-sm sm:text-lg font-semibold text-center">
+              📅 Due: {currentActivities[0].due_date}
+            </p>
+            <p className="mb-2 sm:mb-4 text-green-300 text-sm sm:text-lg font-semibold text-center">
+              🏷️ Tags: {currentActivities[0].tags}
+            </p>
+          </div>
+
+          {/* Collaborators */}
+          <div className="p-4 sm:p-6">
+            <p className="mb-2 sm:mb-4 text-green-300 text-sm sm:text-lg font-semibold text-center">
+              👥 Collaborators: {currentActivities[0].collaborator_name}
+            </p>
+          </div>
+        </div>
+
+        {/* Buttons Section */}
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mt-4 sm:mt-6">
+          <button
+            onClick={() => handleEdit(currentActivities[0])}
+            className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-lg rounded-full text-white bg-gray-700 transition hover:bg-gray-600"
+          >
+            ✏️ Edit
+          </button>
+
+          {currentActivities[0].status === 'pending' && !currentActivities[0].archive && (
+            <button
+              onClick={() => handleMarkAsDone(currentActivities[0].id)}
+              className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-lg rounded-full text-white bg-green-600 transition hover:bg-green-500"
+            >
+              ✅ Done
+            </button>
+          )}
+
+          {currentActivities[0].archive ? (
+            <button
+              onClick={() => handleRestore(currentActivities[0].id)}
+              className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-lg rounded-full text-white bg-yellow-600 transition hover:bg-yellow-500"
+            >
+              🔄 Restore
+            </button>
+          ) : (
+            <button
+              onClick={() => handleArchiveClick(currentActivities[0].id)}
+              className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-lg rounded-full text-white bg-yellow-600 transition hover:bg-yellow-500"
+            >
+              📁 Archive
+            </button>
+          )}
+
+          <button
+            onClick={() => handleDeleteClick(currentActivities[0].id)}
+            className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-lg rounded-full text-white bg-red-600 transition hover:bg-red-500"
+          >
+            🗑️ Delete
+          </button>
+        </div>
+
+        {/* Confirmation Modals */}
+        <Confirmation
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onConfirm={handleDeleteConfirm}
+          title="Delete Activity"
+          message="Are you sure you want to delete this activity? This action cannot be undone."
+        />
+        <Archive
+          isOpen={isArchiveModalOpen}
+          onClose={() => setIsArchiveModalOpen(false)}
+          onConfirm={handleArchiveConfirm}
+          title="Archive Activity"
+          message="Are you sure you want to archive this activity? You can restore it later."
+        />
+      </div>
+    )}
+  </div>
+</div>
+
+
+</div>
+
   
             {/* Pagination Controls */}
             <div className="flex justify-between items-center mt-4">
@@ -499,7 +583,7 @@ const ActivityPage = () => {
           </div>
   
       {/* Right Sidebar for Adding/Editing Activity */}
-      <div className={`fixed inset-y-0 right-0 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'} bg-gray-700 w-[430px] p-10 shadow-2xl rounded-l-lg z-50  border border-green-500`}>
+      <div className={`fixed inset-y-0 right-0 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'} bg-gray-800 w-[430px] p-10 shadow-2xl rounded-l-lg z-50  border border-green-500`}>
 
 
 <button

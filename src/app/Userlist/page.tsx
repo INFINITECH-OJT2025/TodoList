@@ -196,16 +196,20 @@ const UsersTable = () => {
                 {users.length > 0 ? (
                   users.map((user) => (
                     <div
-                      className="relative p-5 bg-gray-700 border border-green-600 rounded-lg shadow-lg flex flex-col items-center"
+                      className="relative card bg-gray-700 border border-green-600 rounded-lg shadow-lg flex flex-col items-center p-5 transition-transform transform hover:scale-105"
                       key={user.id}
                     >
-                      <img
-                        src={user.profile_image ? `http://127.0.0.1:8000/${user.profile_image}` : "/default-profile.png"}
-                        alt="Profile"
-                        className="w-24 h-24 rounded-full object-cover border-4 border-green-500 shadow-lg mb-3"
-                      />
-                      <h3 className="text-lg font-semibold text-white">{user.username}</h3>
-                      <p className="text-gray-300 text-center mt-2">📧 {user.email}</p>
+                      <div className="card-border-top"></div>
+                      <div className="img">
+                        <img
+                          src={user.profile_image ? `http://127.0.0.1:8000/${user.profile_image}` : "/default-profile.png"}
+                          alt="Profile"
+                          className="w-24 h-24 rounded-full object-cover border-4 border-green-500 shadow-lg mb-3"
+                        />
+                      </div>
+                      <span className="font-semibold text-white">{user.username}</span>
+                      <p className="job text-gray-300 text-center mt-2">📧 {user.email}</p>
+                     
 
                       <div className="absolute top-4 right-4 cursor-pointer" onClick={() => setMenuOpen(menuOpen === user.id ? null : user.id)}>
                         <FiMoreVertical size={24} className="text-green-500" />

@@ -1,149 +1,122 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import authUser  from "./utils/authUser";
+import authUser from "./utils/authUser";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
-const Home = () => {
-  const [isDarkMode, setIsDarkMode] = useState(true);
-  const [isSignedIn, setIsSignedIn] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+const HeroSection = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) {
-      setIsDarkMode(savedTheme === "dark");
-    }
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSelectedDate(new Date());
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleThemeSwitch = () => {
-    const newTheme = isDarkMode ? "dark" : "light";
-    setIsDarkMode(!isDarkMode);
-    localStorage.setItem("theme", newTheme);
-  };
-
-  const handleSignInClick = () => {
-    setIsSignedIn(!isSignedIn);
-  };
-
-  const handleDateClick = (day) => {
-    setSelectedDate(new Date(selectedDate.getFullYear(), selectedDate.getMonth(), day));
-  };
-
-  const renderCalendar = () => {
-    const daysInMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0).getDate();
-    const firstDay = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1).getDay();
-    const monthNames = [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
-    ];
-
-    let days = [];
-
-    days.push(
-      <div key="header" className="text-center text-lg sm:text-xl font-bold mb-4">
-        {monthNames[selectedDate.getMonth()]} {selectedDate.getFullYear()}
-      </div>
-    );
-
-    for (let i = 0; i < firstDay; i++) {
-      days.push(<div key={`empty-${i}`} className="w-8 h-8"></div>);
-    }
-
-    for (let day = 1; day <= daysInMonth; day++) {
-      const today = new Date();
-      const isToday =
-        today.getDate() === day &&
-        today.getMonth() === selectedDate.getMonth() &&
-        today.getFullYear() === selectedDate.getFullYear();
-
-      days.push(
-        <div
-          key={day}
-          className={`w-8 h-8 flex items-center justify-center cursor-pointer rounded-lg text-xs transition-all ${
-            isToday
-              ? "bg-green-600 text-white font-bold"
-              : selectedDate.getDate() === day
-              ? "bg-green-800 text-white"
-              : "bg-gray-700 text-gray-300 hover:bg-green-700"
-          }`}
-          onClick={() => handleDateClick(day)}
-        >
-          {day}
-        </div>
-      );
-    }
-
-    return days;
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
   };
 
   return (
-    <div className={`min-h-screen flex flex-col items-center justify-center relative overflow-hidden ${isDarkMode ? "bg-gray-900 text-white" : "bg-gradient-to-br from-gray-200 to-white text-gray-800"}`}>
-      <Image
-        src="/cram.png"
-        alt="Task Management Background"
-        fill
-        style={{ objectFit: "cover" }}
-        className="absolute top-0 left-0 w-full h-full opacity-20"
-      />
+    <div className="bg-gray-900 text-gray-300"> 
+      {/* Navigation */}
+      <nav className="bg-gray-900 py-4 shadow-lg relative z-10 border-b-4 border-green-900 shadow-green-900">
+  <div className="container mx-auto flex items-center px-6 lg:justify-start justify-center">
+    <div className="text-green-300 text-2xl font-bold drop-shadow-lg">
+      <a href="/" className="transform hover:scale-110 transition duration-300">InfiniTask</a>
+    </div>
+  </div>
+</nav>
 
-      <header className="w-full p-4 sm:p-8 flex flex-col sm:flex-row justify-between items-center border-b border-gray-600 relative z-10 text-lg sm:text-xl">
-        <div className="flex items-center">
-          <span className="text-2xl sm:text-3xl font-bold text-green-600">InfiniTask</span>
+      {/* Hero Section */}
+      <section className="py-5 flex items-center justify-end">
+        <div className="container mx-auto flex flex-col-reverse lg:flex-row items-center px-6 lg:px-12">
+          <div className="lg:w-1/2 text-center lg:text-left">
+            <h1 className="text-5xl font-bold sm:text-6xl text-green-400">Stay Organized with InfiniTask</h1>
+            <p className="mt-6 text-lg text-gray-400">🚀 Stay organized, boost productivity, and never miss a deadline with our intuitive task management system.</p>
+            <div className="mt-8 flex flex-col sm:flex-row gap-4 sm:justify-center lg:justify-start">
+              <a href="/login" className="px-8 py-3 text-lg font-semibold rounded bg-green-500 text-gray-900 hover:bg-green-600 transition">Access Dashboard</a>
+              <a href="/signup" className="px-8 py-3 text-lg font-semibold border border-green-600 rounded hover:bg-gray-700 transition">Create an Account</a>
+            </div>
+          </div>
+          <div className="lg:w-3/4 flex justify-center">
+            <img src="/cram.png" alt="Task Management" className="w-full max-w-2xl rounded-lg shadow-lg" />
+          </div>
+          
         </div>
-
-        <nav className="flex flex-col sm:flex-row items-center mt-4 sm:mt-0">
-          <div className="inline-flex rounded-md shadow-xs" role="group">
-            <a href="/login" aria-label="My Tasks" className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-gray-800 border border-green-600 rounded-tl-lg sm:rounded-l-lg hover:bg-green-600 focus:z-10 focus:ring-2 focus:ring-green-500">
-              My Tasks
-            </a>
-            <a href="/login" aria-label="Login" className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-gray-800 border border-green-600 hover:bg-green-600 focus:z-10 focus:ring-2 focus:ring-green-500">
-              Login
-            </a>
-            <a href="/Signup" aria-label="Sign Up" className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-gray-800 border border-green-600 rounded-tr-lg sm:rounded-r-lg hover:bg-green-600 focus:z-10 focus:ring-2 focus:ring-green-500">
-              Sign Up
-            </a>
-          </div>
-        </nav>
-      </header>
-
-      <main className="flex flex-col items-center justify-center w-full max-w-7xl px-4 sm:px-6 py-8 sm:py-16 mx-auto text-center">
-        <div className="w-full max-w-4xl mb-8">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-green-600 mb-6 leading-tight">
-            Cramming? Organize Your Tasks, Achieve Your Goals
-          </h1>
-          <p className="text-gray-300 text-base sm:text-lg md:text-xl">
-            InfiniTask is your all-in-one task management solution, designed to streamline your workflow and boost productivity.
-          </p>
+        
+      </section>
+      <section>
+      <div className="mt-8">
+          <iframe className="w-full h-96 rounded-lg" 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1930.3269289819482!2d121.0135053!3d14.559905!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397c90b830e5f29%3A0x89fe307dfecd3c0d!2sCampos%20Rueda%20Building%2C%20101%20Urban%20Ave%2C%20Makati%2C%201206%20Metro%20Manila!5e0!3m2!1sen!2sph!4v1700000000000" 
+            allowFullScreen loading="lazy">
+          </iframe>
         </div>
+      </section>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
-          <div className="bg-gray-800 p-4 sm:p-6 rounded-2xl shadow-xl text-white text-center">
-            <h2 className="text-lg sm:text-xl font-bold mb-3">Real-Time Calendar</h2>
-            <div className="grid grid-cols-7 gap-1">{renderCalendar()}</div>
-          </div>
-
-          <div className="bg-gray-800 p-4 sm:p-6 rounded-2xl shadow-xl text-white text-center">
-            <h2 className="text-lg sm:text-xl font-bold mb-3">About Us</h2>
-            <p className="text-base sm:text-lg text-gray-300">Learn more about our mission and how we help you stay productive.</p>
-          </div>
-
-          <div className="bg-gray-800 p-4 sm:p-6 rounded-2xl shadow-xl text-white text-center">
-            <h2 className="text-lg sm:text-xl font-bold mb-3">Documents</h2>
-            <p className="text-base sm:text-lg text-gray-300">Access important files and resources related to your tasks.</p>
+      {/* Vlogs Section (Carousel) */}
+      <section className="mt-16 bg-gray-800 py-12">
+        <div className="container mx-auto text-center px-6 lg:px-12">
+          <h2 className="text-4xl font-bold text-green-400">Managing your task on your own</h2>
+          <p className="mt-4 text-lg text-gray-400">Discover our latest updates, moments, and insights.</p>
+          <div className="mt-8">
+            <Swiper
+              modules={[Navigation, Pagination, Autoplay]}
+              spaceBetween={20}
+              slidesPerView={1}
+              navigation
+              pagination={{ clickable: true }}
+              autoplay={{ delay: 3000 }}
+              loop
+              className="rounded-lg shadow-lg"
+            >
+              {[{ src: "/image.png", title: "Dashboard", description: "Your central hub for tracking progress, managing tasks, and visualizing your productivity." },
+                { src: "/usertask.png", title: "Personal Task", description: "Stay organized with your personal tasks, set priorities, and manage your time effectively." },
+                { src: "/admin.png", title: "Admin Task", description: "For admin users, manage team tasks, oversee project progress, and ensure smooth operations." }]
+                .map((item, index) => (
+                  <SwiperSlide key={index}>
+                    <div className="bg-gray-800 p-6 text-center rounded-lg">
+                      <Image src={item.src} alt={item.title} width={500} height={300} className="rounded-lg mx-auto" />
+                      <h3 className="text-xl font-semibold text-green-400 mt-4">{item.title}</h3>
+                      <p className="text-gray-300">{item.description}</p>
+                    </div>
+                  </SwiperSlide>
+              ))}
+            </Swiper>
           </div>
         </div>
-      </main>
+      </section>
+
+      {/* Contact Section */}
+      <section className="mt-16 bg-gray-900 py-12">
+        <div className="container mx-auto text-center px-6 lg:px-12">
+          <h2 className="text-4xl font-bold text-green-500">Get in Touch</h2>
+          <p className="mt-4 text-lg text-gray-300">Have questions about task management? Contact us anytime.</p>
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-gray-700 p-6 rounded-lg">
+              <h3 className="text-xl font-semibold text-white">Email</h3>
+              <p className="text-gray-300">support@infinitechtodolist.com</p>
+            </div>
+            <div className="bg-gray-700 p-6 rounded-lg">
+              <h3 className="text-xl font-semibold text-white">Phone</h3>
+              <p className="text-gray-300">+123 456 7890</p>
+            </div>
+          </div>
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-gray-700 p-6 rounded-lg">
+              <h3 className="text-xl font-semibold text-white">Location</h3>
+              <p className="text-gray-300">123 Tech Street, Innovation City</p>
+            </div>
+            <div className="bg-gray-700 p-6 rounded-lg">
+              <h3 className="text-xl font-semibold text-white">Business Hours</h3>
+              <p className="text-gray-300">Mon-Fri: 8 AM - 5 PM</p>
+            </div>
+          </div>
+        </div>
+        
+      </section>
     </div>
   );
-}
+};
 
-export default authUser (Home);
+export default authUser(HeroSection);
