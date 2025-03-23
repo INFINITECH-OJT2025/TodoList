@@ -369,6 +369,7 @@ const ActivityPage = () => {
   const totalActivities = activities.length;
   const completionPercentage = totalActivities > 0 ? (completedActivities / totalActivities) * 100 : 0;
   const [isMobile, setIsMobile] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   console.log(userId)
   return (
@@ -486,9 +487,7 @@ const ActivityPage = () => {
             <br />
             <ProgressBar percentage={completionPercentage} />
             <br />
-  
-            <div className="flex justify-center w-full">
-            <div className="flex justify-center w-full px-4 sm:px-6">
+  <div className="flex justify-center w-full px-4 sm:px-6">
   <div className="w-full max-w-6xl p-4 sm:p-6 rounded-lg shadow-lg">
     {currentActivities.length > 0 && (
       <div
@@ -497,34 +496,25 @@ const ActivityPage = () => {
       >
         {/* Status Tag in the Top Right Corner */}
         <span
-  className={`absolute top-4 right-4 px-3 py-1 sm:px-4 sm:py-2 text-sm sm:text-lg font-semibold rounded-full border border-gray-500 uppercase ${
-    currentActivities[0].status === 'pending'
-      ? 'bg-yellow-500 text-gray-900'
-      : currentActivities[0].status === 'complete'
-      ? 'bg-green-500 text-gray-900'
-      : 'bg-red-500 text-gray-900'
-  }`}
->
-  📌 {currentActivities[0].status.toUpperCase()}
-</span>
-
-
-        <br />
+          className={`absolute top-4 right-4 px-3 py-1 sm:px-4 sm:py-2 text-sm sm:text-lg font-semibold rounded-full border border-gray-500 uppercase ${
+            currentActivities[0].status === 'pending'
+              ? 'bg-yellow-500 text-gray-900'
+              : currentActivities[0].status === 'complete'
+              ? 'bg-green-500 text-gray-900'
+              : 'bg-red-500 text-gray-900'
+          }`}
+        >
+          📌 {currentActivities[0].status.toUpperCase()}
+        </span>
 
         {/* Centered Title */}
-        <h1 className="text-2xl sm:text-4xl font-bold mb-3 sm:mb-4 text-green-400">
-  {currentActivities[0].title}
-</h1>
+        <h1 className="text-2xl sm:text-6xl font-bold mt-6 sm:mt-8 mb-3 sm:mb-4 bg-gradient-to-r from-green-400 to-gray-600 bg-clip-text text-transparent">
+          {currentActivities[0].title}
+        </h1>
+        <br />
 
         {/* Responsive Grid Layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 p-4 sm:p-6 bg-gray-800 rounded-lg shadow-lg w-full">
-          {/* Description */}
-          <div className="p-4 sm:p-6">
-            <h3 className="text-sm sm:text-lg font-semibold text-gray-300 text-center break-words">
-              {currentActivities[0].description}
-            </h3>
-          </div>
-
           {/* Due Date & Tags */}
           <div className="p-4 sm:p-6">
             <p className="mb-2 sm:mb-4 text-green-300 text-sm sm:text-lg font-semibold text-center">
@@ -534,6 +524,25 @@ const ActivityPage = () => {
               🏷️ Tags: {currentActivities[0].tags}
             </p>
           </div>
+
+          {/* Description */}
+          <div className="p-4 sm:p-6 w-full max-w-3xl mx-auto">
+  <h3
+    className={`text-sm sm:text-lg font-semibold text-gray-300 text-justify indent-8 break-words overflow-y-auto transition-all duration-300 ${
+      expanded ? 'max-h-none' : 'max-h-64'
+    }`}
+    style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
+  >
+    {currentActivities[0].description}
+  </h3>
+  <button
+    onClick={() => setExpanded(!expanded)}
+    className="mt-2 text-sm text-blue-400 hover:text-blue-600 focus:outline-none"
+  >
+    {expanded ? 'See Less' : 'See More'}
+  </button>
+</div>
+
 
           {/* Collaborators */}
           <div className="p-4 sm:p-6">
@@ -605,8 +614,6 @@ const ActivityPage = () => {
   </div>
 </div>
 
-
-</div>
 
   
             {/* Pagination Controls */}

@@ -58,7 +58,7 @@ export default function Archive() {
   return (
     <section className="p-4 text-center bg-gray-700 text-white rounded-lg shadow-lg max-w-full mx-auto">
       <h3 className="text-lg font-bold bg-gray-800 p-3 rounded">Archived Tasks</h3>
-      <ToastContainer position="top-right" autoClose={3000} />
+      
       {loading ? (
         <p>Loading archived tasks...</p>
       ) : error ? (
@@ -124,7 +124,7 @@ export default function Archive() {
             <button
               onClick={() => {
                 setCurrentPage((prev) => Math.max(prev - 1, 1));
-                toast.success("Moved to previous page", { autoClose: 3000 }); // Show page change toast with autoClose
+           
               }}
               disabled={currentPage === 1}
               className="px-3 py-2 bg-gray-600 text-white text-xs rounded hover:bg-gray-500 disabled:opacity-50 w-full md:w-auto">
@@ -134,7 +134,7 @@ export default function Archive() {
             <button
               onClick={() => {
                 setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-                toast.success("Moved to next page", { autoClose: 3000 }); // Show page change toast with autoClose
+
               }}
               disabled={currentPage === totalPages}
               className="px-3 py-2 bg-gray-600 text-white text-xs rounded hover:bg-gray-500 disabled:opacity-50 w-full md:w-auto">

@@ -19,13 +19,19 @@ const HeroSection = () => {
   return (
     <div className="bg-gray-900 text-gray-300"> 
       {/* Navigation */}
-      <nav className="bg-gray-900 py-4 shadow-lg relative z-10 border-b-4 border-green-900 shadow-green-900">
-  <div className="container mx-auto flex items-center px-6 lg:justify-start justify-center">
+      <nav className="bg-gray-900 py-4 shadow-lg fixed top-0 w-full border-b-4 border-green-900 shadow-green-900 z-50">
+  <div className="container mx-auto flex justify-center items-center px-6">
     <div className="text-green-300 text-2xl font-bold drop-shadow-lg">
-      <a href="/" className="transform hover:scale-110 transition duration-300">InfiniTask</a>
+      <a href="/" className="transform hover:scale-110 transition duration-300">
+        InfiniTask
+      </a>
     </div>
   </div>
 </nav>
+<br />
+<br />
+<br />
+<br />
 
       {/* Hero Section */}
       <section className="py-5 flex items-center justify-end">
@@ -38,7 +44,7 @@ const HeroSection = () => {
               <a href="/Signup" className="px-8 py-3 text-lg font-semibold border border-green-600 rounded hover:bg-gray-700 transition">Create an Account</a>
             </div>
           </div>
-          <div className="lg:w-3/4 flex justify-center">
+          <div className="  lg:w-3/6 flex justify-center">
             <img src="/cram.png" alt="Task Management" className="w-full max-w-2xl rounded-lg shadow-lg" />
           </div>
           
