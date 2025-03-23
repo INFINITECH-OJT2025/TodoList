@@ -6,7 +6,7 @@ use App\Models\Task; // Make sure to import the Task model
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Notification;
-
+use App\Events\NotificationSent;
 class AdminProjectController extends Controller
 {
 
@@ -22,7 +22,7 @@ class AdminProjectController extends Controller
         ]);
 
         // Broadcast the event
-        // broadcast(new NotificationSent($notification))->toOthers();
+        broadcast(new NotificationSent($notification))->toOthers();
     }
     // Show a list of tasks
     public function index()
@@ -78,7 +78,7 @@ class AdminProjectController extends Controller
             'tags' => $request->tags,
         ]);
         // Send notification after profile update
-        $this->sendNotification('An admin asigned a task for you '. $request->user_id . ' Deadline: '. $request->deadline . ' Status: '. $request->status . '', $request->user_id);
+        $this->sendNotification('An admin asigned a task for you ' . ' Deadline: '. $request->deadline . ' Status: '. $request->status . '', $request->user_id);
         return response()->json($task, 201); // Return the created task with a 201 status code
     }
 
@@ -277,19 +277,34 @@ class AdminProjectController extends Controller
     }
 
     public function updateStatus(Request $request, $id)
-{
-    $task = Task::find($id);
-    if (!$task) {
-        return response()->json(['message' => 'Task not found'], 404);
+    {
+        $task = Task::find($id);
+        if (!$task) {
+            return response()->json(['message' => 'Task not found'], 404);
+        }
+    
+        // Prevent updating if the task is already overdue
+        if ($task->status === 'overdue') {
+            return response()->json(['message' => 'Task is already overdue and cannot be updated'], 200);
+        }
+    
+        // Update status
+        $task->status = $request->status;
+        $task->save();
+    
+        // Send notification if it turns overdue
+        if ($request->status === 'overdue') {
+            $this->sendNotification(
+                'Your Task from Admin: Overdue ' . $task->user_id . 
+                ' | Deadline: ' . $task->deadline . 
+                ' | Title: ' . $task->title .  
+                ' | Status: ' . $task->status, 
+                $task->user_id
+            );
+        }
+    
+        return response()->json(['message' => 'Task status updated successfully']);
     }
-
-    $task->status = $request->status;
-    $task->save();
-
-    $this->sendNotification('Your Task from Admin: Overdue '. $task->user_id . ' Deadline: '.  $task->deadline . 'Title:'  . $task->title .  ' Status: '. $task->status . '', $task->user_id);
-    return response()->json(['message' => 'Task status updated successfully']);
-}
-
-
+    
 
 }

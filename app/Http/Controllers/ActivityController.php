@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Notification;
 
+
 class ActivityController extends Controller
 {
 
@@ -24,7 +25,7 @@ class ActivityController extends Controller
         ]);
 
         // Broadcast the event
-        // broadcast(new NotificationSent($notification))->toOthers();
+        broadcast(new NotificationSent($notification))->toOthers();
     }
     // Fetch all activities (including filtering by status)
     public function index(Request $request, $authToken)
@@ -230,5 +231,4 @@ public function markAsOverdue (Request $request, $id)
 
     return response()->json(['message' => 'Activity marked as overdue', 'activity' => $activity], 200);
 }
-
 }

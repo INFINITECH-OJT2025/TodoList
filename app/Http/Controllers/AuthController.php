@@ -4,28 +4,29 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Notification;
-use App\Events\NotificationSent;
+// use App\Models\Notification;
+// use App\Events\NotificationSent;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
+
 class AuthController extends Controller
 {
     // POGI SI Ariel James De Guzman
-    private function sendNotification($message, $userId)
-    {
+    // private function sendNotification($message, $userId)
+    // {
 
-        $notification = Notification::create([
-            'user_id' => $userId,
-            'message' => $message,
-            'status' => 'unread',
-        ]);
+    //     $notification = Notification::create([
+    //         'user_id' => $userId,
+    //         'message' => $message,
+    //         'status' => 'unread',
+    //     ]);
 
-        // Broadcast the event
-        broadcast(new NotificationSent($notification))->toOthers();
-    }
+    //     // Broadcast the event
+    //     broadcast(new NotificationSent($notification))->toOthers();
+    // }
     public function getUsers()
     {
         // Filter users by usertype 'admin'
@@ -264,7 +265,7 @@ class AuthController extends Controller
         $user->save();
     
         // Send notification after profile update
-        
+       
     
         return response()->json([
             'message' => 'Profile updated successfully',
