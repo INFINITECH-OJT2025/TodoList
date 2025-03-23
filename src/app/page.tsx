@@ -45,14 +45,16 @@ const HeroSection = () => {
         </div>
         
       </section>
-      <section>
+   
       <div className="mt-8">
-          <iframe className="w-full h-96 rounded-lg" 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1930.3269289819482!2d121.0135053!3d14.559905!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397c90b830e5f29%3A0x89fe307dfecd3c0d!2sCampos%20Rueda%20Building%2C%20101%20Urban%20Ave%2C%20Makati%2C%201206%20Metro%20Manila!5e0!3m2!1sen!2sph!4v1700000000000" 
-            allowFullScreen loading="lazy">
-          </iframe>
-        </div>
-      </section>
+  <iframe
+    className="w-full h-96 rounded-lg border-4 border-green-500"
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1930.3269289819482!2d121.0135053!3d14.559905!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397c90b830e5f29%3A0x89fe307dfecd3c0d!2sCampos%20Rueda%20Building%2C%20101%20Urban%20Ave%2C%20Makati%2C%201206%20Metro%20Manila!5e0!3m2!1sen!2sph!4v1700000000000"
+    allowFullScreen
+    loading="lazy"
+  ></iframe>
+</div>
+
 
       {/* Vlogs Section (Carousel) */}
       <section className="mt-16 bg-gray-800 py-12">

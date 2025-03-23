@@ -170,23 +170,71 @@ const ActivityPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+  
+    // Validation
+    if (!formData.title) {
+      toast.error("Title is required.");
+      return;
+    }
+  
+    if (!formData.description) {
+      toast.error("Description is required.");
+      return;
+    }
+  
+    if (!formData.date_started) {
+      toast.error("Start date is required.");
+      return;
+    }
+  
+    if (!formData.due_date) {
+      toast.error("Due date is required.");
+      return;
+    }
+  
+    // Check if tags are required and validate
+    if (!formData.tags) {
+      toast.error("At least one tag is required.");
+      return;
+    }
+  
+    // Check if at least one collaborator is selected
+    if (!formData.collaborators || formData.collaborators.length === 0) {
+      toast.error("At least one collaborator is required.");
+      return;
+    }
+  
+    // Convert dates to Date objects for comparison
+    const dateStarted = new Date(formData.date_started);
+    const dueDate = new Date(formData.due_date);
+  
+    if (dueDate <= dateStarted) {
+      toast.error("Due date must be after the start date.");
+      return;
+    }
+  
     try {
       const authToken = sessionStorage.getItem("authToken");
       if (!authToken) {
         console.error("No authToken found in sessionStorage.");
         return;
       }
-
+  
       const userResponse = await axios.get(`${API_BASE_URL}/user/${authToken}`);
-      setUserId(userResponse.data.id)
-
+      setUserId(userResponse.data.id);
+  
       if (!userId) {
         console.error("User  ID not found.");
         return;
       }
-
-      const newFormData = { ...formData, user_id: userId, collaborators: formData.collaborators || [] };
-
+  
+      // Include all relevant fields in the newFormData
+      const newFormData = { 
+        ...formData, 
+        user_id: userId, 
+        collaborators: formData.collaborators || [] 
+      };
+  
       if (editId) {
         await axios.put(`${API_BASE_URL}/activities/${editId}`, newFormData);
         toast.success("Activity updated successfully!"); // Use toast for success message
@@ -194,7 +242,7 @@ const ActivityPage = () => {
         await axios.post(`${API_BASE_URL}/activities`, newFormData);
         toast.success("Activity created successfully!"); // Use toast for success message
       }
-
+  
       resetForm();
       fetchActivities();
     } catch (error: any) {
@@ -449,23 +497,24 @@ const ActivityPage = () => {
       >
         {/* Status Tag in the Top Right Corner */}
         <span
-          className={`absolute top-4 right-4 px-3 py-1 sm:px-4 sm:py-2 text-sm sm:text-lg font-semibold rounded-full ${
-            currentActivities[0].status === 'pending'
-              ? 'bg-yellow-500 text-gray-900'
-              : currentActivities[0].status === 'complete'
-              ? 'bg-green-500 text-gray-900'
-              : 'bg-red-500 text-gray-900'
-          }`}
-        >
-          📌 {currentActivities[0].status}
-        </span>
+  className={`absolute top-4 right-4 px-3 py-1 sm:px-4 sm:py-2 text-sm sm:text-lg font-semibold rounded-full border border-gray-500 uppercase ${
+    currentActivities[0].status === 'pending'
+      ? 'bg-yellow-500 text-gray-900'
+      : currentActivities[0].status === 'complete'
+      ? 'bg-green-500 text-gray-900'
+      : 'bg-red-500 text-gray-900'
+  }`}
+>
+  📌 {currentActivities[0].status.toUpperCase()}
+</span>
+
 
         <br />
 
         {/* Centered Title */}
-        <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-green-400">
-          {currentActivities[0].title}
-        </h3>
+        <h1 className="text-2xl sm:text-4xl font-bold mb-3 sm:mb-4 text-green-400">
+  {currentActivities[0].title}
+</h1>
 
         {/* Responsive Grid Layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 p-4 sm:p-6 bg-gray-800 rounded-lg shadow-lg w-full">
