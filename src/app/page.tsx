@@ -35,7 +35,7 @@ const HeroSection = () => {
             <p className="mt-6 text-lg text-gray-400">🚀 Stay organized, boost productivity, and never miss a deadline with our intuitive task management system.</p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4 sm:justify-center lg:justify-start">
               <a href="/login" className="px-8 py-3 text-lg font-semibold rounded bg-green-500 text-gray-900 hover:bg-green-600 transition">Access Dashboard</a>
-              <a href="/signup" className="px-8 py-3 text-lg font-semibold border border-green-600 rounded hover:bg-gray-700 transition">Create an Account</a>
+              <a href="/Signup" className="px-8 py-3 text-lg font-semibold border border-green-600 rounded hover:bg-gray-700 transition">Create an Account</a>
             </div>
           </div>
           <div className="lg:w-3/4 flex justify-center">
