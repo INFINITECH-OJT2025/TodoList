@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Notification;
+use App\Events\NotificationSent;
 
 
 class ActivityController extends Controller
@@ -231,4 +232,5 @@ public function markAsOverdue (Request $request, $id)
 
     return response()->json(['message' => 'Activity marked as overdue', 'activity' => $activity], 200);
 }
+
 }
