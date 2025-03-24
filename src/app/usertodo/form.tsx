@@ -105,7 +105,7 @@ const TaskForm: React.FC<{
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="p-8 bg-gray-900 rounded-2xl shadow-2xl max-w-4xl mx-auto border border-green-600"
+      className="p-8 bg-gray-900 rounded-2xl shadow-2xl max-w-4xl mx-auto border border-gray-600"
     >
       <h2 className="text-4xl mb-8 text-center font-extrabold uppercase bg-gradient-to-r from-green-400 via-green-500 to-green-700 bg-clip-text text-transparent tracking-wider drop-shadow-lg" style={{ fontFamily: "Courier New, Courier, monospace" }}>
         TO-DO LIST MANAGER

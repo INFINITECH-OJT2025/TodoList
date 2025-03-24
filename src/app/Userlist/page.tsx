@@ -11,55 +11,26 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // Modal for editing user details
-const EditModal = ({ isOpen, onClose, onUpdate, username, setUsername, email, setEmail }) => {
-  const [errors, setErrors] = useState({ username: "", email: "" });
-
-  const validateForm = () => {
-    let valid = true;
-    const newErrors = { username: "", email: "" };
-
-    if (!username) {
-      newErrors.username = "Username is required.";
-      valid = false;
-    } else if (username.length < 3) {
-      newErrors.username = "Username must be at least 3 characters long.";
-      valid = false;
-    }
-
-    if (!email) {
-      newErrors.email = "Email is required.";
-      valid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = "Email address is invalid.";
-      valid = false;
-    }
-
-    setErrors(newErrors);
-    return valid;
-  };
+const EditModal = ({ isOpen, onClose, onUpdate, username, setUsername, email, setEmail, errors }) => {
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const handleUpdate = () => {
-    if (validateForm()) {
-      onUpdate();
-    } else {
-      // Show toast notifications for each error
-      if (errors.username) {
-        toast.error(errors.username);
-      }
-      if (errors.email) {
-        toast.error(errors.email);
-      }
-    }
+    setShowConfirmation(true);
+  };
+
+  const confirmUpdate = () => {
+    onUpdate();
+    setShowConfirmation(false);
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" onClick={onClose}>
-      <div className="bg-white p-6 rounded-lg shadow-lg" onClick={(e) => e.stopPropagation()}>
-        <h2 className="text-xl font-bold mb-4">Edit User</h2>
+    <div className={`fixed inset-0 flex items-center justify-end bg-black bg-opacity-50 transition-opacity ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+    <div className={`fixed inset-y-0 right-0 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'} bg-gray-800 w-[430px] p-10 shadow-2xl rounded-l-lg z-50  border border-green-500`}>
+        <h2 className="text-xl font-bold mb-4 text-green-500">Edit User</h2>
         <div className="mb-4">
-          <label className="block text-gray-700">Username</label>
+          <label className="block text-gray-300">Username</label>
           <input
             type="text"
             value={username}
@@ -69,7 +40,7 @@ const EditModal = ({ isOpen, onClose, onUpdate, username, setUsername, email, se
           {errors.username && <p className="text-red-500 text-sm">{errors.username}</p>}
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">Email</label>
+          <label className="block text-gray-300">Email</label>
           <input
             type="email"
             value={email}
@@ -79,8 +50,40 @@ const EditModal = ({ isOpen, onClose, onUpdate, username, setUsername, email, se
           {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
         </div>
         <div className="flex justify-end">
+          <button onClick={onClose} className="mr-2 bg-gray-600 p-2 rounded">Cancel</button>
+          <button onClick={handleUpdate} className="bg-green-500 text-white p-2 rounded">Update</button>
+        </div>
+      </div>
+
+      {/* Confirmation Modal */}
+      {showConfirmation && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-green-500 p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-bold text-white mb-4">Confirm Update</h2>
+            <p className="text-white mb-4">Are you sure you want to update this user?</p>
+            <div className="flex justify-end">
+              <button onClick={() => setShowConfirmation(false)} className="mr-2 bg-gray-300 p-2 rounded">Cancel</button>
+              <button onClick={confirmUpdate} className="bg-green-700 text-white p-2 rounded">Confirm</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Modal for delete confirmation
+const DeleteConfirmationModal = ({ isOpen, onClose, onDelete, username }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-gray-900 p-6 rounded-lg shadow-lg">
+        <h2 className="text-xl font-bold text-white mb-4">Confirm Deletion</h2>
+        <p className="text-white mb-4">Are you sure you want to delete {username}?</p>
+        <div className="flex justify-end">
           <button onClick={onClose} className="mr-2 bg-gray-300 p-2 rounded">Cancel</button>
-          <button onClick={handleUpdate} className="bg-blue-500 text-white p-2 rounded">Update</button>
+          <button onClick={onDelete} className="bg-green-700 text-black p-2 rounded">Delete</button>
         </div>
       </div>
     </div>
@@ -93,9 +96,11 @@ const UsersTable = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedUser , setSelectedUser ] = useState(null);
   const [editUsername, setEditUsername] = useState("");
   const [editEmail, setEditEmail] = useState("");
+  const [errors, setErrors] = useState({ username: "", email: "" });
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(null);
 
@@ -156,9 +161,6 @@ const UsersTable = () => {
   const handleDeleteUser  = async (userId) => {
     if (!userId) return;
 
-    const isConfirmed = window.confirm("Are you sure you want to delete this user?");
-    if (!isConfirmed) return;
-
     try {
       await axios.delete(`http://127.0.0.1:8000/api/users/${userId}`);
       fetchUsers(); // Refresh user list after deletion
@@ -209,7 +211,6 @@ const UsersTable = () => {
                       </div>
                       <span className="font-semibold text-white">{user.username}</span>
                       <p className="job text-gray-300 text-center mt-2">📧 {user.email}</p>
-                     
 
                       <div className="absolute top-4 right-4 cursor-pointer" onClick={() => setMenuOpen(menuOpen === user.id ? null : user.id)}>
                         <FiMoreVertical size={24} className="text-green-500" />
@@ -223,7 +224,10 @@ const UsersTable = () => {
                             📝 Edit
                           </button>
                           <button
-                            onClick={() => handleDeleteUser (user.id)}
+                            onClick={() => {
+                              setSelectedUser (user);
+                              setShowDeleteModal(true);
+                            }}
                             className="block w-full px-4 py-2 text-left text-red-500 hover:bg-gray-500"
                           >
                             ❌ Delete
@@ -250,6 +254,18 @@ const UsersTable = () => {
         setUsername={setEditUsername}
         email={editEmail}
         setEmail={setEditEmail}
+        errors={errors}
+      />
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onDelete={() => {
+          handleDeleteUser (selectedUser .id);
+          setShowDeleteModal(false);
+        }}
+        username={selectedUser  ? selectedUser .username : ""}
       />
 
       {/* Toast Container */}

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import Head from "next/head";
 import TaskForm from "./form"; // Import TaskForm component
-import Archive from "./Archive";
+import Archive from "./Archive"; // Ensure this component is correctly implemented
 import Adminbar from "../Components/adminsidebar";
 import authUser  from "../utils/authUser";
 import { ToastContainer, toast } from "react-toastify"; // Import toast and ToastContainer
@@ -31,7 +31,7 @@ interface Task {
 }
 
 const Dashboard = () => {
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  
   const [tasks, setTasks] = useState<Task[]>([]);
   const [archivedTasks, setArchivedTasks] = useState<Task[]>([]);
   const [showTableModal, setShowTableModal] = useState(false);
@@ -156,155 +156,151 @@ const Dashboard = () => {
         <ToastContainer position="top-right" autoClose={3000} />
         <Adminbar />
         <div className="container mx-auto p-4">
-          <div className="w-full space-y-10 z-40 rounded-lg shadow-lg">
-            <div>
-              <br />
-              <button
-                onClick={() => setShowTableModal(true)}
-                className="px-4 py-2 text-base sm:text-lg font-semibold text-white bg-green-600 border-2 border-gray-800 rounded-lg shadow-md transition-all duration-300 hover:bg-white hover:text-green-600 hover:border-green-600 hover:shadow-lg active:bg-green-500 active:shadow-none active:translate-y-1"
-              >
-                View Task 
-              </button>
+  <div className="w-full space-y-10 z-40 rounded-lg shadow-lg">
+    
+    <br />
+    <button
+      onClick={() => setShowTableModal(true)}
+      className="px-4 py-2 text-base sm:text-lg font-semibold text-green-500 bg-gray-600 border-2 border-green-800 rounded-lg shadow-md transition-all duration-300 hover:bg-white hover:text-green-600 hover:border-green-600 hover:shadow-lg active:bg-green-500 active:shadow-none active:translate-y-1"
+    >
+      View Task 
+    </button>
 
-              <button
-                onClick={() => setShowArchiveModal(true)}
-                className="px-4 py-2 text-base sm:text-lg font-semibold text-white bg-green-600 border-2 border-gray-800 rounded-lg shadow-md transition-all duration-300 hover:bg-white hover:text-green-600 hover:border-green-600 hover:shadow-lg active:bg-green-500 active:shadow-none active:translate-y-1"
-              >
-                View Archived
-              </button>
-  
-              <br />
-              <br />
-              <TaskForm tasks={tasks} setTasks={setTasks} editingTask={editingTask} setEditingTask={setEditingTask} />
-            </div>
-          </div>
-        </div>
+    <button
+      onClick={() => setShowArchiveModal(true)}
+      className="px-4 py-2 text-base sm:text-lg font-semibold text-green-500 bg-gray-600 border-2 border-green-800 rounded-lg shadow-md transition-all duration-300 hover:bg-white hover:text-green-600 hover:border-green-600 hover:shadow-lg active:bg-green-500 active:shadow-none active:translate-y-1"
+    >
+      View Archived
+    </button>
+
+    <br />
+    <br />
+    <TaskForm tasks={tasks} setTasks={setTasks} editingTask={editingTask} setEditingTask={setEditingTask} />
+    
+    {/* Add a gap at the bottom */}
+    <div className="mb-10"></div> {/* Adjust the margin-bottom value as needed */}
+  </div>
+</div>
+
+        {/* Task Table Modal */}
         {showTableModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
-            <div
-              className="relative p-4 sm:p-8 rounded-lg border-4 border-green-800 shadow-lg bg-gray-700 w-full max-w-lg sm:max-w-4xl h-auto transition-all duration-300"
-              style={{ translate: "-6px -6px" }}
-            >
-              <div className="flex justify-between items-center mb-4 sm:mb-6">
-                <div className="text-lg sm:text-xl font-extrabold bg-gray-600 px-4 sm:px-8 py-2 sm:py-4 border-b-4 border-green-800 text-white rounded-lg shadow-lg">
-                  Task Table
-                </div>
-                <button
-                  onClick={() => setShowTableModal(false)}
-                  className="text-white bg-green-600 rounded px-4 sm:px-6 py-2 sm:py-3"
-                >
-                  Close
-                </button>
+          <div className={`fixed inset-y-0 right-0 transform transition-transform duration-300 ${showTableModal ? 'translate-x-0' : 'translate-x-full'} bg-gray-800 w-[430px] p-10 shadow-2xl rounded-l-lg z-50 border border-green-500`}>
+            <div className="flex justify-between items-center mb-4 sm:mb-6">
+              <div className="text-xl sm:text-2xl font-extrabold bg-gray-600 px-4 sm:px-8 py-2 sm:py-4 border-b-4 border-green-800 text-white rounded-lg shadow-lg">
+                Task Table
               </div>
+              <button
+                onClick={() => setShowTableModal(false)}
+                className="text-white bg-green-600 rounded px-4 sm:px-6 py-2 sm:py-3"
+              >
+                Close
+              </button>
+            </div>
 
-              <div className="max-h-80 sm:max-h-96 overflow-y-auto">
-                <div className="grid grid-cols-1 gap-4 sm:gap-6">
-                  {currentTask && (
-                    <div
-                      key={currentTask.id}
-                      className="relative p-4 sm:p-6 rounded-lg border-4 border-green-800 shadow-md bg-gray-600 transition-all duration-300 text-center"
+            <div className="max-h-80 sm:max-h-96 overflow-y-auto">
+              <div className="grid grid-cols-1 gap-4 sm:gap-6">
+                {currentTask && (
+                  <div
+                    key={currentTask.id}
+                    className="relative p-4 sm:p-6 rounded-lg border-4 border-green-800 shadow-md bg-gray-600 transition-all duration-300 text-center"
+                  >
+                    <span
+                      className={`absolute top-2 right-2 px-2 sm:px-3 py-1 text-xs sm:text-sm font-bold text-white rounded-md ${
+                        currentTask.status === 'done' ? 'bg-green-600' :
+                        currentTask.status === 'pending' ? 'bg-yellow-500' :
+                        currentTask.status === 'overdue' ? 'bg-red-600' :
+                        'bg-gray-500'
+                      }`}
                     >
-                      <span
-                        className={`absolute top-2 right-2 px-2 sm:px-3 py-1 text-xs sm:text-sm font-bold text-white rounded-md ${
-                          currentTask.status === 'done' ? 'bg-green-600' :
-                          currentTask.status === 'pending' ? 'bg-yellow-500' :
-                          currentTask.status === 'overdue' ? 'bg-red-600' :
-                          'bg-gray-500'
-                        }`}
+                      {currentTask.status.toUpperCase()}
+                    </span>
+
+                    <h4 className="text-lg sm:text-xl font-bold text-white">{currentTask.title}</h4>
+                    <p className="text-gray-300 text-sm sm:text-base">
+                      {expandedDescription ? currentTask.description : `${currentTask.description.substring(0, 120)}...`}
+                      {currentTask.description.length > 120 && (
+                        <button
+                          onClick={() => setExpandedDescription(!expandedDescription)}
+                          className="text-blue-400 hover:underline ml-1"
+                        >
+                          {expandedDescription ? "Read Less" : "Read More"}
+                        </button>
+                      )}
+                    </p>
+                    <p className="text-xs sm:text-sm text-gray-300"><strong>Deadline:</strong> {currentTask.deadline}</p>
+                    <p className="text-xs sm:text-sm text-gray-300"><strong>Started:</strong> {currentTask.time_started}</p>
+                    <p className="text-xs sm:text-sm text-gray-300"><strong>Ended:</strong> {currentTask.time_ended}</p>
+
+                    <div className="mt-4 sm:mt-6 flex flex-wrap gap-2 sm:gap-4 justify-center">
+                      <button
+                        onClick={() => { editTask(currentTask); setShowTableModal(false); }}
+                        className="py-2 px-4 sm:px-5 border-4 border-green-800 shadow-md bg-green-600 text-white transition-all duration-300 hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0px_#000] flex-shrink-0"
                       >
-                        {currentTask.status.toUpperCase()}
-                      </span>
-
-                      <h4 className="text-lg sm:text-xl font-bold text-white">{currentTask.title}</h4>
-                      <p className="text-gray-300 text-sm sm:text-base">
-                        {expandedDescription ? currentTask.description : `${currentTask.description.substring(0, 120)}...`}
-                        {currentTask.description.length > 120 && (
-                          <button
-                            onClick={() => setExpandedDescription(!expandedDescription)}
-                            className="text-blue-400 hover:underline ml-1"
-                          >
-                            {expandedDescription ? "Read Less" : "Read More"}
-                          </button>
-                        )}
-                      </p>
-                      <p className="text-xs sm:text-sm text-gray-300"><strong>Deadline:</strong> {currentTask.deadline}</p>
-                      <p className="text-xs sm:text-sm text-gray-300"><strong>Started:</strong> {currentTask.time_started}</p>
-                      <p className="text-xs sm:text-sm text-gray-300"><strong>Ended:</strong> {currentTask.time_ended}</p>
-
-                      <div className="mt-4 sm:mt-6 flex flex-wrap gap-2 sm:gap-4 justify-center">
-                        <button
-                          onClick={() => { editTask(currentTask); setShowTableModal(false); }}
-                          className="py-2 px-4 sm:px-5 border-4 border-green-800 shadow-md bg-green-600 text-white transition-all duration-300 hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0px_#000] flex-shrink-0"
-                        >
-                          ✏️ Edit
-                        </button>
-                        <button
-                          onClick={() => confirmDeleteTask(currentTask.id)} // Open delete confirmation modal
-                          className="py-2 px-4 sm:px-5 border-4 border-green-800 shadow-md bg-red-600 text-white transition-all duration-300 hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0px_#000] flex-shrink-0"
-                        >
-                          🗑️ Delete
-                        </button>
-                        <button
-                          onClick={() => confirmArchiveTask(currentTask.id)} // Open archive confirmation modal
-                          className="py-2 px-4 sm:px-5 border-4 border-green-800 shadow-md bg-blue-600 text-white transition-all duration-300 hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0px_#000] flex-shrink-0"
-                        >
-                          📦 Archive
-                        </button>
-                        <button
-                          onClick={() => toggleVisibility(currentTask.id)}
-                          disabled={loading}
-                          className={`py-2 px-4 sm:px-5 border-4 border-green-800 shadow-md ${
-                            currentTask.visibility === "visible" ? "bg-green-600" : "bg-gray-500"
-                          } text-white transition-all duration-300 flex-shrink-0`}
-                        >
-                          {currentTask.visibility === "visible" ? "🔵 Visible" : "⚫ Invisible"}
-                        </button>
-                      </div>
+                        ✏️ Edit
+                      </button>
+                      <button
+                        onClick={() => confirmDeleteTask(currentTask.id)} // Open delete confirmation modal
+                        className="py-2 px-4 sm:px-5 border-4 border-green-800 shadow-md bg-red-600 text-white transition-all duration-300 hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0px_#000] flex-shrink-0"
+                      >
+                        🗑️ Delete
+                      </button>
+                      <button
+                        onClick={() => confirmArchiveTask(currentTask.id)} // Open archive confirmation modal
+                        className="py-2 px-4 sm:px-5 border-4 border-green-800 shadow-md bg-blue-600 text-white transition-all duration-300 hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0px_#000] flex-shrink-0"
+                      >
+                        📦 Archive
+                      </button>
+                      <button
+                        onClick={() => toggleVisibility(currentTask.id)}
+                        disabled={loading}
+                        className={`py-2 px-4 sm:px-5 border-4 border-green-800 shadow-md ${
+                          currentTask.visibility === "visible" ? "bg-green-600" : "bg-gray-500"
+                        } text-white transition-all duration-300 flex-shrink-0`}
+                      >
+                        {currentTask.visibility === "visible" ? "🔵 Visible" : "⚫ Invisible"}
+                      </button>
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
+            </div>
 
-              <div className="flex justify-between mt-4 sm:mt-6">
-                <button
-                  onClick={handlePreviousPage}
-                  disabled={currentPage === 0}
-                  className="py-2 px-4 sm:py-3 sm:px-6 bg-green-600 text-white rounded disabled:opacity-50"
-                >
-                  Previous
-                </button>
-                <button
-                  onClick={handleNextPage}
-                  disabled={currentPage === totalPages - 1}
-                  className="py-2 px-4 sm:py-3 sm:px-6 bg-green-600 text-white rounded disabled:opacity-50"
-                >
-                  Next
-                </button>
-              </div>
+            <div className="flex justify-between mt-4 sm:mt-6">
+              <button
+                onClick={handlePreviousPage}
+                disabled={currentPage === 0}
+                className="py-2 px-4 sm:py-3 sm:px-6 bg-green-600 text-white rounded disabled:opacity-50"
+              >
+                Previous
+              </button>
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages - 1}
+                className="py-2 px-4 sm:py-3 sm:px-6 bg-green-600 text-white rounded disabled:opacity-50"
+              >
+                Next
+              </button>
             </div>
           </div>
         )}
 
+        {/* Archive Modal */}
         {showArchiveModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-gray-700 p-8 rounded-lg shadow-lg text-white h-auto ">
-              <h3 className="text-xl font-bold text-center mb-4">Archived Tasks</h3>
-              <Archive />
-              <button onClick={() => setShowArchiveModal(false)} className="w-full bg-green-600 hover:bg-green-500 py-2 px-4 rounded mt-4">Close</button>
+          <div className={`fixed inset-y-0 right-0 transform transition-transform duration-300 ${showArchiveModal ? 'translate-x-0' : 'translate-x-full'} bg-gray-800 w-[430px] p-10 shadow-2xl rounded-l-lg z-50 border border-green-500`}>
+            <div className="flex justify-between items-center mb-4 sm:mb-6">
+              <div className="text-xl sm:text-2xl font-extrabold bg-gray-600 px-4 sm:px-8 py-2 sm:py-4 border-b-4 border-green-800 text-white rounded-lg shadow-lg">
+                Archived Tasks
+              </div>
+              <button
+                onClick={() => setShowArchiveModal(false)}
+                className="text-white bg-green-600 rounded px-4 sm:px-6 py-2 sm:py-3"
+              >
+                Close
+              </button>
             </div>
-          </div>
-        )}
-  
-        {showLogoutModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-gray-700 p-6 rounded-lg shadow-lg text-white w-96">
-              <h3 className="text-xl font-bold text-center mb-4">Confirm Logout</h3>
-              <button onClick={handleLogout} className="w-full bg-red-600 hover:bg-red-500 py-2 px-4 rounded transition">
-                ✅ Logout
-              </button>
-              <button onClick={() => setShowLogoutModal(false)} className="w-full bg-gray-600 hover:bg-gray-500 py-2 px-4 rounded mt-2">
-                Cancel
-              </button>
+
+            <div className="max-h-80 sm:max-h-96 overflow-y-auto">
+              <Archive />
             </div>
           </div>
         )}

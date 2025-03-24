@@ -81,8 +81,18 @@ export default function Login() {
 
         {/* Login Box */}
         <div className="relative bg-gray-900/80 backdrop-blur-md p-6 sm:p-8 rounded-lg shadow-lg w-full max-w-sm border border-green-600">
+        <div className="flex items-center justify-center ">
+            <img
+              src="/infini.png"
+              alt="Logo"
+              className="w-40"
+            />
+          </div>
+          <br />
           <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-4 sm:mb-6">
+            
             Infini-Sign In
+
           </h2>
 
           <form onSubmit={handleLogin} className="space-y-4 sm:space-y-5">

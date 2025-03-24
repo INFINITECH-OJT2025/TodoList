@@ -21,11 +21,19 @@ const HeroSection = () => {
       {/* Navigation */}
       <nav className="bg-gray-900 py-4 shadow-lg fixed top-0 w-full border-b-4 border-green-900 shadow-green-900 z-50">
   <div className="container mx-auto flex justify-center items-center px-6">
+ 
+ 
     <div className="text-green-300 text-2xl font-bold drop-shadow-lg">
       <a href="/" className="transform hover:scale-110 transition duration-300">
         InfiniTask
       </a>
+      
     </div>
+    <img
+              src="/infini.png"
+              alt="Logo"
+              className="w-9"
+            />
   </div>
 </nav>
 <br />
@@ -44,10 +52,14 @@ const HeroSection = () => {
               <a href="/Signup" className="px-8 py-3 text-lg font-semibold border border-green-600 rounded hover:bg-gray-700 transition">Create an Account</a>
             </div>
           </div>
-          <div className="  lg:w-3/6 flex justify-center">
-            <img src="/cram.png" alt="Task Management" className="w-full max-w-2xl rounded-lg shadow-lg" />
-          </div>
-          
+          <div className="lg:w-3/6 flex justify-center">
+  <img 
+    src="/cram.png" 
+    alt="Task Management" 
+    className="w-full max-w-2xl rounded-lg shadow-md"
+  />
+</div>
+
         </div>
         
       </section>
@@ -72,6 +84,7 @@ const HeroSection = () => {
               className="rounded-lg shadow-lg"
             >
               {[{ src: "/image.png", title: "Dashboard", description: "Your central hub for tracking progress, managing tasks, and visualizing your productivity." },
+                { src: "/usertask.png", title: "Personal Task", description: "Stay organized with your personal tasks, set priorities, and manage your time effectively." },
                 { src: "/usertask.png", title: "Personal Task", description: "Stay organized with your personal tasks, set priorities, and manage your time effectively." },
                 { src: "/admin.png", title: "Admin Task", description: "For admin users, manage team tasks, oversee project progress, and ensure smooth operations." }]
                 .map((item, index) => (

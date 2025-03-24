@@ -391,16 +391,19 @@ const ActivityPage = () => {
                 {/* // Hamburger Menu Button on the Left */}
           
                 <div className="relative inline-block">
+                <div className="flex justify-center w-full">
                 <button
-  onClick={() => setOpen(!open)}
-  className="flex items-center justify-center px-5 py-2 text-lg font-bold text-white bg-green-700 border-2 border-gray-500 shadow-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-green-600 hover:border-gray-400 hover:shadow-xl active:bg-green-500 active:shadow-none active:translate-y-1"
-  style={{
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4), inset 0 2px 5px rgba(255, 255, 255, 0.2)",
-    borderRadius: "8px",
-  }}
->
-  Status
-</button>
+    onClick={() => setOpen(!open)}
+    className="flex items-center justify-center px-5 py-2 text-lg font-bold text-white bg-green-700 border-2 border-gray-500 shadow-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-green-600 hover:border-gray-400 hover:shadow-xl active:bg-green-500 active:shadow-none active:translate-y-1"
+    style={{
+      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4), inset 0 2px 5px rgba(255, 255, 255, 0.2)",
+      borderRadius: "8px",
+    }}
+  >
+    STATUS
+  </button>
+</div>
+
 
 
 
@@ -448,19 +451,19 @@ const ActivityPage = () => {
 
 
 </div>
-                  {/* Plus Button (Circular, Small, Gray-Green Theme) */}
-                  <button
-  onClick={() => setIsOpen((prev) => !prev)}
-  className="flex items-center justify-center px-5 py-2 text-lg font-bold text-white bg-green-700 border-2 border-gray-500 shadow-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-green-600 hover:border-gray-400 hover:shadow-xl active:bg-green-500 active:shadow-none active:translate-y-1"
-  style={{
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.2)",
-    borderRadius: "6px",
-  }}
->
-  {isOpen ? "Add Task" : "Add Task"}
-</button>
-
-
+{/* Plus Button (Centered on Small Screens) */}
+<div className="flex justify-center w-full">
+  <button
+    onClick={() => setIsOpen((prev) => !prev)}
+    className="flex items-center justify-center px-4 py-2 text-lg font-bold text-white bg-green-700 border-2 border-gray-500 shadow-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-green-600 hover:border-gray-400 hover:shadow-xl active:bg-green-500 active:shadow-none active:translate-y-1"
+    style={{
+      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.2)",
+      borderRadius: "10px",
+    }}
+  >
+    {isOpen ? "ADD TASK" : "ADD TASK"}
+  </button>
+</div>
     
    
                 </div>
@@ -482,7 +485,7 @@ const ActivityPage = () => {
             </div>
   
             <h1 className="text-3xl md:text-5xl font-extrabold mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 drop-shadow-lg">
-              Personal Task
+              PERSONAL TASK
             </h1>
             <br />
             <ProgressBar percentage={completionPercentage} />
@@ -525,10 +528,10 @@ const ActivityPage = () => {
             </p>
           </div>
 
-          {/* Description */}
-          <div className="p-4 sm:p-6 w-full max-w-3xl mx-auto">
+{/* Description */}
+<div className="p-4 sm:p-6 w-full max-w-3xl mx-auto">
   <h3
-    className={`text-sm sm:text-lg font-semibold text-gray-300 text-justify indent-8 break-words overflow-y-auto transition-all duration-300 ${
+    className={`text-sm sm:text-lg font-semibold text-gray-300 text-justify mx-auto max-w-2xl indent-8 break-words overflow-y-auto transition-all duration-300 ${
       expanded ? 'max-h-none' : 'max-h-64'
     }`}
     style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
@@ -542,6 +545,7 @@ const ActivityPage = () => {
     {expanded ? 'See Less' : 'See More'}
   </button>
 </div>
+
 
 
           {/* Collaborators */}
@@ -650,7 +654,7 @@ const ActivityPage = () => {
 </button>
 
 <h2 className="text-2xl font-bold mb-6 text-center text-green-500">
-  {editId ? "Edit" : "Add"} Task
+  {editId ? "EDIT" : "ADD"} TASK
 </h2>
 
 <form onSubmit={handleSubmit} className="flex flex-col gap-6">

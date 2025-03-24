@@ -45,6 +45,13 @@ const SidebarNavigation = () => {
     <>
       <aside className="bg-gray-700 min-h-screen w-20 flex flex-col items-center py-4 justify-between ">
         <ul className="text-white space-y-6">
+        <div className="flex items-center justify-center ">
+            <img
+              src="/infini.png"
+              alt="Logo"
+              className="w-14"
+            />
+          </div>
           {menuItems.map((item) => (
             <li key={item.name} className="group relative flex flex-col items-center">
               <Link href={item.path} legacyBehavior>

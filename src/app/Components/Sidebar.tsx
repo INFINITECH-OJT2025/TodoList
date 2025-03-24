@@ -144,11 +144,11 @@ export default function Sidebar() {
           </div>
 
           {/* Logo Container */}
-          <div className="flex items-center justify-center p-3">
+          <div className="flex items-center justify-center ">
             <img
               src="/infini.png"
               alt="Logo"
-              className={`transition-all duration-300 ${isOpen ? "w-57" : "w-10"}`}
+              className={`transition-all duration-300 ${isOpen ? "w-36" : "w-10"}`}
             />
           </div>
 
