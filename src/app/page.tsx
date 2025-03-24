@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import authUser from "./utils/authUser";
+import authUser  from "./utils/authUser";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -18,28 +18,22 @@ const HeroSection = () => {
 
   return (
     <div className="bg-gray-900 text-gray-300"> 
-      {/* Navigation */}
-      <nav className="bg-gray-900 py-4 shadow-lg fixed top-0 w-full border-b-4 border-green-900 shadow-green-900 z-50">
-  <div className="container mx-auto flex justify-center items-center px-6">
- 
- 
-    <div className="text-green-300 text-2xl font-bold drop-shadow-lg">
-      <a href="/" className="transform hover:scale-110 transition duration-300">
-        InfiniTask
-      </a>
-      
-    </div>
-    <img
-              src="/infini.png"
-              alt="Logo"
-              className="w-9"
-            />
-  </div>
-</nav>
-<br />
-<br />
-<br />
-<br />
+
+      {/* Header */}
+      <header className="bg-gray-900 py-4 shadow-lg fixed top-0 w-full border-b-4 border-green-900 shadow-green-900 z-50">
+        <div className="container mx-auto flex justify-between items-center px-6">
+          <div className="text-green-300 text-2xl font-bold drop-shadow-lg">
+            <a href="/" className="transform hover:scale-110 transition duration-300">
+              InfiniTask
+            </a>
+          </div>
+          <img src="/infini.png" alt="Logo" className="w-9" />
+        </div>
+      </header>
+      <br />
+      <br />
+      <br />
+      <br />
 
       {/* Hero Section */}
       <section className="py-5 flex items-center justify-end">
@@ -52,20 +46,12 @@ const HeroSection = () => {
               <a href="/Signup" className="px-8 py-3 text-lg font-semibold border border-green-600 rounded hover:bg-gray-700 transition">Create an Account</a>
             </div>
           </div>
+          <br />
           <div className="lg:w-3/6 flex justify-center">
-  <img 
-    src="/cram.png" 
-    alt="Task Management" 
-    className="w-full max-w-2xl rounded-lg shadow-md"
-  />
-</div>
-
+            <img src="/cram.png" alt="Task Management" className="w-full max-w-2xl rounded-lg shadow-md" />
+          </div>
         </div>
-        
       </section>
-   
-  
-
 
       {/* Vlogs Section (Carousel) */}
       <section className="mt-16 bg-gray-800 py-12">
@@ -85,7 +71,7 @@ const HeroSection = () => {
             >
               {[{ src: "/image.png", title: "Dashboard", description: "Your central hub for tracking progress, managing tasks, and visualizing your productivity." },
                 { src: "/usertask.png", title: "Personal Task", description: "Stay organized with your personal tasks, set priorities, and manage your time effectively." },
-                { src: "/usertask.png", title: "Personal Task", description: "Stay organized with your personal tasks, set priorities, and manage your time effectively." },
+                { src: "/profile.png", title: "Personal Task", description: "Stay organized with your personal tasks, set priorities, and manage your time effectively." },
                 { src: "/admin.png", title: "Admin Task", description: "For admin users, manage team tasks, oversee project progress, and ensure smooth operations." }]
                 .map((item, index) => (
                   <SwiperSlide key={index}>
@@ -99,13 +85,13 @@ const HeroSection = () => {
             </Swiper>
           </div>
           <div className="mt-8">
-  <iframe
-    className="w-full h-96 rounded-lg border-4 border-green-500"
-    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1930.3269289819482!2d121.0135053!3d14.559905!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397c90b830e5f29%3A0x89fe307dfecd3c0d!2sCampos%20Rueda%20Building%2C%20101%20Urban%20Ave%2C%20Makati%2C%201206%20Metro%20Manila!5e0!3m2!1sen!2sph!4v1700000000000"
-    allowFullScreen
-    loading="lazy"
-  ></iframe>
-</div>
+            <iframe
+              className="w-full h-96 rounded-lg border-4 border-green-500"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1930.3269289819482!2d121.0135053!3d14.559905!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397c90b830e5f29%3A0x89fe307dfecd3c0d!2sCampos%20Rueda%20Building%2C%20101%20Urban%20Ave%2C%20Makati%2C%201206%20Metro%20Manila!5e0!3m2!1sen!2sph!4v1700000000000"
+              allowFullScreen
+              loading="lazy"
+            ></iframe>
+          </div>
         </div>
       </section>
 
@@ -117,17 +103,17 @@ const HeroSection = () => {
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-gray-700 p-6 rounded-lg">
               <h3 className="text-xl font-semibold text-white">Email</h3>
-              <p className="text-gray-300">support@infinitechtodolist.com</p>
+              <p className="text-gray-300">Infinitech@gmail.com</p>
             </div>
             <div className="bg-gray-700 p-6 rounded-lg">
               <h3 className="text-xl font-semibold text-white">Phone</h3>
-              <p className="text-gray-300">+123 456 7890</p>
+              <p className="text-gray-300">09267772634</p>
             </div>
           </div>
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-gray-700 p-6 rounded-lg">
               <h3 className="text-xl font-semibold text-white">Location</h3>
-              <p className="text-gray-300">123 Tech Street, Innovation City</p>
+              <p className="text-gray-300">unit 202, campos rueda building, 101 Urban Ave, Makati, 1206 Metro Manila</p>
             </div>
             <div className="bg-gray-700 p-6 rounded-lg">
               <h3 className="text-xl font-semibold text-white">Business Hours</h3>
@@ -135,10 +121,21 @@ const HeroSection = () => {
             </div>
           </div>
         </div>
-        
       </section>
+
+      {/* Footer Section */}
+      <footer className="bg-gray-800 py-6">
+        <div className="container mx-auto text-center">
+          <p className="text-gray-400">© {new Date().getFullYear()} InfiniTask. All rights reserved.</p>
+          <div className="mt-4">
+            <a href="/privacy" className="text-gray-400 hover:text-green-500 mx-2">Privacy Policy</a>
+            <a href="/terms" className="text-gray-400 hover:text-green-500 mx-2">Terms of Service</a>
+            <a href="/contact" className="text-gray-400 hover:text-green-500 mx-2">Contact Us</a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
 
-export default authUser(HeroSection);
+export default authUser (HeroSection);

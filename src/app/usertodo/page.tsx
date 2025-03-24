@@ -31,7 +31,6 @@ interface Task {
 }
 
 const Dashboard = () => {
-  
   const [tasks, setTasks] = useState<Task[]>([]);
   const [archivedTasks, setArchivedTasks] = useState<Task[]>([]);
   const [showTableModal, setShowTableModal] = useState(false);
@@ -157,23 +156,23 @@ const Dashboard = () => {
         <Adminbar />
         <div className="container mx-auto p-4">
   <div className="w-full space-y-10 z-40 rounded-lg shadow-lg">
-    
     <br />
-    <button
-      onClick={() => setShowTableModal(true)}
-      className="px-4 py-2 text-base sm:text-lg font-semibold text-green-500 bg-gray-600 border-2 border-green-800 rounded-lg shadow-md transition-all duration-300 hover:bg-white hover:text-green-600 hover:border-green-600 hover:shadow-lg active:bg-green-500 active:shadow-none active:translate-y-1"
-    >
-      View Task 
-    </button>
+    <div className="flex justify-center space-x-4">
+      <button
+        onClick={() => setShowTableModal(true)}
+        className="px-4 py-2 text-base sm:text-lg font-semibold text-green-500 bg-gray-600 border-2 border-green-800 rounded-lg shadow-md transition-all duration-300 hover:bg-white hover:text-green-600 hover:border-green-600 hover:shadow-lg active:bg-green-500 active:shadow-none active:translate-y-1"
+      >
+        View Task 
+      </button>
 
-    <button
-      onClick={() => setShowArchiveModal(true)}
-      className="px-4 py-2 text-base sm:text-lg font-semibold text-green-500 bg-gray-600 border-2 border-green-800 rounded-lg shadow-md transition-all duration-300 hover:bg-white hover:text-green-600 hover:border-green-600 hover:shadow-lg active:bg-green-500 active:shadow-none active:translate-y-1"
-    >
-      View Archived
-    </button>
+      <button
+        onClick={() => setShowArchiveModal(true)}
+        className="px-4 py-2 text-base sm:text-lg font-semibold text-green-500 bg-gray-600 border-2 border-green-800 rounded-lg shadow-md transition-all duration-300 hover:bg-white hover:text-green-600 hover:border-green-600 hover:shadow-lg active:bg-green-500 active:shadow-none active:translate-y-1"
+      >
+        View Archived
+      </button>
+    </div>
 
-    <br />
     <br />
     <TaskForm tasks={tasks} setTasks={setTasks} editingTask={editingTask} setEditingTask={setEditingTask} />
     
@@ -288,7 +287,7 @@ const Dashboard = () => {
         {showArchiveModal && (
           <div className={`fixed inset-y-0 right-0 transform transition-transform duration-300 ${showArchiveModal ? 'translate-x-0' : 'translate-x-full'} bg-gray-800 w-[430px] p-10 shadow-2xl rounded-l-lg z-50 border border-green-500`}>
             <div className="flex justify-between items-center mb-4 sm:mb-6">
-              <div className="text-xl sm:text-2xl font-extrabold bg-gray-600 px-4 sm:px-8 py-2 sm:py-4 border-b-4 border-green-800 text-white rounded-lg shadow-lg">
+            <div className="text-xl sm:text-2xl font-extrabold bg-gray-600 px-4 sm:px-8 py-2 sm:py-4 border-b-4 border-green-800 text-white rounded-lg shadow-lg">
                 Archived Tasks
               </div>
               <button

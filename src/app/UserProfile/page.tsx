@@ -152,7 +152,7 @@ const TodoPage = () => {
       <div
         className={`fixed top-0 right-0 h-full w-96 bg-gray-800 p-6 transition-transform transform ${
           editing ? "translate-x-0" : "translate-x-full"
-        } shadow-lg z-50 flex flex-col items-center justify-center border-4 border-green-500 rounded-l-lg`}
+        } shadow-lg z-50 flex flex-col items-center justify-center border-2 border-gray-500 rounded-l-lg`}
       >
         <h2 className="text-xl font-bold text-center text-gray-300 mb-4">Edit Profile</h2>
         

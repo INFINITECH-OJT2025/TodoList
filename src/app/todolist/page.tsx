@@ -118,9 +118,11 @@ const TodoList = () => {
   
         {/* Task Completion Bar */}
         <div className="w-full bg-gray-300 rounded-xl p-4 mb-6 shadow-lg">
-          <div className="text-lg font-bold mb-2">Task Completion</div>
+          
+          <div className="text-lg font-bold mb-2"> Task Completion</div>
           <div className="w-full bg-gray-400 rounded-full h-6 overflow-hidden">
             <div className="h-full bg-green-900 transition-all" style={{ width: `${completionPercentage}%` }}></div>
+            
           </div>
           <div className="text-right text-sm text-gray-700 mt-1">
             {completionPercentage.toFixed(2)}% Completed

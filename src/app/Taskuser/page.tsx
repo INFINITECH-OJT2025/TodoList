@@ -490,8 +490,8 @@ const ActivityPage = () => {
             <br />
             <ProgressBar percentage={completionPercentage} />
             <br />
-  <div className="flex justify-center w-full px-4 sm:px-6">
-  <div className="w-full max-w-6xl p-4 sm:p-6 rounded-lg shadow-lg">
+            <div className="flex justify-center w-full px-4 sm:px-6">
+  <div className="w-full max-w-6xl p-4 sm:p-6 rounded-lg shadow-lg border border-green-500">
     {currentActivities.length > 0 && (
       <div
         key={currentActivities[0].id}
@@ -528,25 +528,23 @@ const ActivityPage = () => {
             </p>
           </div>
 
-{/* Description */}
-<div className="p-4 sm:p-6 w-full max-w-3xl mx-auto">
-  <h3
-    className={`text-sm sm:text-lg font-semibold text-gray-300 text-justify mx-auto max-w-2xl indent-8 break-words overflow-y-auto transition-all duration-300 ${
-      expanded ? 'max-h-none' : 'max-h-64'
-    }`}
-    style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
-  >
-    {currentActivities[0].description}
-  </h3>
-  <button
-    onClick={() => setExpanded(!expanded)}
-    className="mt-2 text-sm text-blue-400 hover:text-blue-600 focus:outline-none"
-  >
-    {expanded ? 'See Less' : 'See More'}
-  </button>
-</div>
-
-
+          {/* Description */}
+          <div className="p-4 sm:p-6 w-full max-w-3xl mx-auto">
+            <h3
+              className={`text-sm sm:text-lg font-semibold text-gray-300 text-justify mx-auto max-w-2xl indent-8 break-words overflow-y-auto transition-all duration-300 ${
+                expanded ? 'max-h-none' : 'max-h-64'
+              }`}
+              style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
+            >
+              {currentActivities[0].description}
+            </h3>
+            <button
+              onClick={() => setExpanded(!expanded)}
+              className="mt-2 text-sm text-blue-400 hover:text-blue-600 focus:outline-none"
+            >
+              {expanded ? 'See Less' : 'See More'}
+            </button>
+          </div>
 
           {/* Collaborators */}
           <div className="p-4 sm:p-6">
@@ -643,7 +641,7 @@ const ActivityPage = () => {
           </div>
   
       {/* Right Sidebar for Adding/Editing Activity */}
-      <div className={`fixed inset-y-0 right-0 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'} bg-gray-800 w-[430px] p-10 shadow-2xl rounded-l-lg z-50  border border-green-500`}>
+      <div className={`fixed inset-y-0 right-0 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'} bg-gray-800 w-[430px] p-10 shadow-2xl rounded-l-lg z-50  border border-gray-500`}>
 
 
 <button

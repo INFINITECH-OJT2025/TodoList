@@ -19,6 +19,7 @@ export default function Archive() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedTask, setSelectedTask] = useState<ArchivedTask | null>(null);
   const tasksPerPage = 2; 
+  const [showTable, setShowTable] = useState<boolean>(false); // State to control the sliding effect
 
   useEffect(() => {
     fetchArchivedTasks();
@@ -30,6 +31,7 @@ export default function Archive() {
     try {
       const response = await axios.get("http://127.0.0.1:8000/api/archived-tasks");
       setArchivedTasks(response.data);
+      setShowTable(true); // Show the table after fetching tasks
     } catch (error) {
       setError("Failed to fetch archived tasks.");
       console.error("Error fetching archived tasks:", error);
@@ -66,65 +68,64 @@ export default function Archive() {
       ) : archivedTasks.length === 0 ? (
         <p>No archived tasks found.</p>
       ) : (
-        <div className="max-h-80 overflow-y-auto">
-         <div className="overflow-x-auto">
-  <table className="w-full min-w-[320px] md:min-w-[500px] border-collapse bg-gray-900 text-white border border-gray-600">
-    <thead className="hidden md:table-header-group">
-      <tr className="bg-gray-800 text-xs md:text-sm">
-        <th className="p-2 border border-gray-600">ID</th>
-        <th className="p-2 border border-gray-600">Title</th>
-        <th className="p-2 border border-gray-600">Description</th>
-        <th className="p-2 border border-gray-600">Status</th>
-        <th className="p-2 border border-gray-600">Deadline</th>
-        <th className="p-2 border border-gray-600">Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {currentTasks.map((task) => (
-        <tr
-          key={task.id}
-          className="bg-gray-700 block md:table-row mb-2 md:mb-0 border border-gray-600 rounded-lg md:rounded-none md:border-none text-xs md:text-sm"
-        >
-          <td className="p-2 border border-gray-600 md:border-none block md:table-cell">{task.id}</td>
-          <td
-            className="p-2 border border-gray-600 md:border-none block md:table-cell font-bold cursor-pointer underline"
-            onClick={() => setSelectedTask(task)}
-          >
-            {task.title}
-          </td>
-          <td className="p-2 border border-gray-600 md:border-none block md:table-cell">
-            {task.description.length > 30 ? (
-              <>
-                {task.description.slice(0, 30)}...
-                <button className="text-blue-400 ml-1 text-xs" onClick={() => setSelectedTask(task)}>
-                  More
-                </button>
-              </>
-            ) : (
-              task.description
-            )}
-          </td>
-          <td className="p-2 border border-gray-600 md:border-none block md:table-cell">{task.status}</td>
-          <td className="p-2 border border-gray-600 md:border-none block md:table-cell">{task.deadline}</td>
-          <td className="p-2 border border-gray-600 md:border-none block md:table-cell">
-            <button
-              onClick={() => restoreTask(task.id)}
-              className="bg-green-600 text-white text-xs p-1 rounded hover:bg-green-500 w-full md:w-auto"
-            >
-              Restore
-            </button>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
+        <div className={`max-h-80 overflow-y-auto transition-transform duration-300 ${showTable ? 'translate-x-0' : 'translate-x-full'}`}>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[320px] md:min-w-[500px] border-collapse bg-gray-900 text-white border border-gray-600">
+              <thead className="hidden md:table-header-group">
+                <tr className="bg-gray-800 text-xs md:text-sm">
+                  <th className="p-2 border border-gray-600">ID</th>
+                  <th className="p-2 border border-gray-600">Title</th>
+                  <th className="p-2 border border-gray-600">Description</th>
+                  <th className="p-2 border border-gray-600">Status</th>
+                  <th className="p-2 border border-gray-600">Deadline</th>
+                  <th className="p-2 border border-gray-600">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentTasks.map((task) => (
+                  <tr
+                    key={task.id}
+                    className="bg-gray-700 block md:table-row mb-2 md:mb-0 border border-gray-600 rounded-lg md:rounded-none md:border-none text-xs md:text-sm"
+                  >
+                    <td className="p-2 border border-gray-600 md:border-none block md:table-cell">{task.id}</td>
+                    <td
+                      className="p-2 border border-gray-600 md:border-none block md:table-cell font-bold cursor-pointer underline"
+                      onClick={() => setSelectedTask(task)}
+                    >
+                      {task.title}
+                    </td>
+                    <td className="p-2 border border-gray-600 md:border-none block md:table-cell">
+                      {task.description.length > 30 ? (
+                        <>
+                          {task.description.slice(0, 30)}...
+                          <button className="text-blue-400 ml-1 text-xs" onClick={() => setSelectedTask(task)}>
+                            More
+                          </button>
+                        </>
+                      ) : (
+                        task.description
+                      )}
+                    </td>
+                    <td className="p-2 border border-gray-600 md:border-none block md:table-cell">{task.status}</td>
+                    <td className="p-2 border border-gray-600 md:border-none block md:table-cell">{task.deadline}</td>
+                    <td className="p-2 border border-gray-600 md:border-none block md:table-cell">
+                      <button
+                        onClick={() => restoreTask(task.id)}
+                        className="bg-green-600 text-white text-xs p-1 rounded hover:bg-green-500 w-full md:w-auto"
+                      >
+                        Restore
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
           <div className="mt-4 flex flex-col md:flex-row justify-center items-center gap-2">
             <button
               onClick={() => {
                 setCurrentPage((prev) => Math.max(prev - 1, 1));
-           
               }}
               disabled={currentPage === 1}
               className="px-3 py-2 bg-gray-600 text-white text-xs rounded hover:bg-gray-500 disabled:opacity-50 w-full md:w-auto">
@@ -134,7 +135,6 @@ export default function Archive() {
             <button
               onClick={() => {
                 setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-
               }}
               disabled={currentPage === totalPages}
               className="px-3 py-2 bg-gray-600 text-white text-xs rounded hover:bg-gray-500 disabled:opacity-50 w-full md:w-auto">

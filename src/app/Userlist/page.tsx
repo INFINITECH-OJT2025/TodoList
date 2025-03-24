@@ -27,6 +27,7 @@ const EditModal = ({ isOpen, onClose, onUpdate, username, setUsername, email, se
 
   return (
     <div className={`fixed inset-0 flex items-center justify-end bg-black bg-opacity-50 transition-opacity ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+      
     <div className={`fixed inset-y-0 right-0 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'} bg-gray-800 w-[430px] p-10 shadow-2xl rounded-l-lg z-50  border border-green-500`}>
         <h2 className="text-xl font-bold mb-4 text-green-500">Edit User</h2>
         <div className="mb-4">
@@ -177,11 +178,16 @@ const UsersTable = () => {
         <title>Users List | Infi-Admin</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-
+    
       <div className="flex min-h-screen bg-gray-800 text-gray-100">
-        <Adminbar />
+
+     
+      <div>
+<Adminbar />
+</div>
 
         <div className="flex-1 flex flex-col items-center p-10">
+          
           <h2 className="text-3xl font-bold text-green-500 text-center mb-6 drop-shadow-lg">
             User List
           </h2>
