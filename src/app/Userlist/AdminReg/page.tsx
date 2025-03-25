@@ -154,8 +154,9 @@ const Dashboard = () => {
         <Adminbar />
 
         <div className="flex-1 p-6">
-          <h3 className="text-2xl font-bold text-green-500">Admin Dashboard</h3>
-
+        <div className="flex justify-center items-center ">
+  <h3 className="text-3xl font-bold text-green-500">Admin Dashboard</h3>
+</div>
           {/* Button to open the modal */}
           <button
             onClick={() => setShowModal(true)}
