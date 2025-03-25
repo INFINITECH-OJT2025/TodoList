@@ -150,7 +150,7 @@ const Dashboard = () => {
 
       <ToastContainer />
 
-      <div className="flex min-h-screen bg-gray-800 text-white">
+      <div className="flex min-h-screen bg-gray-900 text-white">
         <Adminbar />
 
         <div className="flex-1 p-6">
@@ -166,7 +166,7 @@ const Dashboard = () => {
 
           {/* Modal for the registration form */}
           {showModal && (
-            <div className={`fixed inset-y-0 right-0 transform transition-transform duration-300 ${showModal ? 'translate-x-0' : 'translate-x-full'} bg-gray-800 w-[430px] p-10 shadow-2xl rounded-l-lg z-50 border border-green-500`}>
+            <div className={`fixed inset-y-0 right-0 transform transition-transform duration-300 ${showModal ? 'translate-x-0' : 'translate-x-full'} bg-gray-900 w-[430px] p-10 shadow-2xl rounded-l-lg z-50 border border-green-500`}>
               <div className="flex justify-between items-center">
                 <h3 className="text-2xl font-bold text-green-500">Register Admin</h3>
                 <button

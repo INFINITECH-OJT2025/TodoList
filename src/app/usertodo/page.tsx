@@ -151,7 +151,7 @@ const Dashboard = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
   
-      <div className="flex min-h-screen bg-gray-800 text-white">
+      <div className="flex min-h-screen bg-gray-900 text-white">
         <ToastContainer position="top-right" autoClose={3000} />
         <Adminbar />
         <div className="container mx-auto p-4">

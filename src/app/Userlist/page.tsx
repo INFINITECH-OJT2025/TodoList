@@ -347,206 +347,200 @@ const UsersTable = () => {
 
 
 
+return (
+  <>
+    <Head>
+      <title>Users List | Infi-Admin</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+    </Head>
 
-  return (
-    <>
-      <Head>
-        <title>Users List | Infi-Admin</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </Head>
-
-      <div className="flex min-h-screen bg-gray-800 text-gray-100">
-        <div>
-          <Adminbar />
-        </div>
-
-        <div className="flex-1 flex flex-col items-center p-5 sm:p-10">
-          <h2 className="text-2xl sm:text-3xl font-bold text-green-500 text-center mb-4 sm:mb-6 drop-shadow-lg">
-            User List
-          </h2>
-
-          {loading ? (
-            <p className="text-center text-gray-300 text-lg">Loading users...</p>
-          ) : error ? (
-            <p className="text-center text-red-500 text-lg">{error}</p>
-          ) : (
-            <>
-              <p className="text-center text-gray-300 mb-4 sm:mb-6">Total Users: {users.length}</p>
-
-              <div className="w-full max-w-8xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                {users.length > 0 ? (
-                  users.map((user) => {
-                    const { totalTasks, completedTasks, pendingTasks, overdueTasks } = calculateTaskStats(user.id);
-                    return (
-                      <div
-                        className="relative card bg-gray-700 border border-transparent rounded-lg shadow-lg flex flex-col items-center p-4 sm:p-5 transition-transform transform hover:scale-105"
-                        key={user.id}
-                        style={{
-                          borderImage: 'linear-gradient(to right, gold, green) 1',
-                        }}
-                      >
-                        <div className="absolute top-4 right-4 cursor-pointer" onClick={() => setMenuOpen(menuOpen === user.id ? null : user.id)}>
-                          <FiMoreVertical size={24} className="text-green-500" />
-                        </div>
-                        <div className="img mb-3">
-                          <img
-                            src={user.profile_image ? `http://127.0.0.1:8000/${user.profile_image}` : "/default-profile.png"}
-                            alt="Profile"
-                            className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-green-500 shadow-lg"
-                          />
-                        </div>
-                        <span className="font-semibold text-white">{user.username}</span>
-                        <p className="text-gray-300 text-center mt-1">User  ID: {user.id}</p>
-                        <p className="job text-gray-300 text-center mt-2">📧 {user.email}</p>
-
-                        {/* Task Stats */}
-                        <div className="w-full mt-4">
-                          <div className="flex flex-wrap -mx-2">
-                            {/* Total Tasks */}
-                            <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
-                              <div className="bg-blue-600 text-white rounded-lg shadow-md p-4 flex items-center">
-                                <div className="mr-2 text-2xl">📋</div>
-                                <div>
-                                  <p className="font-semibold">Total Tasks</p>
-                                  <p>{totalTasks}</p>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Completed Tasks */}
-                            <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
-                              <div className="bg-green-600 text-white rounded-lg shadow-md p-4 flex items-center">
-                                <div className="mr-2 text-2xl">✅</div>
-                                <div>
-                                  <p className="font-semibold">Completed</p>
-                                  <p>{completedTasks}</p>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Pending Tasks */}
-                            <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
-                              <div className="bg-yellow-600 text-white rounded-lg shadow-md p-4 flex items-center">
-                                <div className="mr-2 text-2xl">⏳</div>
-                                <div>
-                                  <p className="font-semibold">Pending</p>
-                                  <p>{pendingTasks}</p>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Overdue Tasks */}
-                            <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
-                              <div className="bg-red-600 text-white rounded-lg shadow-md p-4 flex items-center">
-                                <div className="mr-2 text-2xl">❌</div>
-                                <div>
-                                  <p className="font-semibold">Overdue</p>
-                                  <p>{overdueTasks}</p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          <p className="text-green-400 font-semibold"> 📊 Task Completion</p>
-                          
-                        <button
-                          onClick={() => handleShowTasks(user)} // Show tasks on button click
-                          className="mt-2 bg-blue-500 text-white px-4 py-2 rounded"
-                        >
-                          View Tasks
-                        </button>
-<br />
-                        {/* Button to Generate PDF Report for this User */}
-                        <button
-                          onClick={() => generateUserReport(user)}
-                          className="mt-2 bg-green-500 text-white px-4 py-2 rounded"
-                        >
-                          Generate PDF Report
-                        </button>
-                          <p className="text-white">{totalTasks > 0 ? ((completedTasks / totalTasks) * 100).toFixed(0) : 0}%</p>
-                          <div className="bg-gray-600 rounded-full h-2 mt-4">
-                            <div
-                              className="bg-green-500 h-2 rounded-full"
-                              style={{ width: `${totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0}%` }}
-                            />
-                          </div>
-                        </div>
-
-
-                        {menuOpen === user.id && (
-                          <div className="absolute top-10 right-4 bg-gray-600 shadow-md rounded-lg overflow-hidden w-32 z-10">
-                            <button
-                              onClick={() => handleEditUser (user)}
-                              className="block w-full px-4 py-2 text-left text-white hover:bg-gray-500"
-                            >
-                              📝 Edit
-                            </button>
-                            <button
-                              onClick={() => {
-                                setSelectedUser (user);
-                                setShowDeleteModal(true);
-                              }}
-                              className="block w-full px-4 py-2 text-left text-red-500 hover:bg-gray-500"
-                            >
-                              ❌ Delete
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })
-                ) : (
-                  <div className="text-center text-gray-400 py-4 col-span-full">No users found.</div>
-                )}
-              </div>
-            </>
-          )}
-        </div>
+    <div className="flex min-h-screen bg-gray-900 text-gray-100">
+      <div>
+        <Adminbar />
       </div>
 
-      {/* Edit Modal */}
-      <EditModal
-        isOpen={showEditModal}
-        onClose={() => setShowEditModal(false)}
-        onUpdate={handleUpdateUser }
-        username={editUsername}
-        setUsername={setEditUsername}
-        email={editEmail}
-        setEmail={setEditEmail}
-        errors={errors}
-      />
+      <div className="flex-1 flex flex-col items-center p-5 sm:p-10">
+        <h2 className="text-2xl sm:text-3xl font-bold text-green-500 text-center mb-4 sm:mb-6 drop-shadow-lg">
+          User List
+        </h2>
 
-      {/* Delete Confirmation Modal */}
-      <DeleteConfirmationModal
-        isOpen={showDeleteModal}
-        onClose={() => setShowDeleteModal(false)}
-        onDelete={() => {
-          handleDeleteUser (selectedUser.id);
-          setShowDeleteModal(false);
+        {loading ? (
+          <p className="text-center text-gray-300 text-lg">Loading users...</p>
+        ) : error ? (
+          <p className="text-center text-red-500 text-lg">{error}</p>
+        ) : (
+          <>
+            <p className="text-center text-gray-300 mb-4 sm:mb-6">Total Users: {users.length}</p>
+
+            <div className="w-full max-w-8xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {users.length > 0 ? (
+                users.map((user) => {
+                  const { totalTasks, completedTasks, pendingTasks, overdueTasks } = calculateTaskStats(user.id);
+                  return (
+                    <div
+                      className="relative card bg-gray-800 border border-gray-600 rounded-lg shadow-lg flex flex-col items-center p-4 sm:p-5 transition-transform transform"
+                      key={user.id}
+                      style={{
+                        borderImage: 'linear-gradient(to right, gold, green) 1',
+                      }}
+                    >
+                      <div className="absolute top-4 right-4 cursor-pointer" onClick={() => setMenuOpen(menuOpen === user.id ? null : user.id)}>
+                        <FiMoreVertical size={24} className="text-green-500" />
+                      </div>
+                      <div className="img mb-3">
+                        <img
+                          src={user.profile_image ? `http://127.0.0.1:8000/${user.profile_image}` : "/default-profile.png"}
+                          alt="Profile"
+                          className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-green-500 shadow-lg"
+                        />
+                      </div>
+                      <span className="font-semibold text-white">{user.username}</span>
+                      <p className="text-gray-300 text-center mt-1">User  ID: {user.id}</p>
+                      <p className="job text-gray-300 text-center mt-2">📧 {user.email}</p>
+
+                      {/* Task Stats */}
+                      <div className="w-full mt-4">
+  <div className="flex flex-wrap -mx-2">
+    {/* Total Tasks */}
+    <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
+      <div className="bg-blue-600 text-white rounded-lg shadow-md p-4 flex flex-col items-center text-center border border-black">
+        <div className="text-3xl mb-2">📋</div>
+        <p className="font-semibold">Total Tasks</p>
+        <p>{totalTasks}</p>
+      </div>
+    </div>
+
+    {/* Completed Tasks */}
+    <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
+      <div className="bg-green-600 text-white rounded-lg shadow-md p-4 flex flex-col items-center text-center border border-black">
+        <div className="text-3xl mb-2">✅</div>
+        <p className="font-semibold">Completed</p>
+        <p>{completedTasks}</p>
+      </div>
+    </div>
+
+    {/* Pending Tasks */}
+    <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
+      <div className="bg-yellow-600 text-white rounded-lg shadow-md p-4 flex flex-col items-center text-center border border-black">
+        <div className="text-3xl mb-2">⏳</div>
+        <p className="font-semibold">Pending</p>
+        <p>{pendingTasks}</p>
+      </div>
+    </div>
+
+    {/* Overdue Tasks */}
+    <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
+      <div className="bg-red-600 text-white rounded-lg shadow-md p-4 flex flex-col items-center text-center border border-black">
+        <div className="text-3xl mb-2">❌</div>
+        <p className="font-semibold">Overdue</p>
+        <p>{overdueTasks}</p>
+      </div>
+    </div>
+  </div>
+
+  <div className="flex flex-col">
+    <div className="bg-gray-900 p-4 rounded shadow border border-gray-900">
+      <div className="flex space-x-2 mb-2">
+        <button
+          onClick={() => handleShowTasks(user)}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          View Tasks
+        </button>
+        <button
+          onClick={() => generateUserReport(user)}
+          className="bg-green-500 text-white px-4 py-2 rounded"
+        >
+          Generate PDF Report
+        </button>
+      </div>
+      <p className="text-green-400 font-semibold"> 📊 Task Completion</p>
+      <p className="text-white">{totalTasks > 0 ? ((completedTasks / totalTasks) * 100).toFixed(0) : 0}%</p>
+      <div className="bg-gray-600 rounded-full h-2 mt-4">
+        <div
+          className="bg-green-500 h-2 rounded-full transition-all duration-500"
+          style={{ width: `${totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0}%` }}
+        />
+      </div>
+    </div>
+  </div>
+
+  {menuOpen === user.id && (
+    <div className="absolute top-10 right-4 bg-gray-600 shadow-md rounded-lg overflow-hidden w-32 z-10 border border-gray-900">
+      <button
+        onClick={() => handleEditUser(user)}
+        className="block w-full px-4 py-2 text-left text-white hover:bg-gray-500"
+      >
+        📝 Edit
+      </button>
+      <button
+        onClick={() => {
+          setSelectedUser(user);
+          setShowDeleteModal(true);
         }}
-        username={selectedUser  ? selectedUser.username : ""}
-      />
+        className="block w-full px-4 py-2 text-left text-red-500 hover:bg-gray-500"
+      >
+        ❌ Delete
+      </button>
+    </div>
+  )}
+</div>
 
-      {/* Task Table Modal */}
-      {showTaskTable && (
-        <div className={`fixed top-14 right-1 bg-gray-800 shadow-md rounded-lg border border-green-700 z-50 text-white transition-transform transform ${showTaskTable ? "translate-x-0" : "translate-x-full"} duration-300 h-auto p-4  max-w-4xl mx-4`}>
-          <h2 className="text-xl sm:text-2xl text-green-500 font-bold mb-4">Tasks for {selectedUser ?.username}</h2>
-          <TaskTable tasks={userTasks[selectedUser?.id]} />
-          <div className="flex justify-end mt-4">
-            <button
-              onClick={() => setShowTaskTable(false)}
-              className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition duration-200"
-            >
-              Close
-            </button>
-          </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="text-center text-gray-400 py-4 col-span-full">No users found.</div>
+              )}
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+
+    {/* Edit Modal */}
+    <EditModal
+      isOpen={showEditModal}
+      onClose={() => setShowEditModal(false)}
+      onUpdate={handleUpdateUser }
+      username={editUsername}
+      setUsername={setEditUsername}
+      email={editEmail}
+      setEmail={setEditEmail}
+      errors={errors}
+    />
+
+    {/* Delete Confirmation Modal */}
+    <DeleteConfirmationModal
+      isOpen={showDeleteModal}
+      onClose={() => setShowDeleteModal(false)}
+      onDelete={() => {
+        handleDeleteUser (selectedUser .id);
+        setShowDeleteModal(false);
+      }}
+      username={selectedUser  ? selectedUser .username : ""}
+    />
+
+    {/* Task Table Modal */}
+    {showTaskTable && (
+      <div className={`fixed top-14 right-1 bg-gray-800 shadow-md rounded-lg border border-green-700 z-50 text-white transition-transform transform ${showTaskTable ? "translate-x-0" : "translate-x-full"} duration-300 h-auto p-4 max-w-full mx-4`}>
+        <h2 className="text-xl sm:text-2xl text-green-500 font-bold mb-4">Tasks for {selectedUser ?.username}</h2>
+        <TaskTable tasks={userTasks[selectedUser ?.id]} />
+        <div className="flex justify-end mt-4">
+          <button
+            onClick={() => setShowTaskTable(false)}
+            className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition duration-200"
+          >
+            Close
+          </button>
         </div>
-      )}
+      </div>
+    )}
 
-      {/* Toast Container */}
-      <ToastContainer />
-    </>
-  );
+    {/* Toast Container */}
+    <ToastContainer />
+  </>
+);
 }
 
 export default authUser (UsersTable);
