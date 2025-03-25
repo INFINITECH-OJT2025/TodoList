@@ -278,7 +278,9 @@ class AdminProjectController extends Controller
 
     public function updateStatus(Request $request, $id)
     {
+        // Find the task by ID
         $task = Task::find($id);
+        
         if (!$task) {
             return response()->json(['message' => 'Task not found'], 404);
         }
@@ -288,12 +290,17 @@ class AdminProjectController extends Controller
             return response()->json(['message' => 'Task is already overdue and cannot be updated'], 200);
         }
     
+        // Validate the request status
+        $request->validate([
+            'status' => 'required|string|in:pending,in_progress,completed,overdue', // Adjust statuses as needed
+        ]);
+    
         // Update status
         $task->status = $request->status;
         $task->save();
     
-        // Send notification if it turns overdue
-        if ($request->status === 'overdue') {
+        // Send notification if the status is updated to overdue
+        if ($task->status === 'overdue') {
             $this->sendNotification(
                 'Your Task from Admin: Overdue ' . $task->user_id . 
                 ' | Deadline: ' . $task->deadline . 
@@ -303,8 +310,40 @@ class AdminProjectController extends Controller
             );
         }
     
-        return response()->json(['message' => 'Task status updated successfully']);
+        return response()->json(['message' => 'Task status updated successfully', 'task' => $task], 200);
+    }
+
+    public function getUserTasks($id)
+    {
+        // Fetch tasks for the user with the given ID
+        $tasks = Task::where('user_id', $id)->get();
+    
+        return response()->json($tasks);
     }
     
+
+    public function generateReport(Request $request)
+    {
+        // Validate the incoming request
+        $request->validate([
+            'userId' => 'required|exists:users,id', // Ensure userId is provided and exists
+        ]);
+
+        $userId = $request->input('userId');
+
+        // Fetch user data
+        $user = User::with('tasks')->find($userId); // Assuming a relationship 'tasks' exists in User model
+
+        // Prepare report data
+        $reportData = [
+            'user_id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'tasks' => $user->tasks, // Include tasks
+        ];
+
+        // Return the report data as a JSON response
+        return Response::json($reportData);
+    }
 
 }

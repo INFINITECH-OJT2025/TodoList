@@ -171,3 +171,6 @@ Route::get('/pusher-test', function () {
         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
     }
 });
+
+Route::get('/users/{id}/tasks', [AdminProjectController::class, 'getUserTasks']);
+// Route::post('/generate-report', [AdminProjectController::class, 'generateReport']);

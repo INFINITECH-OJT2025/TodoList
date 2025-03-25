@@ -214,21 +214,32 @@ public function restore($id)
 
 }
 
-public function markAsOverdue (Request $request, $id)
+public function markAsOverdue(Request $request, $id)
 {
     // Find the activity by ID
     $activity = Activity::find($id);
-
+    
     if (!$activity) {
         return response()->json(['message' => 'Activity not found'], 404);
+    }
+
+    // Prevent marking as overdue if the activity is already overdue
+    if ($activity->status === 'overdue') {
+        return response()->json(['message' => 'Activity is already overdue and cannot be marked again'], 200);
     }
 
     // Update the status to 'overdue'
     $activity->status = 'overdue';
     $activity->save();
 
-    $this->sendNotification('Your personal task is going to overdue '. $activity->user_id . ' Deadline: '. $activity->due_date . ' Status: '. $activity->status . '', $activity->user_id, $activity->description );
-    return response()->json($activity, 201); // Return the created task with a 201 status code
+    // Send notification about the overdue status
+    $this->sendNotification(
+        'Your personal task is going to overdue ' . $activity->user_id . 
+        ' | Deadline: ' . $activity->due_date . 
+        ' | Status: ' . $activity->status, 
+        $activity->user_id, 
+        $activity->description
+    );
 
     return response()->json(['message' => 'Activity marked as overdue', 'activity' => $activity], 200);
 }
