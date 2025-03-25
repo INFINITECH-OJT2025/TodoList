@@ -10,7 +10,7 @@ const SidebarNavigation = () => {
   const [active, setActive] = useState("DashBoard");
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const router = useRouter();
-  const [profileImage, setProfileImage] = useState("/profile-placeholder.png");
+
 
   const menuItems = [
     { name: "DashBoard", icon: <LayoutDashboard size={24} />, path: "/DashBoard" },
@@ -43,7 +43,7 @@ const SidebarNavigation = () => {
 
   return (
     <>
-      <aside className="bg-gray-700 min-h-screen w-20 flex flex-col items-center py-4 justify-between ">
+      <aside className="bg-gray-700 min-h-full w-20 flex flex-col items-center py-4 justify-between ">
         <ul className="text-white space-y-6">
         <div className="flex items-center justify-center ">
             <img

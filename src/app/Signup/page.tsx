@@ -174,16 +174,19 @@ export default function Register() {
         className="absolute top-0 left-0 w-full h-full opacity-20"
       />
       <div className="relative bg-gray-800/80 backdrop-blur-md p-6 rounded-lg shadow-lg w-full max-w-md border border-green-600">
-      
-        <h2 className="text-2xl font-bold text-white text-center mb-6">Register</h2>
-        
-        <div className="flex items-center justify-center ">
+      <div className="flex items-center justify-center ">
             <img
               src="/infini.png"
               alt="Logo"
               className="w-28"
             />
           </div>
+          <br />
+          
+      
+        <h2 className="text-2xl font-bold text-white text-center mb-6">Register</h2>
+        
+   
           <br />
         
 

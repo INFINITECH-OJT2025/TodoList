@@ -9,6 +9,38 @@ import { FiMoreVertical } from "react-icons/fi";
 import authUser  from "../utils/authUser";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+
+// Task Table Component
+const TaskTable = ({ tasks }) => {
+  if (!tasks || tasks.length === 0) {
+    return <p className="text-gray-400">No tasks available for this user.</p>;
+  }
+
+  return (
+    <table className="min-w-full bg-gray-800 border border-gray-700">
+      <thead>
+        <tr>
+          <th className="py-2 px-4 border-b border-gray-700">Task ID</th>
+          <th className="py-2 px-4 border-b border-gray-700">Title</th>
+          <th className="py-2 px-4 border-b border-gray-700">Status</th>
+          <th className="py-2 px-4 border-b border-gray-700">Due Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {tasks.map((task) => (
+          <tr key={task.id} className="hover:bg-gray-700">
+            <td className="py-2 px-4 border-b border-gray-700">{task.id}</td>
+            <td className="py-2 px-4 border-b border-gray-700">{task.title}</td>
+            <td className="py-2 px-4 border-b border-gray-700">{task.status}</td>
+            <td className="py-2 px-4 border-b border-gray-700">{task.deadline}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
 
 // Modal for editing user details
 const EditModal = ({ isOpen, onClose, onUpdate, username, setUsername, email, setEmail, errors }) => {
@@ -27,8 +59,7 @@ const EditModal = ({ isOpen, onClose, onUpdate, username, setUsername, email, se
 
   return (
     <div className={`fixed inset-0 flex items-center justify-end bg-black bg-opacity-50 transition-opacity ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-      
-    <div className={`fixed inset-y-0 right-0 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'} bg-gray-800 w-[430px] p-10 shadow-2xl rounded-l-lg z-50  border border-green-500`}>
+      <div className={`fixed inset-y-0 right-0 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'} bg-gray-800 w-[90%] sm:w-[430px] p-10 shadow-2xl rounded-l-lg z-50 border border-green-500`}>
         <h2 className="text-xl font-bold mb-4 text-green-500">Edit User</h2>
         <div className="mb-4">
           <label className="block text-gray-300">Username</label>
@@ -36,7 +67,7 @@ const EditModal = ({ isOpen, onClose, onUpdate, username, setUsername, email, se
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className={`border ${errors.username ? 'border-red-500' : 'border-gray-300'} p-2 w-full`}
+            className={`border ${errors.username ? 'border-red-500' : 'border-gray-300'} p-2 w-full bg-gray-700 text-gray-200`}
           />
           {errors.username && <p className="text-red-500 text-sm">{errors.username}</p>}
         </div>
@@ -46,7 +77,7 @@ const EditModal = ({ isOpen, onClose, onUpdate, username, setUsername, email, se
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className={`border ${errors.email ? 'border-red-500' : 'border-gray-300'} p-2 w-full`}
+            className={`border ${errors.email ? 'border-red-500' : 'border-gray-300'} p-2 w-full bg-gray-700 text-gray-200`}
           />
           {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
         </div>
@@ -59,7 +90,7 @@ const EditModal = ({ isOpen, onClose, onUpdate, username, setUsername, email, se
       {/* Confirmation Modal */}
       {showConfirmation && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-green-500 p-6 rounded-lg shadow-lg">
+          <div className="bg-gray-900 p-6 rounded-lg shadow-lg">
             <h2 className="text-xl font-bold text-white mb-4">Confirm Update</h2>
             <p className="text-white mb-4">Are you sure you want to update this user?</p>
             <div className="flex justify-end">
@@ -104,6 +135,8 @@ const UsersTable = () => {
   const [errors, setErrors] = useState({ username: "", email: "" });
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(null);
+  const [userTasks, setUserTasks] = useState({}); // Store tasks for each user
+  const [showTaskTable, setShowTaskTable] = useState(false); // State to control task table visibility
 
   // Fetch users on component mount
   useEffect(() => {
@@ -122,11 +155,50 @@ const UsersTable = () => {
         headers: { Authorization: `Bearer ${sessionStorage.getItem("authToken")}` },
       });
       setUsers(response.data || []);
+      console.log("Fetched users:", response.data); // Debugging log
+      fetchUserTasks(response.data); // Fetch tasks for each user
     } catch (err) {
       setError("Failed to load users. Please try again later.");
       toast.error("Failed to load users. Please try again later."); // Show error toast
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Function to fetch tasks for each user
+  const fetchUserTasks = async (users) => {
+    if (!Array.isArray(users) || users.length === 0) {
+      console.error("No users provided to fetch tasks.");
+      return;
+    }
+
+    const tasksPromises = users.map(async (user) => {
+      if (!user.id) {
+        console.error("User  ID is missing for user:", user);
+        return { userId: user.id, tasks: [] }; // Return empty tasks for invalid user
+      }
+
+      try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/users/${user.id}/tasks`, {
+          headers: { Authorization: `Bearer ${sessionStorage.getItem("authToken")}` },
+        });
+        console.log(`Fetched tasks for user ${user.id}:`, response.data); // Debugging log
+        return { userId: user.id, tasks: response.data };
+      } catch (error) {
+        console.error(`Failed to fetch tasks for user ${user.id}:`, error.response ? error.response.data : error.message);
+        return { userId: user.id, tasks: [] }; // Return an empty array if there's an error
+      }
+    });
+
+    try {
+      const tasksResults = await Promise.all(tasksPromises);
+      const tasksMap = {};
+      tasksResults.forEach(({ userId, tasks }) => {
+        tasksMap[userId] = tasks;
+      });
+      setUserTasks(tasksMap); // Ensure setUser Tasks is defined and updates state correctly
+    } catch (error) {
+      console.error("Error processing tasks results:", error);
     }
   };
 
@@ -172,23 +244,124 @@ const UsersTable = () => {
     }
   };
 
+  // Function to calculate task stats
+  const calculateTaskStats = (userId) => {
+    const tasks = userTasks[userId] || [];
+    const totalTasks = tasks.length;
+    const completedTasks = tasks.filter(task => task.status === "complete").length;
+    const pendingTasks = tasks.filter(task => task.status === "pending").length;
+
+    // Calculate overdue tasks
+    const overdueTasks = tasks.filter(task => {
+      const deadline = new Date(task.deadline); // Assuming deadline is a valid date string
+      const isOverdue = task.status !== "complete" && deadline < new Date(); // Check if task is overdue
+      console.log(`Task: ${task.id}, Due Date: ${deadline}, Is Overdue: ${isOverdue}`); // Debugging log
+      return isOverdue;
+    }).length;
+
+    return { totalTasks, completedTasks, pendingTasks, overdueTasks, tasks };
+  };
+
+  // Function to handle showing tasks for a user
+  const handleShowTasks = (user) => {
+    setSelectedUser (user);
+    setShowTaskTable(true);
+  };
+
+  // Function to generate PDF report for a specific user
+  const generateUserReport = (user) => {
+    const { totalTasks, completedTasks, pendingTasks, overdueTasks, tasks } = calculateTaskStats(user.id);
+    const doc = new jsPDF();
+
+    // Set font
+    doc.setFont("courier", "bold");
+    doc.setFontSize(14);
+    
+    // Background
+    doc.setFillColor(220, 220, 220); // Light gray background
+    doc.rect(0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight(), 'F');
+
+    // Header (Green Background)
+    doc.setFillColor(0, 128, 0); 
+    doc.rect(0, 0, doc.internal.pageSize.getWidth(), 40, 'F'); // Increased height for spacing
+    doc.setTextColor(255, 255, 255);
+    
+    // Header Text
+    const headerText = "InfiniteTask Report";
+    const headerX = (doc.internal.pageSize.getWidth() - doc.getTextWidth(headerText)) / 2;
+    doc.text(headerText, headerX, 25); // Lowered header text
+
+    // Add Logo Below Header
+    const logoPath = "/infini.png"; 
+    doc.addImage(logoPath, "PNG", 75, 50, 60, 40); // Adjusted position (centered & lowered)
+
+    // Move content down to prevent overlap
+    let y = 100; // Increased Y value to push content lower
+
+    // User Details
+    doc.setTextColor(0, 0, 0);
+    doc.text(`Report for: ${user.username}`, 20, y); y += 7;
+    doc.text(`Email: ${user.email}`, 20, y); y += 7;
+    doc.text(`Total Tasks: ${totalTasks}`, 20, y); y += 7;
+    doc.text(`Completed Tasks: ${completedTasks}`, 20, y); y += 7;
+    doc.text(`Pending Tasks: ${pendingTasks}`, 20, y); y += 7;
+    doc.text(`Overdue Tasks: ${overdueTasks}`, 20, y); y += 12;
+
+    // Task Details Section
+    doc.setFontSize(14);
+    doc.text("Task Details:", 20, y); y += 10;
+    doc.setFontSize(12);
+
+    // Table headers
+    doc.setFont("courier", "bold");
+    doc.text("No.", 20, y);
+    doc.text("Task Details", 35, y);
+    y += 7;
+    doc.setFont("courier", "normal");
+
+    // Task details - Wrapping long text
+    tasks.forEach((task, index) => {
+        let taskText = `ID: ${task.id}, Title: ${task.title || "N/A"}, Status: ${task.status}, Due: ${task.deadline}`;
+        let wrappedText = doc.splitTextToSize(taskText, 150);
+        doc.text((index + 1).toString(), 20, y);
+        doc.text(wrappedText, 35, y);
+        y += wrappedText.length * 6 + 5;
+    });
+
+    // Green Border
+    doc.setDrawColor(0, 128, 0);
+    doc.rect(10, 10, doc.internal.pageSize.getWidth() - 20, doc.internal.pageSize.getHeight() - 20);
+
+    // Footer (Sagad sa Baba)
+    const footerY = doc.internal.pageSize.getHeight() - 10;
+    doc.setFillColor(0, 128, 0);
+    doc.rect(0, footerY - 10, doc.internal.pageSize.getWidth(), 15, 'F'); // Fully stretched
+    doc.setTextColor(255, 255, 255);
+    const footerText = "Generated by InfiniteTask";
+    const footerX = (doc.internal.pageSize.getWidth() - doc.getTextWidth(footerText)) / 2;
+    doc.text(footerText, footerX, footerY);
+
+    // Save PDF
+    doc.save(`${user.username}_report.pdf`);
+};
+
+
+
+
   return (
     <>
       <Head>
         <title>Users List | Infi-Admin</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-    
+
       <div className="flex min-h-screen bg-gray-800 text-gray-100">
+        <div>
+          <Adminbar />
+        </div>
 
-     
-      <div>
-<Adminbar />
-</div>
-
-        <div className="flex-1 flex flex-col items-center p-10">
-          
-          <h2 className="text-3xl font-bold text-green-500 text-center mb-6 drop-shadow-lg">
+        <div className="flex-1 flex flex-col items-center p-5 sm:p-10">
+          <h2 className="text-2xl sm:text-3xl font-bold text-green-500 text-center mb-4 sm:mb-6 drop-shadow-lg">
             User List
           </h2>
 
@@ -198,50 +371,130 @@ const UsersTable = () => {
             <p className="text-center text-red-500 text-lg">{error}</p>
           ) : (
             <>
-              <p className="text-center text-gray-300 mb-6">Total Users: {users.length}</p>
+              <p className="text-center text-gray-300 mb-4 sm:mb-6">Total Users: {users.length}</p>
 
-              <div className="w-full max-w-8xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="w-full max-w-8xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {users.length > 0 ? (
-                  users.map((user) => (
-                    <div
-                      className="relative card bg-gray-700 border border-green-600 rounded-lg shadow-lg flex flex-col items-center p-5 transition-transform transform hover:scale-105"
-                      key={user.id}
-                    >
-                      <div className="card-border-top"></div>
-                      <div className="img">
-                        <img
-                          src={user.profile_image ? `http://127.0.0.1:8000/${user.profile_image}` : "/default-profile.png"}
-                          alt="Profile"
-                          className="w-24 h-24 rounded-full object-cover border-4 border-green-500 shadow-lg mb-3"
-                        />
-                      </div>
-                      <span className="font-semibold text-white">{user.username}</span>
-                      <p className="job text-gray-300 text-center mt-2">📧 {user.email}</p>
-
-                      <div className="absolute top-4 right-4 cursor-pointer" onClick={() => setMenuOpen(menuOpen === user.id ? null : user.id)}>
-                        <FiMoreVertical size={24} className="text-green-500" />
-                      </div>
-                      {menuOpen === user.id && (
-                        <div className="absolute top-10 right-4 bg-gray-600 shadow-md rounded-lg overflow-hidden w-32 z-10">
-                          <button
-                            onClick={() => handleEditUser (user)}
-                            className="block w-full px-4 py-2 text-left text-white hover:bg-gray-500"
-                          >
-                            📝 Edit
-                          </button>
-                          <button
-                            onClick={() => {
-                              setSelectedUser (user);
-                              setShowDeleteModal(true);
-                            }}
-                            className="block w-full px-4 py-2 text-left text-red-500 hover:bg-gray-500"
-                          >
-                            ❌ Delete
-                          </button>
+                  users.map((user) => {
+                    const { totalTasks, completedTasks, pendingTasks, overdueTasks } = calculateTaskStats(user.id);
+                    return (
+                      <div
+                        className="relative card bg-gray-700 border border-transparent rounded-lg shadow-lg flex flex-col items-center p-4 sm:p-5 transition-transform transform hover:scale-105"
+                        key={user.id}
+                        style={{
+                          borderImage: 'linear-gradient(to right, gold, green) 1',
+                        }}
+                      >
+                        <div className="absolute top-4 right-4 cursor-pointer" onClick={() => setMenuOpen(menuOpen === user.id ? null : user.id)}>
+                          <FiMoreVertical size={24} className="text-green-500" />
                         </div>
-                      )}
-                    </div>
-                  ))
+                        <div className="img mb-3">
+                          <img
+                            src={user.profile_image ? `http://127.0.0.1:8000/${user.profile_image}` : "/default-profile.png"}
+                            alt="Profile"
+                            className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-green-500 shadow-lg"
+                          />
+                        </div>
+                        <span className="font-semibold text-white">{user.username}</span>
+                        <p className="text-gray-300 text-center mt-1">User  ID: {user.id}</p>
+                        <p className="job text-gray-300 text-center mt-2">📧 {user.email}</p>
+
+                        {/* Task Stats */}
+                        <div className="w-full mt-4">
+                          <div className="flex flex-wrap -mx-2">
+                            {/* Total Tasks */}
+                            <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
+                              <div className="bg-blue-600 text-white rounded-lg shadow-md p-4 flex items-center">
+                                <div className="mr-2 text-2xl">📋</div>
+                                <div>
+                                  <p className="font-semibold">Total Tasks</p>
+                                  <p>{totalTasks}</p>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Completed Tasks */}
+                            <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
+                              <div className="bg-green-600 text-white rounded-lg shadow-md p-4 flex items-center">
+                                <div className="mr-2 text-2xl">✅</div>
+                                <div>
+                                  <p className="font-semibold">Completed</p>
+                                  <p>{completedTasks}</p>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Pending Tasks */}
+                            <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
+                              <div className="bg-yellow-600 text-white rounded-lg shadow-md p-4 flex items-center">
+                                <div className="mr-2 text-2xl">⏳</div>
+                                <div>
+                                  <p className="font-semibold">Pending</p>
+                                  <p>{pendingTasks}</p>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Overdue Tasks */}
+                            <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
+                              <div className="bg-red-600 text-white rounded-lg shadow-md p-4 flex items-center">
+                                <div className="mr-2 text-2xl">❌</div>
+                                <div>
+                                  <p className="font-semibold">Overdue</p>
+                                  <p>{overdueTasks}</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <p className="text-green-400 font-semibold"> 📊 Task Completion</p>
+                          
+                        <button
+                          onClick={() => handleShowTasks(user)} // Show tasks on button click
+                          className="mt-2 bg-blue-500 text-white px-4 py-2 rounded"
+                        >
+                          View Tasks
+                        </button>
+<br />
+                        {/* Button to Generate PDF Report for this User */}
+                        <button
+                          onClick={() => generateUserReport(user)}
+                          className="mt-2 bg-green-500 text-white px-4 py-2 rounded"
+                        >
+                          Generate PDF Report
+                        </button>
+                          <p className="text-white">{totalTasks > 0 ? ((completedTasks / totalTasks) * 100).toFixed(0) : 0}%</p>
+                          <div className="bg-gray-600 rounded-full h-2 mt-4">
+                            <div
+                              className="bg-green-500 h-2 rounded-full"
+                              style={{ width: `${totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0}%` }}
+                            />
+                          </div>
+                        </div>
+
+
+                        {menuOpen === user.id && (
+                          <div className="absolute top-10 right-4 bg-gray-600 shadow-md rounded-lg overflow-hidden w-32 z-10">
+                            <button
+                              onClick={() => handleEditUser (user)}
+                              className="block w-full px-4 py-2 text-left text-white hover:bg-gray-500"
+                            >
+                              📝 Edit
+                            </button>
+                            <button
+                              onClick={() => {
+                                setSelectedUser (user);
+                                setShowDeleteModal(true);
+                              }}
+                              className="block w-full px-4 py-2 text-left text-red-500 hover:bg-gray-500"
+                            >
+                              ❌ Delete
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })
                 ) : (
                   <div className="text-center text-gray-400 py-4 col-span-full">No users found.</div>
                 )}
@@ -268,11 +521,27 @@ const UsersTable = () => {
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
         onDelete={() => {
-          handleDeleteUser (selectedUser .id);
+          handleDeleteUser (selectedUser.id);
           setShowDeleteModal(false);
         }}
-        username={selectedUser  ? selectedUser .username : ""}
+        username={selectedUser  ? selectedUser.username : ""}
       />
+
+      {/* Task Table Modal */}
+      {showTaskTable && (
+        <div className={`fixed top-14 right-1 bg-gray-800 shadow-md rounded-lg border border-green-700 z-50 text-white transition-transform transform ${showTaskTable ? "translate-x-0" : "translate-x-full"} duration-300 h-auto p-4  max-w-4xl mx-4`}>
+          <h2 className="text-xl sm:text-2xl text-green-500 font-bold mb-4">Tasks for {selectedUser ?.username}</h2>
+          <TaskTable tasks={userTasks[selectedUser?.id]} />
+          <div className="flex justify-end mt-4">
+            <button
+              onClick={() => setShowTaskTable(false)}
+              className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition duration-200"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Toast Container */}
       <ToastContainer />

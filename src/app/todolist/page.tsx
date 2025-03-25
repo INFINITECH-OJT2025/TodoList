@@ -152,7 +152,7 @@ const TodoList = () => {
         {/* Task Status Chart */}
         <div className="w-full bg-gray-300 rounded-xl p-4 mb-3 shadow-lg">
           <div className="text-lg font-bold mb-4">Task Status Over Time</div>
-          <ResponsiveContainer width="100%" height={330}>
+          <ResponsiveContainer width="100%" height={500}>
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
               <XAxis dataKey="date" stroke="#333" />

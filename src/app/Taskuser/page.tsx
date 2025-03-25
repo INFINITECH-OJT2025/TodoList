@@ -138,7 +138,7 @@ const ActivityPage = () => {
               activityTime.getMonth() === now.getMonth() &&
               activityTime.getDate() === now.getDate() &&
               activityTime.getHours() === now.getHours() &&
-              activityTime.getMinutes() - 1 === now.getMinutes()
+              activityTime.getMinutes() -1 === now.getMinutes()
             ) {
               playAlarm(); // Trigger alarm at exact time
             }

@@ -42,9 +42,19 @@ const TodoPage = () => {
 
     authenticateUser ();
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (userId) {
+        fetchTasks(userId);
+      }
+    }, 60000); // Check every minute
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, [userId]);
+
   const completedTasks = tasks.filter((t) => t.status === "complete").length;
   const progress = tasks.length > 0 ? (completedTasks / tasks.length) * 100 : 0;
-
 
   const fetchTasks = async (userId) => {
     try {
@@ -108,9 +118,9 @@ const TodoPage = () => {
   return (
     <div className="flex min-h-screen bg-gray-900 text-gray-100">
       <ToastContainer position="top-right" autoClose={3000} /> {/* ToastContainer for notifications */}
-     
-                <Sidebar />
-           
+
+      <Sidebar />
+
       <div className="flex-1 p-9 flex flex-col items-center">
         <h1 className="text-2xl font-extrabold mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-gray-500 drop-shadow-lg">
           ADMIN TASK
@@ -118,22 +128,22 @@ const TodoPage = () => {
         <br />
 
         <div className="relative w-full h-6 bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-      {/* 3D Background Layer */}
-      <div className="absolute inset-0 bg-gray-900 rounded-lg shadow-inner" />
+          {/* 3D Background Layer */}
+          <div className="absolute inset-0 bg-gray-900 rounded-lg shadow-inner" />
 
-      {/* Animated Progress */}
-      <motion.div
-        className="absolute top-0 left-0 h-full bg-gradient-to-r from-green-400 to-green-600 rounded-lg shadow-md"
-        initial={{ width: "0%" }}
-        animate={{ width: `${progress}%` }}
-        transition={{ duration: 0.6, ease: "easeInOut" }}
-      />
+          {/* Animated Progress */}
+          <motion.div
+            className="absolute top-0 left-0 h-full bg-gradient-to-r from-green-400 to-green-600 rounded-lg shadow-md"
+            initial={{ width: "0%" }}
+            animate={{ width: `${progress}%` }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+          />
 
-      {/* Text Display */}
-      <span className="absolute inset-0 flex justify-center items-center text-white font-bold drop-shadow-lg">
-        {Math.round(progress)}%
-      </span>
-    </div>
+          {/* Text Display */}
+          <span className="absolute inset-0 flex justify-center items-center text-white font-bold drop-shadow-lg">
+            {Math.round(progress)}%
+          </span>
+        </div>
         <br />
         <br />
 

@@ -107,7 +107,7 @@ const HeroSection = () => {
             </div>
             <div className="bg-gray-700 p-6 rounded-lg">
               <h3 className="text-xl font-semibold text-white">Phone</h3>
-              <p className="text-gray-300">09267772634</p>
+              <p className="text-gray-300">+63 9267772634</p>
             </div>
           </div>
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
