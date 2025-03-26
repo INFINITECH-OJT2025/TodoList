@@ -105,13 +105,13 @@ const TaskForm: React.FC<{
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="p-8 bg-gray-900 rounded-2xl shadow-2xl max-w-4xl mx-auto border border-gray-600"
+      className="p-4 sm:p-8 bg-gray-900 rounded-2xl shadow-2xl w-full  mx-auto border border-gray-600 overflow-auto"
     >
-      <h2 className="text-4xl mb-8 text-center font-extrabold uppercase bg-gradient-to-r from-green-400 via-green-500 to-green-700 bg-clip-text text-transparent tracking-wider drop-shadow-lg" style={{ fontFamily: "Courier New, Courier, monospace" }}>
+      <h2 className="text-3xl sm:text-4xl mb-6 text-center font-extrabold uppercase bg-gradient-to-r from-green-400 via-green-500 to-green-700 bg-clip-text text-transparent tracking-wider drop-shadow-lg" style={{ fontFamily: "Courier New, Courier, monospace" }}>
         TO-DO LIST MANAGER
       </h2>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* User Selection */}
         <div className="relative">
           <label htmlFor="user_id" className="block text-gray-300 text-lg mb-2 font-bold">
@@ -131,7 +131,7 @@ const TaskForm: React.FC<{
           </select>
           {errors.user_id && <p className="text-red-500 text-sm">{errors.user_id.message}</p>}
         </div>
-
+  
         {/* Task Title */}
         <div className="relative">
           <label htmlFor="title" className="block text-gray-300 text-lg mb-2 font-bold">
@@ -145,7 +145,7 @@ const TaskForm: React.FC<{
           />
           {errors.title && <p className="text-red-500 text-sm">{errors.title.message}</p>}
         </div>
-
+  
         {/* Target Time */}
         <div className="relative">
           <label htmlFor="time_started" className="block text-gray-300 text-lg mb-2 font-bold">
@@ -159,7 +159,7 @@ const TaskForm: React.FC<{
           />
           {errors.time_started && <p className="text-red-500 text-sm">{errors.time_started.message}</p>}
         </div>
-
+  
         {/* Time Ended */}
         <div className="relative">
           <label htmlFor="time_ended" className="block text-gray-300 text-lg mb-2 font-bold">
@@ -173,7 +173,7 @@ const TaskForm: React.FC<{
           />
           {errors.time_ended && <p className="text-red-500 text-sm">{errors.time_ended.message}</p>}
         </div>
-
+  
         {/* Deadline */}
         <div className="relative">
           <label htmlFor="deadline" className="block text-gray-300 text-lg mb-2 font-bold">
@@ -187,7 +187,7 @@ const TaskForm: React.FC<{
           />
           {errors.deadline && <p className="text-red-500 text-sm">{errors.deadline.message}</p>}
         </div>
-
+  
         {/* Status */}
         <div className="relative">
           <label htmlFor="status" className="block text-gray-300 text-lg mb-2 font-bold">
@@ -205,7 +205,7 @@ const TaskForm: React.FC<{
           </select>
           {errors.status && <p className="text-red-500 text-sm">{errors.status.message}</p>}
         </div>
-
+  
         {/* Tags */}
         <div className="relative">
           <label htmlFor="tags" className="block text-gray-300 text-lg mb-2 font-bold">
@@ -223,7 +223,7 @@ const TaskForm: React.FC<{
           </select>
         </div>
       </div>
-
+  
       {/* Description */}
       <div className="relative mt-6">
         <label htmlFor="description" className="block text-gray-300 text-lg mb-2 font-bold">
@@ -236,9 +236,9 @@ const TaskForm: React.FC<{
         ></textarea>
         {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
       </div>
-
+  
       {/* Buttons */}
-      <div className="flex gap-6 mt-6 justify-between flex-wrap">
+      <div className="flex gap-4 sm:gap-6 mt-6 justify-between flex-wrap">
         <button
           type="submit"
           className="bg-green-500 hover:bg-green-600 text-white py-3 px-6 rounded-lg shadow-lg transition duration-300 transform hover:scale-105 text-lg font-bold"
@@ -246,7 +246,7 @@ const TaskForm: React.FC<{
         >
           {loading ? "Saving..." : editingTask ? "Update Task" : "Submit"}
         </button>
-
+  
         {editingTask && (
           <button
             type="button"

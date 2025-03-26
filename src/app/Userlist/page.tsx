@@ -58,7 +58,7 @@ const EditModal = ({ isOpen, onClose, onUpdate, username, setUsername, email, se
 
   return (
     <div className={`fixed inset-0 flex items-center justify-end bg-black bg-opacity-50 transition-opacity ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-      <div className={`fixed inset-y-0 right-0 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'} bg-gray-800 w-[90%] sm:w-[430px] p-10 shadow-2xl rounded-l-lg z-50 border border-green-500`}>
+      <div className={`fixed inset-y-0 right-0 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'} bg-gray-800 w-[90%] sm:w-[400px] p-9 shadow-2xl rounded-l-lg z-50 border border-green-500`}>
         <h2 className="text-xl font-bold mb-4 text-green-500">Edit User</h2>
         <div className="mb-4">
           <label className="block text-gray-300">Username</label>

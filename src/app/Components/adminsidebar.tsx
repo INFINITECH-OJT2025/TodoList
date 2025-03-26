@@ -75,11 +75,8 @@ const SidebarNavigation = () => {
           </div>
           <span className="text-sm">Logout</span>
         </button>
-        
       </li>
-      
     </ul>
-    
 
     {showLogoutModal && (
       <div className="fixed z-50 inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">

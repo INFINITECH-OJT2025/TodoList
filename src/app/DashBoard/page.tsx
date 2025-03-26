@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Adminbar from "../Components/adminsidebar";
+import Adminbar from "../Components/adminsidebar"; // Assuming this is your sidebar component
 import {
   PieChart,
   Pie,
@@ -23,6 +23,20 @@ import authUser  from "../utils/authUser";
 const API_BASE_URL = "http://127.0.0.1:8000/api";
 
 const TaskList = ({ tasks = [] }) => {
+  const itemsPerPage = 5; // Number of items per page
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(tasks.length / itemsPerPage);
+
+  // Get current tasks based on the current page
+  const currentTasks = tasks.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  // Function to handle page change
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div className="bg-gray-800 p-4 rounded-xl shadow-lg w-full ">
       <h2 className="text-lg font-semibold text-center mb-2 text-green-300">Tasks</h2>
@@ -31,13 +45,13 @@ const TaskList = ({ tasks = [] }) => {
           <thead>
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Title</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">USER</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">User </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Due Date</th>
             </tr>
           </thead>
           <tbody className="bg-gray-700 divide-y divide-gray-600">
-            {tasks.map((task) => (
+            {currentTasks.map((task) => (
               <tr key={task.id}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{task.title}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{task.user_id}</td>
@@ -48,6 +62,27 @@ const TaskList = ({ tasks = [] }) => {
           </tbody>
         </table>
       </div>
+
+      {/* Pagination Controls */}
+      <div className="flex justify-between items-center mt-4">
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="bg-gray-600 text-white px-4 py-2 rounded disabled:opacity-50"
+        >
+          Previous
+        </button>
+        <span className="text-gray-300">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="bg-gray-600 text-white px-4 py-2 rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };
@@ -56,7 +91,7 @@ const Dashboard = () => {
   const [taskCount, setTaskCount] = useState(0);
   const [pendingCount, setPendingCount] = useState(0);
   const [completedCount, setCompletedCount] = useState(0);
-  const [overdueCount, setOverdueCount] = useState(0); // New state for overdue tasks
+  const [overdueCount, setOverdueCount] = useState(0);
   const [userCount, setUserCount] = useState(0);
   const [taskData, setTaskData] = useState([]);
   const [userData, setUserData] = useState([]);
@@ -75,7 +110,7 @@ const Dashboard = () => {
         // Calculate overdue tasks
         const now = new Date();
         const overdueTasks = tasks.filter((task) => new Date(task.deadline) < now && task.status !== "complete");
-        setOverdueCount(overdueTasks.length); // Set the overdue count
+        setOverdueCount(overdueTasks.length);
 
         const usersRes = await axios.get(`${API_BASE_URL}/users`);
         const users = usersRes.data;
@@ -110,10 +145,10 @@ const Dashboard = () => {
   const data = [
     { name: 'Pending', value: pendingCount },
     { name: 'Completed', value: completedCount },
-    { name: 'Overdue', value: overdueCount }, // Add overdue to the data
+    { name: 'Overdue', value: overdueCount },
   ];
 
-  const COLORS = ['#FFBB28', '#00C49F', '#FF4C4C']; // Add a color for overdue
+  const COLORS = ['#FFBB28', '#00C49F', '#FF4C4C'];
 
   return (
     <div className="flex min-h-screen bg-gray-900 text-white">
@@ -145,7 +180,7 @@ const Dashboard = () => {
           </div>
 
           <div className="bg-gray-700 p-6 rounded-xl shadow-lg text-center w-48">
-            <h2 className="text-xl font-semibold text-gray-200">Overdue</h2> {/* New overdue section */}
+            <h2 className="text-xl font-semibold text-gray-200">Overdue</h2>
             <p className="text-4xl font-bold text-red-400">{overdueCount}</p>
           </div>
 
@@ -157,7 +192,7 @@ const Dashboard = () => {
 
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="bg-gray-800 p-2 rounded-xl shadow-lg w-full flex flex-col items-center">
-          <h2 className="text-lg font-semibold text-center mb-2 text-green-300">Task Progress</h2>
+            <h2 className="text-lg font-semibold text-center mb-2 text-green-300">Task Progress</h2>
             <ResponsiveContainer width="100%" height={350}>
               <PieChart>
                 <Pie
