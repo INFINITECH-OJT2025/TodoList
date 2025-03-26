@@ -33,7 +33,7 @@ const HeroSection = () => {
   // Use effect to inject the chat bot script into the document
   useEffect(() => {
     const script = document.createElement("script");
-    script.src = "https://embed.tawk.to/67e365c14f39121902671651/1in84avhr";
+    script.src = "https://embed.tawk.to/67e3a3defdf8c219086c03df/1in8jg7nt";
     script.async = true;
     script.charset = "UTF-8";
     script.setAttribute("crossorigin", "*");
@@ -44,6 +44,8 @@ const HeroSection = () => {
     };
   }, []);
 
+
+  
 
   return (
     <div className="bg-gray-900 text-gray-300"> 
