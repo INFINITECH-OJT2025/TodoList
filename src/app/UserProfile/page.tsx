@@ -26,14 +26,14 @@ const TodoPage = () => {
     }
 
     axios
-      .get("http://127.0.0.1:8000/api/user", {
+      .get("https://infinitech-api5.site/api/user", {
         headers: { Authorization: `Bearer ${authToken}` },
       })
       .then((response) => {
         setUser (response.data.user);
         setUsername(response.data.user.username);
         setEmail(response.data.user.email);
-        setImagePreview(`http://127.0.0.1:8000/${response.data.user.profile_image}`); // Set default image preview
+        setImagePreview(`https://infinitech-api5.site/${response.data.user.profile_image}`); // Set default image preview
         setLoading(false);
       })
       .catch((error) => {
@@ -72,7 +72,7 @@ const TodoPage = () => {
       }
 
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/update-profile",
+        "https://infinitech-api5.site/api/update-profile",
         formData,
         {
           headers: {
@@ -102,7 +102,7 @@ const TodoPage = () => {
             {user?.profile_image ? (
               <img
                 className="w-full h-full object-cover rounded-xl"
-                src={`http://127.0.0.1:8000/${user.profile_image}`}
+                src={`https://infinitech-api5.site/${user.profile_image}`}
                 alt="Profile"
               />
             ) : (
@@ -131,7 +131,7 @@ const TodoPage = () => {
                   if (!editing) {
                     setUsername(user?.username);
                     setEmail(user?.email);
-                    setImagePreview(`http://127.0.0.1:8000/${user.profile_image}`); // Set default image preview when editing starts
+                    setImagePreview(`https://infinitech-api5.site/${user.profile_image}`); // Set default image preview when editing starts
                   }
                 }}
                 className="w-[120px] h-[40px] rounded-full border border-white/40 bg-black flex items-center justify-center cursor-pointer transition-all duration-300 overflow-hidden relative group"

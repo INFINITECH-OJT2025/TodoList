@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import authUser  from "./utils/authUser";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
@@ -9,12 +9,41 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
+const chatBotScript = `<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/67e365c14f39121902671651/1in84avhr';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->`;
+
 const HeroSection = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
+
+  // Use effect to inject the chat bot script into the document
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://embed.tawk.to/67e365c14f39121902671651/1in84avhr";
+    script.async = true;
+    script.charset = "UTF-8";
+    script.setAttribute("crossorigin", "*");
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
 
   return (
     <div className="bg-gray-900 text-gray-300"> 
@@ -69,9 +98,9 @@ const HeroSection = () => {
               loop
               className="rounded-lg shadow-lg"
             >
-              {[{ src: "/image.png", title: "Dashboard", description: "Your central hub for tracking progress, managing tasks, and visualizing your productivity." },
+              {[{ src: "/image.png", title: "Dashboard", description              : "Your central hub for tracking progress, managing tasks, and visualizing your productivity." },
                 { src: "/usertask.png", title: "Personal Task", description: "Stay organized with your personal tasks, set priorities, and manage your time effectively." },
-                { src: "/profile.png", title: "Personal Task", description: "Stay organized with your personal tasks, set priorities, and manage your time effectively." },
+                { src: "/profile.png", title: "Profile", description: "Manage your profile and settings to enhance your experience." },
                 { src: "/admin.png", title: "Admin Task", description: "For admin users, manage team tasks, oversee project progress, and ensure smooth operations." }]
                 .map((item, index) => (
                   <SwiperSlide key={index}>
@@ -113,7 +142,7 @@ const HeroSection = () => {
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-gray-700 p-6 rounded-lg">
               <h3 className="text-xl font-semibold text-white">Location</h3>
-              <p className="text-gray-300">unit 202, campos rueda building, 101 Urban Ave, Makati, 1206 Metro Manila</p>
+              <p className="text-gray-300">Unit 202, Campos Rueda Building, 101 Urban Ave, Makati, 1206 Metro Manila</p>
             </div>
             <div className="bg-gray-700 p-6 rounded-lg">
               <h3 className="text-xl font-semibold text-white">Business Hours</h3>

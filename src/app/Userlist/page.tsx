@@ -155,7 +155,7 @@ const UsersTable = () => {
   // Function to fetch users from the API
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/users", {
+      const response = await axios.get("https://infinitech-api5.site/api/users", {
         headers: { Authorization: `Bearer ${sessionStorage.getItem("authToken")}` },
       });
       setUsers(response.data || []);
@@ -182,7 +182,7 @@ const UsersTable = () => {
       }
 
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/users/${user.id}/tasks`, {
+        const response = await axios.get(`https://infinitech-api5.site/api/users/${user.id}/tasks`, {
           headers: { Authorization: `Bearer ${sessionStorage.getItem("authToken")}` },
         });
         return { userId: user.id, tasks: response.data };
@@ -223,7 +223,7 @@ const UsersTable = () => {
     if (!selectedUser ) return;
 
     try {
-      await axios.put(`http://127.0.0.1:8000/api/users/${selectedUser .id}`, {
+      await axios.put(`https://infinitech-api5.site/api/users/${selectedUser .id}`, {
         username: editUsername,
         email: editEmail,
       });
@@ -242,7 +242,7 @@ const UsersTable = () => {
     if (!userId) return;
 
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/users/${userId}`);
+      await axios.delete(`https://infinitech-api5.site/api/users/${userId}`);
       fetchUsers(); // Refresh user list after deletion
       toast.success("User  deleted successfully!");
     } catch (error) {
@@ -419,7 +419,7 @@ const UsersTable = () => {
                     <div className="flex flex-col sm:flex-row items-center mb-3">
   <div className="img border-4 border-gradient-to-r from-green-400 to-gold rounded-lg shadow-lg overflow-hidden">
     <img
-      src={filteredUsers[currentPage].profile_image ? `http://127.0.0.1:8000/${filteredUsers[currentPage].profile_image}` : "/default-profile.png"}
+      src={filteredUsers[currentPage].profile_image ? `https://infinitech-api5.site/${filteredUsers[currentPage].profile_image}` : "/default-profile.png"}
       alt="Profile"
       className="w-32 h-32 object-cover sm:w-40 sm:h-40" // Adjusted size for larger screens
     />

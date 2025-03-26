@@ -29,7 +29,7 @@ export default function Archive() {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/archived-tasks");
+      const response = await axios.get("https://infinitech-api5.site/api/archived-tasks");
       setArchivedTasks(response.data);
       setShowTable(true); // Show the table after fetching tasks
     } catch (error) {
@@ -43,7 +43,7 @@ export default function Archive() {
 
   const restoreTask = async (taskId: number) => {
     try {
-      const response = await axios.put(`http://127.0.0.1:8000/api/tasks/restore/${taskId}`);
+      const response = await axios.put(`https://infinitech-api5.site/api/tasks/restore/${taskId}`);
       if (response.status === 200 && response.data.task.archived === 0) {
         setArchivedTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
         toast.success("Task restored successfully!", { autoClose: 3000 }); // Show success toast with autoClose

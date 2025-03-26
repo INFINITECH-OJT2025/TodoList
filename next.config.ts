@@ -13,7 +13,7 @@ module.exports = {
               headers: [
                   {
                       key: "Access-Control-Allow-Origin",
-                      value: "http://127.0.0.1:8000",
+                      value: "https://infinitech-api5.site",
                   },
                   {
                       key: "Access-Control-Allow-Credentials",

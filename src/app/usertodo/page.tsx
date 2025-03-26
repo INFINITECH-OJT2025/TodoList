@@ -11,7 +11,7 @@ import authUser  from "../utils/authUser";
 import { ToastContainer, toast } from "react-toastify"; // Import toast and ToastContainer
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS for toast notifications
 
-const API_BASE_URL = "http://127.0.0.1:8000/api";
+const API_BASE_URL = "https://infinitech-api5.site/api";
 
 interface Task {
   id: number;

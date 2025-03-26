@@ -18,7 +18,7 @@ export default function Sidebar() {
       try {
         const token = sessionStorage.getItem("authToken");
         if (!token) return;
-        const response = await axios.get(`http://127.0.0.1:8000/api/notifications?authToken=${token}`);
+        const response = await axios.get(`https://infinitech-api5.site/api/notifications?authToken=${token}`);
         if (response.status === 200) {
           setNotifications(response.data.notifications);
         }
@@ -31,7 +31,7 @@ export default function Sidebar() {
 
   const markAsRead = async (id) => {
     try {
-      await axios.put(`http://127.0.0.1:8000/api/notifications/${id}/markAsRead`);
+      await axios.put(`https://infinitech-api5.site/api/notifications/${id}/markAsRead`);
       setNotifications(notifications.map(n => n.id === id ? { ...n, status: "read" } : n));
     } catch (error) {
       console.error("Error updating notification:", error);
@@ -40,7 +40,7 @@ export default function Sidebar() {
 
   const markAllAsRead = async () => {
     try {
-      await axios.put("http://127.0.0.1:8000/api/notifications/markAllAsRead");
+      await axios.put("https://infinitech-api5.site/api/notifications/markAllAsRead");
       setNotifications(notifications.map(n => ({ ...n, status: "read" })));
     } catch (error) {
       console.error("Error marking all as read:", error);

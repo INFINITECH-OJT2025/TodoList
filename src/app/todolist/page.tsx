@@ -34,7 +34,7 @@ const TodoList = () => {
     return localStorage.getItem("isLightMode") === "true";
   });
 
-  const API_BASE_URL = "http://127.0.0.1:8000/api";
+  const API_BASE_URL = "https://infinitech-api5.site/api";
 
   useEffect(() => {
     fetchActivities();

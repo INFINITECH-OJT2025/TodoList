@@ -20,7 +20,7 @@ import {
 import { ToastContainer } from "react-toastify";
 import authUser  from "../utils/authUser";
 
-const API_BASE_URL = "http://127.0.0.1:8000/api";
+const API_BASE_URL = "https://infinitech-api5.site/api";
 
 const TaskList = ({ tasks = [] }) => {
   const itemsPerPage = 5; // Number of items per page
@@ -96,6 +96,8 @@ const Dashboard = () => {
   const [taskData, setTaskData] = useState([]);
   const [userData, setUserData] = useState([]);
   const [currentTime, setCurrentTime] = useState(new Date());
+
+  
 
   useEffect(() => {
     const fetchData = async () => {

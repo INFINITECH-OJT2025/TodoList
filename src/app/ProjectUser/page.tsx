@@ -30,7 +30,7 @@ const TodoPage = () => {
           return;
         }
 
-        const response = await axios.post("http://127.0.0.1:8000/api/getUserId", { authToken });
+        const response = await axios.post("https://infinitech-api5.site/api/getUserId", { authToken });
         setUserId(response.data.id);
         fetchTasks(response.data.id);
       } catch (error) {
@@ -58,7 +58,7 @@ const TodoPage = () => {
 
   const fetchTasks = async (userId) => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/tasks/${userId}`);
+      const response = await axios.get(`https://infinitech-api5.site/api/tasks/${userId}`);
       const now = new Date();
 
       const updatedTasks = response.data.map((task) => {
@@ -81,7 +81,7 @@ const TodoPage = () => {
 
   const updateTaskStatus = async (taskId, status) => {
     try {
-      await axios.patch(`http://127.0.0.1:8000/api/tasks/${taskId}/updateStatus`, { status });
+      await axios.patch(`https://infinitech-api5.site/api/tasks/${taskId}/updateStatus`, { status });
     } catch (error) {
       console.error(`Failed to update task ${taskId} to ${status}:`, error);
       toast.error(`Failed to update task ${taskId}`); // Show error toast
@@ -92,7 +92,7 @@ const TodoPage = () => {
     if (!selectedTask) return;
 
     try {
-      await axios.patch(`http://127.0.0.1:8000/api/tasks/${selectedTask.id}/markAsDone`, {
+      await axios.patch(`https://infinitech-api5.site/api/tasks/${selectedTask.id}/markAsDone`, {
         status: "complete",
       });
 
