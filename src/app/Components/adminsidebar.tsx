@@ -39,12 +39,20 @@ const SidebarNavigation = () => {
     }
   };
 
-  return (
-    <aside className="bg-gray-700 min-h-full w-30 flex flex-col  justify-between items-center relative"> {/* Increased py-6 to py-12 */}
-    <div className="flex items-center justify-center mb-7 w-36 h-36 rounded-full overflow-hidden bg-gray-900  -top-8 z-50 -left-5 absolute"> {/* Adjusted -top-10 to -top-20 */}
+ return (
+  <aside className="relative min-h-full w-30 flex flex-col justify-between items-center bg-gray-700 rounded-lg shadow-lg overflow-hidden">
+    {/* Gradient Border */}
+    <div className="absolute inset-0 rounded-lg border-4 border-transparent" style={{
+      background: 'linear-gradient(135deg, #FFD700, #32CD32)',
+      WebkitMask: 'linear-gradient(white, white) content-box, linear-gradient(transparent, transparent)',
+      mask: 'linear-gradient(white, white) content-box, linear-gradient(transparent, transparent)',
+      zIndex: -1,
+    }}></div>
+
+    <div className="flex items-center justify-center mb-7 w-36 h-36 rounded-full overflow-hidden bg-gray-900 -top-7 z-50 -left- absolute">
       <img src="/infini.png" alt="Logo" className="w-full h-full object-cover" />
     </div>
-    <ul className="text-white space-y-4 w-full pt-32"> {/* Increased pt-24 to pt-32 */}
+    <ul className="text-white space-y-4 w-full pt-32">
       {menuItems.map((item) => (
         <li key={item.name} className="w-full flex flex-col items-center">
           <Link href={item.path} legacyBehavior>
@@ -67,9 +75,12 @@ const SidebarNavigation = () => {
           </div>
           <span className="text-sm">Logout</span>
         </button>
+        
       </li>
+      
     </ul>
-  
+    
+
     {showLogoutModal && (
       <div className="fixed z-50 inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
         <div className="bg-gray-800 p-6 rounded-md shadow-lg text-center">
@@ -89,7 +100,7 @@ const SidebarNavigation = () => {
       </div>
     )}
   </aside>
-  );
+);
 };
 
 export default SidebarNavigation;

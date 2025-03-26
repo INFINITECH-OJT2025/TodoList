@@ -5,12 +5,11 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import Head from "next/head";
 import Adminbar from "../Components/adminsidebar";
-import { FiMoreVertical } from "react-icons/fi";
+import { FiMoreVertical, FiChevronLeft, FiChevronRight, FiSearch } from "react-icons/fi";
 import authUser  from "../utils/authUser";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 
 // Task Table Component
 const TaskTable = ({ tasks }) => {
@@ -135,8 +134,13 @@ const UsersTable = () => {
   const [errors, setErrors] = useState({ username: "", email: "" });
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(null);
-  const [userTasks, setUserTasks] = useState({}); // Store tasks for each user
-  const [showTaskTable, setShowTaskTable] = useState(false); // State to control task table visibility
+  const [userTasks, setUserTasks] = useState({});
+  const [showTaskTable, setShowTaskTable] = useState(false);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(0);
+  const usersPerPage = 1; // Display one user per page
+  const [searchId, setSearchId] = useState(""); // State for search input
 
   // Fetch users on component mount
   useEffect(() => {
@@ -155,11 +159,10 @@ const UsersTable = () => {
         headers: { Authorization: `Bearer ${sessionStorage.getItem("authToken")}` },
       });
       setUsers(response.data || []);
-      console.log("Fetched users:", response.data); // Debugging log
-      fetchUserTasks(response.data); // Fetch tasks for each user
+      fetchUserTasks(response.data);
     } catch (err) {
       setError("Failed to load users. Please try again later.");
-      toast.error("Failed to load users. Please try again later."); // Show error toast
+      toast.error("Failed to load users. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -175,18 +178,17 @@ const UsersTable = () => {
     const tasksPromises = users.map(async (user) => {
       if (!user.id) {
         console.error("User  ID is missing for user:", user);
-        return { userId: user.id, tasks: [] }; // Return empty tasks for invalid user
+        return { userId: user.id, tasks: [] };
       }
 
       try {
         const response = await axios.get(`http://127.0.0.1:8000/api/users/${user.id}/tasks`, {
           headers: { Authorization: `Bearer ${sessionStorage.getItem("authToken")}` },
         });
-        console.log(`Fetched tasks for user ${user.id}:`, response.data); // Debugging log
         return { userId: user.id, tasks: response.data };
       } catch (error) {
         console.error(`Failed to fetch tasks for user ${user.id}:`, error.response ? error.response.data : error.message);
-        return { userId: user.id, tasks: [] }; // Return an empty array if there's an error
+        return { userId: user.id, tasks: [] };
       }
     });
 
@@ -196,11 +198,16 @@ const UsersTable = () => {
       tasksResults.forEach(({ userId, tasks }) => {
         tasksMap[userId] = tasks;
       });
-      setUserTasks(tasksMap); // Ensure setUser Tasks is defined and updates state correctly
+      setUserTasks(tasksMap);
     } catch (error) {
       console.error("Error processing tasks results:", error);
     }
   };
+
+  // Filter users based on search input
+  const filteredUsers = users.filter(user => 
+    user.id.toString().includes(searchId)
+  );
 
   // Function to handle user editing
   const handleEditUser  = (user) => {
@@ -223,10 +230,10 @@ const UsersTable = () => {
 
       setShowEditModal(false);
       fetchUsers(); // Refresh user list
-      toast.success("User  updated successfully!"); // Show success toast
+      toast.success("User  updated successfully!");
     } catch (error) {
       console.error("Error updating user:", error);
-      toast.error("Failed to update user. Please try again."); // Show error toast
+      toast.error("Failed to update user. Please try again.");
     }
   };
 
@@ -237,10 +244,10 @@ const UsersTable = () => {
     try {
       await axios.delete(`http://127.0.0.1:8000/api/users/${userId}`);
       fetchUsers(); // Refresh user list after deletion
-      toast.success("User  deleted successfully!"); // Show success toast
+      toast.success("User  deleted successfully!");
     } catch (error) {
       console.error("Error deleting user:", error);
-      toast.error("Failed to delete user. Please try again."); // Show error toast
+      toast.error("Failed to delete user. Please try again.");
     }
   };
 
@@ -251,12 +258,9 @@ const UsersTable = () => {
     const completedTasks = tasks.filter(task => task.status === "complete").length;
     const pendingTasks = tasks.filter(task => task.status === "pending").length;
 
-    // Calculate overdue tasks
     const overdueTasks = tasks.filter(task => {
-      const deadline = new Date(task.deadline); // Assuming deadline is a valid date string
-      const isOverdue = task.status !== "complete" && deadline < new Date(); // Check if task is overdue
-      console.log(`Task: ${task.id}, Due Date: ${deadline}, Is Overdue: ${isOverdue}`); // Debugging log
-      return isOverdue;
+      const deadline = new Date(task.deadline);
+      return task.status !== "complete" && deadline < new Date();
     }).length;
 
     return { totalTasks, completedTasks, pendingTasks, overdueTasks, tasks };
@@ -278,25 +282,25 @@ const UsersTable = () => {
     doc.setFontSize(14);
     
     // Background
-    doc.setFillColor(220, 220, 220); // Light gray background
+    doc.setFillColor(220, 220, 220);
     doc.rect(0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight(), 'F');
 
     // Header (Green Background)
     doc.setFillColor(0, 128, 0); 
-    doc.rect(0, 0, doc.internal.pageSize.getWidth(), 40, 'F'); // Increased height for spacing
+    doc.rect(0, 0, doc.internal.pageSize.getWidth(), 40, 'F');
     doc.setTextColor(255, 255, 255);
     
     // Header Text
     const headerText = "InfiniteTask Report";
     const headerX = (doc.internal.pageSize.getWidth() - doc.getTextWidth(headerText)) / 2;
-    doc.text(headerText, headerX, 25); // Lowered header text
+    doc.text(headerText, headerX, 25);
 
     // Add Logo Below Header
     const logoPath = "/infini.png"; 
-    doc.addImage(logoPath, "PNG", 75, 50, 60, 40); // Adjusted position (centered & lowered)
+    doc.addImage(logoPath, "PNG", 75, 50, 60, 40);
 
     // Move content down to prevent overlap
-    let y = 100; // Increased Y value to push content lower
+    let y = 100;
 
     // User Details
     doc.setTextColor(0, 0, 0);
@@ -332,10 +336,10 @@ const UsersTable = () => {
     doc.setDrawColor(0, 128, 0);
     doc.rect(10, 10, doc.internal.pageSize.getWidth() - 20, doc.internal.pageSize.getHeight() - 20);
 
-    // Footer (Sagad sa Baba)
+    // Footer
     const footerY = doc.internal.pageSize.getHeight() - 10;
     doc.setFillColor(0, 128, 0);
-    doc.rect(0, footerY - 10, doc.internal.pageSize.getWidth(), 15, 'F'); // Fully stretched
+    doc.rect(0, footerY - 10, doc.internal.pageSize.getWidth(), 15, 'F');
     doc.setTextColor(255, 255, 255);
     const footerText = "Generated by InfiniteTask";
     const footerX = (doc.internal.pageSize.getWidth() - doc.getTextWidth(footerText)) / 2;
@@ -343,204 +347,250 @@ const UsersTable = () => {
 
     // Save PDF
     doc.save(`${user.username}_report.pdf`);
-};
+  };
 
+  // Pagination functions
+  const nextPage = () => {
+    if (currentPage < filteredUsers.length - 1) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
+  const prevPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
-return (
-  <>
-    <Head>
-      <title>Users List | Infi-Admin</title>
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-    </Head>
+  return (
+    <>
+      <Head>
+        <title>Users List | Infi-Admin</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
 
-    <div className="flex min-h-screen bg-gray-900 text-gray-100">
-      <div>
-        <Adminbar />
-      </div>
+      <div className="flex min-h-screen bg-gray-900 text-gray-100">
+        <div>
+          <Adminbar />
+        </div>
 
-      <div className="flex-1 flex flex-col items-center p-5 sm:p-10">
-        <h2 className="text-2xl sm:text-3xl font-bold text-green-500 text-center mb-4 sm:mb-6 drop-shadow-lg">
-          User List
-        </h2>
+        <div className="flex-1 flex flex-col items-center p-5 sm:p-10">
+          <h2 className="text-2xl sm:text-3xl font-bold text-green-500 text-center mb-4 sm:mb-6 drop-shadow-lg">
+            User List
+          </h2>
 
-        {loading ? (
-          <p className="text-center text-gray-300 text-lg">Loading users...</p>
-        ) : error ? (
-          <p className="text-center text-red-500 text-lg">{error}</p>
-        ) : (
-          <>
-            <p className="text-center text-gray-300 mb-4 sm:mb-6">Total Users: {users.length}</p>
-
-            <div className="w-full max-w-8xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {users.length > 0 ? (
-                users.map((user) => {
-                  const { totalTasks, completedTasks, pendingTasks, overdueTasks } = calculateTaskStats(user.id);
-                  return (
-                    <div
-                      className="relative card bg-gray-800 border border-gray-600 rounded-lg shadow-lg flex flex-col items-center p-4 sm:p-5 transition-transform transform"
-                      key={user.id}
-                      style={{
-                        borderImage: 'linear-gradient(to right, gold, green) 1',
-                      }}
-                    >
-                      <div className="absolute top-4 right-4 cursor-pointer" onClick={() => setMenuOpen(menuOpen === user.id ? null : user.id)}>
-                        <FiMoreVertical size={24} className="text-green-500" />
-                      </div>
-                      <div className="img mb-3">
-                        <img
-                          src={user.profile_image ? `http://127.0.0.1:8000/${user.profile_image}` : "/default-profile.png"}
-                          alt="Profile"
-                          className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-green-500 shadow-lg"
-                        />
-                      </div>
-                      <span className="font-semibold text-white">{user.username}</span>
-                      <p className="text-gray-300 text-center mt-1">User  ID: {user.id}</p>
-                      <p className="job text-gray-300 text-center mt-2">📧 {user.email}</p>
-
-                      {/* Task Stats */}
-                      <div className="w-full mt-4">
-  <div className="flex flex-wrap -mx-2">
-    {/* Total Tasks */}
-    <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
-      <div className="bg-blue-600 text-white rounded-lg shadow-md p-4 flex flex-col items-center text-center border border-black">
-        <div className="text-3xl mb-2">📋</div>
-        <p className="font-semibold">Total Tasks</p>
-        <p>{totalTasks}</p>
-      </div>
-    </div>
-
-    {/* Completed Tasks */}
-    <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
-      <div className="bg-green-600 text-white rounded-lg shadow-md p-4 flex flex-col items-center text-center border border-black">
-        <div className="text-3xl mb-2">✅</div>
-        <p className="font-semibold">Completed</p>
-        <p>{completedTasks}</p>
-      </div>
-    </div>
-
-    {/* Pending Tasks */}
-    <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
-      <div className="bg-yellow-600 text-white rounded-lg shadow-md p-4 flex flex-col items-center text-center border border-black">
-        <div className="text-3xl mb-2">⏳</div>
-        <p className="font-semibold">Pending</p>
-        <p>{pendingTasks}</p>
-      </div>
-    </div>
-
-    {/* Overdue Tasks */}
-    <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
-      <div className="bg-red-600 text-white rounded-lg shadow-md p-4 flex flex-col items-center text-center border border-black">
-        <div className="text-3xl mb-2">❌</div>
-        <p className="font-semibold">Overdue</p>
-        <p>{overdueTasks}</p>
-      </div>
-    </div>
+          <div className="flex justify-end mb-4 w-full">
+  <div className="relative">
+    <FiSearch className="absolute left-3 top-2 text-gray-400" />
+    <input
+      type="text"
+      placeholder="Search by User ID"
+      value={searchId}
+      onChange={(e) => setSearchId(e.target.value)}
+      className="pl-10 pr-4 py-2 rounded border border-gray-300 bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+    />
   </div>
-
-  <div className="flex flex-col">
-    <div className="bg-gray-900 p-4 rounded shadow border border-gray-900">
-      <div className="flex space-x-2 mb-2">
-        <button
-          onClick={() => handleShowTasks(user)}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          View Tasks
-        </button>
-        <button
-          onClick={() => generateUserReport(user)}
-          className="bg-green-500 text-white px-4 py-2 rounded"
-        >
-          Generate PDF Report
-        </button>
-      </div>
-      <p className="text-green-400 font-semibold"> 📊 Task Completion</p>
-      <p className="text-white">{totalTasks > 0 ? ((completedTasks / totalTasks) * 100).toFixed(0) : 0}%</p>
-      <div className="bg-gray-600 rounded-full h-2 mt-4">
-        <div
-          className="bg-green-500 h-2 rounded-full transition-all duration-500"
-          style={{ width: `${totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0}%` }}
-        />
-      </div>
-    </div>
-  </div>
-
-  {menuOpen === user.id && (
-    <div className="absolute top-10 right-4 bg-gray-600 shadow-md rounded-lg overflow-hidden w-32 z-10 border border-gray-900">
-      <button
-        onClick={() => handleEditUser(user)}
-        className="block w-full px-4 py-2 text-left text-white hover:bg-gray-500"
-      >
-        📝 Edit
-      </button>
-      <button
-        onClick={() => {
-          setSelectedUser(user);
-          setShowDeleteModal(true);
-        }}
-        className="block w-full px-4 py-2 text-left text-red-500 hover:bg-gray-500"
-      >
-        ❌ Delete
-      </button>
-    </div>
-  )}
 </div>
 
+          {loading ? (
+            <p className="text-center text-gray-300 text-lg">Loading users...</p>
+          ) : error ? (
+            <p className="text-center text-red-500 text-lg">{error}</p>
+          ) : (
+            <>
+            <div className="flex justify-end mb-4 w-full">
+    <p className="text-gray-300 font-bold">
+      Total Users: {filteredUsers.length}
+    </p>
+  </div>
+
+              {filteredUsers.length > 0 && (
+                <div className="w-full max-w-8xl grid grid-cols-1 gap-4 sm:gap-4">
+                  <div
+                    className="relative card bg-gray-800 border border-gray-600 rounded-lg shadow-lg flex flex-col items-start p-6 sm:p-8 transition-transform transform"
+                    key={filteredUsers[currentPage].id}
+                    style={{
+                      borderImage: 'linear-gradient(to right, gold, green) 1',
+                    }}
+                  >
+                    <div className="absolute top-4 right-4 cursor-pointer" onClick={() => setMenuOpen(menuOpen === filteredUsers[currentPage].id ? null : filteredUsers[currentPage].id)}>
+                      <FiMoreVertical size={24} className="text-green-500" />
                     </div>
-                  );
-                })
-              ) : (
-                <div className="text-center text-gray-400 py-4 col-span-full">No users found.</div>
+                    <div className="flex flex-col sm:flex-row items-center mb-3">
+  <div className="img border-4 border-gradient-to-r from-green-400 to-gold rounded-lg shadow-lg overflow-hidden">
+    <img
+      src={filteredUsers[currentPage].profile_image ? `http://127.0.0.1:8000/${filteredUsers[currentPage].profile_image}` : "/default-profile.png"}
+      alt="Profile"
+      className="w-32 h-32 object-cover sm:w-40 sm:h-40" // Adjusted size for larger screens
+    />
+  </div>
+  <div className="ml-0 sm:ml-4 flex flex-col mt-4 sm:mt-0"> {/* Added margin-top for small screens */}
+    <span className="font-bold text-center text-black text-xl border border-green-500 rounded-lg p-1 bg-green-600">
+      {filteredUsers[currentPage].username}
+    </span>
+    <p className="text-gray-300 text-center font-bold text-lg">Employer ID: {filteredUsers[currentPage].id}</p>
+    <p className="text-gray-300 text-center font-bold text-lg">📧 {filteredUsers[currentPage].email}</p>
+  </div>
+</div>
+
+                    {/* Task Stats */}
+                    <div className="w-full mt-4">
+                      <div className="flex flex-wrap -mx-2">
+                        {/* Total Tasks */}
+                        <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
+                          <div className="bg-blue-600 text-white rounded-lg shadow-md p-4 flex flex-col items-center text-center border border-black">
+                            <div className="text-3xl mb-2">📋</div>
+                            <p className="font-semibold">Total Tasks</p>
+                            <p>{calculateTaskStats(filteredUsers[currentPage].id).totalTasks}</p>
+                          </div>
+                        </div>
+
+                        {/* Completed Tasks */}
+                        <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
+                          <div className="bg-green-600 text-white rounded-lg shadow-md p-4 flex flex-col items-center text-center border border-black">
+                            <div className="text-3xl mb-2">✅</div>
+                            <p className="font-semibold">Completed</p>
+                            <p>{calculateTaskStats(filteredUsers[currentPage].id).completedTasks}</p>
+                          </div>
+                        </div>
+
+                        {/* Pending Tasks */}
+                        <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
+                          <div className="bg-yellow-600 text-white rounded-lg shadow-md p-4 flex flex-col items-center text-center border border-black">
+                            <div className="text-3xl mb-2">⏳</div>
+                            <p className="font-semibold">Pending</p>
+                            <p>{calculateTaskStats(filteredUsers[currentPage].id).pendingTasks}</p>
+                          </div>
+                        </div>
+
+                        {/* Overdue Tasks */}
+                        <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
+                          <div className="bg-red-600 text-white rounded-lg shadow-md p-4 flex flex-col items-center text-center border border-black">
+                            <div className="text-3xl mb-2">❌</div>
+                            <p className="font-semibold">Overdue</p>
+                            <p>{calculateTaskStats(filteredUsers[currentPage].id).overdueTasks}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col">
+                        <div className="bg-gray-900 p-4 rounded shadow border border-gray-900">
+                          <div className="flex space-x-2 mb-2">
+                            <button
+                              onClick={() => handleShowTasks(filteredUsers[currentPage])}
+                              className="bg-blue-500 text-white px-4 py-2 rounded"
+                            >
+                              View Tasks
+                            </button>
+                            <button
+                              onClick={() => generateUserReport(filteredUsers[currentPage])}
+                              className="bg-green-500 text-white px-4 py-2 rounded"
+                            >
+                              Generate PDF Report
+                            </button>
+                          </div>
+                          <p className="text-green-400 font-semibold"> 📊 Task Completion</p>
+                          <p className="text-white">{calculateTaskStats(filteredUsers[currentPage].id).totalTasks > 0 ? ((calculateTaskStats(filteredUsers[currentPage].id).completedTasks / calculateTaskStats(filteredUsers[currentPage].id).totalTasks) * 100).toFixed(0) : 0}%</p>
+                          <div className="bg-gray-600 rounded-full h-2 mt-4">
+                            <div
+                              className="bg-green-500 h-2 rounded-full transition-all duration-500"
+                              style={{ width: `${calculateTaskStats(filteredUsers[currentPage].id).totalTasks > 0 ? (calculateTaskStats(filteredUsers[currentPage].id).completedTasks / calculateTaskStats(filteredUsers[currentPage].id).totalTasks) * 100 : 0}%` }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {menuOpen === filteredUsers[currentPage].id && (
+                        <div className="absolute top-10 right-4 bg-gray-600 shadow-md rounded-lg overflow-hidden w-32 z-10 border border-gray-900">
+                          <button
+                            onClick={() => handleEditUser (filteredUsers[currentPage])}
+                            className="block w-full px-4 py-2 text-left text-white hover:bg-gray-500"
+                          >
+                            📝 Edit
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedUser (filteredUsers[currentPage]);
+                              setShowDeleteModal(true);
+                            }}
+                            className="block w-full px-4 py-2 text-left text-red-500 hover:bg-gray-500"
+                          >
+                            ❌ Delete
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
               )}
-            </div>
-          </>
-        )}
-      </div>
-    </div>
 
-    {/* Edit Modal */}
-    <EditModal
-      isOpen={showEditModal}
-      onClose={() => setShowEditModal(false)}
-      onUpdate={handleUpdateUser }
-      username={editUsername}
-      setUsername={setEditUsername}
-      email={editEmail}
-      setEmail={setEditEmail}
-      errors={errors}
-    />
-
-    {/* Delete Confirmation Modal */}
-    <DeleteConfirmationModal
-      isOpen={showDeleteModal}
-      onClose={() => setShowDeleteModal(false)}
-      onDelete={() => {
-        handleDeleteUser (selectedUser .id);
-        setShowDeleteModal(false);
-      }}
-      username={selectedUser  ? selectedUser .username : ""}
-    />
-
-    {/* Task Table Modal */}
-    {showTaskTable && (
-      <div className={`fixed top-14 right-1 bg-gray-800 shadow-md rounded-lg border border-green-700 z-50 text-white transition-transform transform ${showTaskTable ? "translate-x-0" : "translate-x-full"} duration-300 h-auto p-4 max-w-full mx-4`}>
-        <h2 className="text-xl sm:text-2xl text-green-500 font-bold mb-4">Tasks for {selectedUser ?.username}</h2>
-        <TaskTable tasks={userTasks[selectedUser ?.id]} />
-        <div className="flex justify-end mt-4">
-          <button
-            onClick={() => setShowTaskTable(false)}
-            className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition duration-200"
-          >
-            Close
-          </button>
+              {/* Pagination buttons */}
+              <div className="flex justify-between gap-9 items-center mt-4">
+                <button
+                  onClick={prevPage}
+                  disabled={currentPage === 0}
+                  className={`flex items-center bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition duration-200 ${currentPage === 0 ? 'opacity-50 cursor-not-allowed' : ''} mr-2`}
+                >
+                  <FiChevronLeft className="mr-2" />
+                  
+                </button>
+                <button
+                  onClick={nextPage}
+                  disabled={currentPage >= filteredUsers.length - 1}
+                  className={`flex items-center bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition duration-200 ${currentPage >= filteredUsers.length - 1 ? 'opacity-50 cursor-not-allowed' : ''} ml-2`}
+                >
+                  
+                  <FiChevronRight className="ml-2" />
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
-    )}
 
-    {/* Toast Container */}
-    <ToastContainer />
-  </>
-);
+      {/* Edit Modal */}
+      <EditModal
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        onUpdate={handleUpdateUser }
+        username={editUsername}
+        setUsername={setEditUsername}
+        email={editEmail}
+        setEmail={setEditEmail}
+        errors={errors}
+      />
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onDelete={() => {
+          handleDeleteUser (selectedUser.id);
+          setShowDeleteModal(false);
+        }}
+        username={selectedUser  ? selectedUser .username : ""}
+      />
+
+      {/* Task Table Modal */}
+      {showTaskTable && (
+        <div className={`fixed top-14 right-1 bg-gray-800 shadow-md rounded-lg border border-green-700 z-50 text-white transition-transform transform ${showTaskTable ? "translate-x-0" : "translate-x-full"} duration-300 h-auto p-4 max-w-full mx-4`}>
+          <h2 className="text-xl sm:text-2xl text-green-500 font-bold mb-4">Tasks for {selectedUser?.username}</h2>
+          <TaskTable tasks={userTasks[selectedUser ?.id]} />
+          <div className="flex justify-end mt-4">
+            <button
+              onClick={() => setShowTaskTable(false)}
+              className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition duration-200"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Toast Container */}
+      <ToastContainer />
+    </>
+  );
 }
 
 export default authUser (UsersTable);
