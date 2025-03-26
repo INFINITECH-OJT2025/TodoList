@@ -168,21 +168,7 @@ export default function Login() {
         </div>
       </div>
 
-      {/* Success Modal */}
-      {/* {showModal && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center"
-        >
-          <div className="bg-white p-8 rounded-xl text-center w-80 shadow-lg">
-            <div className="w-16 h-16 mx-auto border-4 border-green-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <h2 className="text-xl font-bold text-gray-800">Login Successful!</h2>
-            <p className="text-gray-600 mt-2">Redirecting to your dashboard...</p>
-          </div>
-        </motion.div>
-      )} */}
+     
     </>
   );
 }
