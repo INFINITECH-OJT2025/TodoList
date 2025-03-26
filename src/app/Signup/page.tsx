@@ -50,7 +50,7 @@ export default function Register() {
     if (name === "username") {
       if (value.length >= 6) {
         try {
-          const checkRes = await axios.post("http://localhost:8000/api/check-availability", {
+          const checkRes = await axios.post("https://infinitech-api5.site/api/check-availability", {
             username: value,
           });
 
@@ -71,7 +71,7 @@ export default function Register() {
     if (name === "email") {
       if (value.includes("@")) {
         try {
-          const checkRes = await axios.post("http://localhost:8000/api/check-availability", {
+          const checkRes = await axios.post("https://infinitech-api5.site/api/check-availability", {
             email: value,
           });
 
@@ -149,7 +149,7 @@ export default function Register() {
         formDataObj.append("profile_image", profileImage);
       }
 
-      const res = await axios.post("http://localhost:8000/api/register", formDataObj, {
+      const res = await axios.post("https://infinitech-api5.site/api/register", formDataObj, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
