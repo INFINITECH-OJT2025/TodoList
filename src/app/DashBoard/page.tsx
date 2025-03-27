@@ -89,6 +89,7 @@ const TaskList = ({ tasks = [] }) => {
       </div>
     </div>
   );
+};
 const Dashboard = () => {
   const [taskCount, setTaskCount] = useState(0);
   const [pendingCount, setPendingCount] = useState(0);
