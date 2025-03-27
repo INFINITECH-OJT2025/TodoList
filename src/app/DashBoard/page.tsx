@@ -18,6 +18,7 @@ import {
   Legend,
 } from "recharts";
 import { ToastContainer } from "react-toastify";
+import { FaCheckCircle, FaExclamationCircle } from 'react-icons/fa'; // Importing icons
 import authUser  from "../utils/authUser";
 
 const API_BASE_URL = "https://infinitech-api5.site/api";
@@ -37,7 +38,7 @@ const TaskList = ({ tasks = [] }) => {
     setCurrentPage(page);
   };
 
-   return (
+  return (
     <div className="bg-gray-800 p-4 rounded-xl shadow-lg w-full ">
       <h2 className="text-lg font-semibold text-center mb-2 text-green-300">Tasks</h2>
       <div className="overflow-x-auto">
@@ -100,8 +101,6 @@ const Dashboard = () => {
   const [taskData, setTaskData] = useState([]);
   const [userData, setUserData] = useState([]);
   const [currentTime, setCurrentTime] = useState(new Date());
-
-  
 
   useEffect(() => {
     const fetchData = async () => {
