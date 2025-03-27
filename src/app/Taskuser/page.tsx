@@ -28,7 +28,7 @@ interface Activity {
   collaborator_name?: string,
 }
 
-
+const API_BASE_URL = "https://infinitech-api5.site/api";
 
 const ProgressBar = ({ percentage }: { percentage: number }) => {
   return (
@@ -94,7 +94,7 @@ const ActivityPage = () => {
         console.error("No authToken found in sessionStorage.");
         return;
       }
-      const response = await axios.get(`https://infinitech-api5.site/api/activities/${authToken}`);
+      const response = await axios.get(`${API_BASE_URL}/activities/${authToken}`);
       setActivities(response.data);
       setDependencies(response.data);
     } catch (error) {
@@ -104,7 +104,7 @@ const ActivityPage = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get(`https://infinitech-api5.site/api/users`); // Adjust the endpoint as necessary
+      const response = await axios.get(`${API_BASE_URL}/users`); // Adjust the endpoint as necessary
       setUsers(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -156,7 +156,7 @@ const ActivityPage = () => {
 
     const userIdSetter = async () => {
       const authToken = sessionStorage.getItem("authToken");
-      const userResponse = await axios.get(`https://infinitech-api5.site/api/user/${authToken}`);
+      const userResponse = await axios.get(`${API_BASE_URL}/user/${authToken}`);
       setUserId(userResponse.data.id)
     }
     userIdSetter()
@@ -220,7 +220,7 @@ const ActivityPage = () => {
         return;
       }
   
-      const userResponse = await axios.get(`https://infinitech-api5.site/api/user/${authToken}`);
+      const userResponse = await axios.get(`${API_BASE_URL}/user/${authToken}`);
       setUserId(userResponse.data.id);
   
       if (!userId) {
@@ -236,10 +236,10 @@ const ActivityPage = () => {
       };
   
       if (editId) {
-        await axios.put(`https://infinitech-api5.site/api/activities/${editId}`, newFormData);
+        await axios.put(`${API_BASE_URL}/activities/${editId}`, newFormData);
         toast.success("Activity updated successfully!"); // Use toast for success message
       } else {
-        await axios.post(`https://infinitech-api5.site/api/activities`, newFormData);
+        await axios.post(`${API_BASE_URL}/activities`, newFormData);
         toast.success("Activity created successfully!"); // Use toast for success message
       }
   
@@ -282,7 +282,7 @@ const ActivityPage = () => {
   const handleDeleteConfirm = async () => {
     if (selectedId !== null) {
       try {
-        await axios.delete(`https://infinitech-api5.site/api/activities/${selectedId}`);
+        await axios.delete(`${API_BASE_URL}/activities/${selectedId}`);
         toast.success("Activity deleted successfully!");
         fetchActivities();
       } catch (error) {
@@ -296,7 +296,7 @@ const ActivityPage = () => {
 
   const handleMarkAsDone = async (id: number) => {
     try {
-      await axios.put(`https://infinitech-api5.site/api/activities/${id}/done`);
+      await axios.put(`${API_BASE_URL}/activities/${id}/done`);
       toast.success("Activity marked as done!"); // Use toast for success message
       fetchActivities();
     } catch (error) {
@@ -313,7 +313,7 @@ const ActivityPage = () => {
   const handleArchiveConfirm = async () => {
     if (selectedId !== null) {
       try {
-        await axios.put(`https://infinitech-api5.site/api/activities/${selectedId}/archive`);
+        await axios.put(`${API_BASE_URL}/activities/${selectedId}/archive`);
         toast.success("Activity archived successfully!");
         fetchActivities();
       } catch (error) {
@@ -326,7 +326,7 @@ const ActivityPage = () => {
 
   const handleRestore = async (id: number) => {
     try {
-      await axios.put(`https://infinitech-api5.site/api/activities/${id}/restore`);
+      await axios.put(`${API_BASE_URL}/activities/${id}/restore`);
       toast.success("Activity restored successfully!"); // Use toast for success message
       fetchActivities();
     } catch (error) {
@@ -341,7 +341,7 @@ const ActivityPage = () => {
   const handleOverdue = async (id: number) => {
     try {
       console.log(`Updating activity ${id} to overdue status.`);
-      const response = await axios.put(`https://infinitech-api5.site/api/activities/${id}/overdue`);
+      const response = await axios.put(`${API_BASE_URL}/activities/${id}/overdue`);
       console.log("Response from server:", response.data);
       fetchActivities();
     } catch (error) {
