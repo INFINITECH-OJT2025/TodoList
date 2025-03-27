@@ -198,11 +198,11 @@ const ActivityPage = () => {
       return;
     }
   
-    // Check if at least one collaborator is selected
-    if (!formData.collaborators || formData.collaborators.length === 0) {
-      toast.error("At least one collaborator is required.");
-      return;
-    }
+    // // Check if at least one collaborator is selected
+    // if (!formData.collaborators || formData.collaborators.length === 0) {
+    //   toast.error("At least one collaborator is required.");
+    //   return;
+    // }
   
     // Convert dates to Date objects for comparison
     const dateStarted = new Date(formData.date_started);
