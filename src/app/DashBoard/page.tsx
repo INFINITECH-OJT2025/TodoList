@@ -37,30 +37,34 @@ const TaskList = ({ tasks = [] }) => {
     setCurrentPage(page);
   };
 
-  return (
+   return (
     <div className="bg-gray-800 p-4 rounded-xl shadow-lg w-full ">
       <h2 className="text-lg font-semibold text-center mb-2 text-green-300">Tasks</h2>
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-700">
-          <thead>
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Title</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">User </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Due Date</th>
-            </tr>
-          </thead>
-          <tbody className="bg-gray-700 divide-y divide-gray-600">
-            {currentTasks.map((task) => (
-              <tr key={task.id}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{task.title}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{task.user_id}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{task.status}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{task.deadline}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <table className="min-w-full border border-gray-600 divide-y divide-gray-700">
+  <thead>
+    <tr>
+      <th className="px-8 py-4 text-left text-lg font-bold text-gray-300 uppercase tracking-wider border-b border-gray-600">Title</th>
+      <th className="px-8 py-4 text-left text-lg font-bold text-gray-300 uppercase tracking-wider border-b border-gray-600">User </th>
+      <th className="px-8 py-4 text-left text-lg font-bold text-gray-300 uppercase tracking-wider border-b border-gray-600">Status</th>
+      <th className="px-8 py-4 text-left text-lg font-bold text-gray-300 uppercase tracking-wider border-b border-gray-600">Due Date</th>
+    </tr>
+  </thead>
+  <tbody className="bg-gray-800 divide-y divide-gray-600">
+    {currentTasks.map((task) => (
+      <tr key={task.id}>
+        <td className="px-8 py-4 whitespace-nowrap text-lg text-gray-200 border border-gray-600 flex items-center">
+          {task.status === 'complete' && <FaCheckCircle className="text-green-400 mr-2" />}
+          {task.status === 'overdue' && <FaExclamationCircle className="text-red-400 mr-2" />}
+          {task.title}
+        </td>
+        <td className="px-8 py-4 whitespace-nowrap text-lg text-gray-200 border border-gray-600">{task.user_id}</td>
+        <td className="px-8 py-4 whitespace-nowrap text-lg text-gray-200 border border-gray-600">{task.status}</td>
+        <td className="px-8 py-4 whitespace-nowrap text-lg text-gray-200 border border-gray-600">{task.deadline}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
       </div>
 
       {/* Pagination Controls */}
@@ -85,8 +89,6 @@ const TaskList = ({ tasks = [] }) => {
       </div>
     </div>
   );
-};
-
 const Dashboard = () => {
   const [taskCount, setTaskCount] = useState(0);
   const [pendingCount, setPendingCount] = useState(0);
