@@ -380,6 +380,10 @@ const ActivityPage = () => {
       {/* Parent Div for Sidebar and Main Content */}
 
              <Sidebar />
+
+       <div className="sticky top-0 h-screen w-64 bg-gray-800 shadow-lg hidden md:block">
+      
+      </div>
      
         
         {/* Main Content Div */}
@@ -451,6 +455,9 @@ const ActivityPage = () => {
 
 
 </div>
+                     <br />
+      <br />
+     
 {/* Plus Button (Centered on Small Screens) */}
 <div className="flex justify-center w-full">
   <button
