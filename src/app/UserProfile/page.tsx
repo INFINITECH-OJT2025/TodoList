@@ -92,7 +92,12 @@ const TodoPage = () => {
   return (
     <div className="flex min-h-screen bg-gray-900 text-gray-900">
       <Sidebar />
+               <div className="sticky top-0 h-screen w-64 bg-gray-800 shadow-lg hidden md:block">
+      
+      </div>
       <div className={`flex-1 flex items-center justify-center p-4 md:p-6 transition-transform duration-300 ${editing ? 'translate-x-[-300px]' : ''}`}>
+        <br />
+        <br />
         <div className="card w-full max-w-4xl h-auto bg-gray-900 rounded-xl shadow-2xl p-6 flex flex-col md:flex-row border-4 border-green-900 relative">
           <h1 className="absolute top-[-96px] left-1/2 transform -translate-x-1/2 text-3xl md:text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 drop-shadow-lg">
             USER PROFILE
@@ -101,7 +106,7 @@ const TodoPage = () => {
           <div className="img-container w-full md:w-2/4 h-auto p-4 bg-gray-900 rounded-xl overflow-hidden flex items-center justify-center border-4 border-gray-700 mt-8">
             {user?.profile_image ? (
               <img
-                className="w-full h-full object-cover rounded-xl"
+          className="w-62 h-52 object-cover rounded-xl"
                 src={`https://infinitech-api5.site/${user.profile_image}`}
                 alt="Profile"
               />
