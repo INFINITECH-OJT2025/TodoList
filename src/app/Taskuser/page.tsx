@@ -27,7 +27,7 @@ interface Activity {
   collaborator_name?: string,
 }
 
-const API_BASE_URL = "http://127.0.0.1:8000/api";
+const API_BASE_URL = "https://infinitech-api5.site/api";
 
 const ProgressBar = ({ percentage }: { percentage: number }) => {
   return (
