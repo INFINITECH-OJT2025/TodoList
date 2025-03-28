@@ -96,8 +96,7 @@ const TodoPage = () => {
       
       </div>
       <div className={`flex-1 flex items-center justify-center p-4 md:p-6 transition-transform duration-300 ${editing ? 'translate-x-[-300px]' : ''}`}>
-        <br />
-        <br />
+  
         <div className="card w-full max-w-4xl h-auto bg-gray-900 rounded-xl shadow-2xl p-6 flex flex-col md:flex-row border-4 border-green-900 relative">
           <h1 className="absolute top-[-96px] left-1/2 transform -translate-x-1/2 text-3xl md:text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 drop-shadow-lg">
             USER PROFILE
