@@ -154,6 +154,10 @@ const Dashboard = () => {
       <div className="flex min-h-screen bg-gray-900 text-white">
         <ToastContainer position="top-right" autoClose={3000} />
         <Adminbar />
+           <div className="sticky top-0 h-screen w-64 bg-gray-800 shadow-lg hidden md:block">
+      
+      </div>
+  
         <div className="container mx-auto p-4">
   <div className="w-full space-y-10 z-40 rounded-lg shadow-lg">
     <br />
