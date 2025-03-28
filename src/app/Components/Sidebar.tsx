@@ -87,6 +87,81 @@ export default function Sidebar() {
 
   return (
     <>
+      {/* Top Navbar (Mobile) */}
+      <div className="fixed top-0 left-0 w-full bg-gray-800 p-3 flex justify-between items-center text-white md:hidden">
+        <button onClick={() => setIsOpen(!isOpen)} className="text-2xl text-green-500">
+          {isOpen ? <FaTimes /> : <FaBars />}
+        </button>
+        <h2 className="text-lg font-bold">Infinitech</h2>
+        <button onClick={() => setShowNotifications(!showNotifications)} className="relative">
+          <FaBell className="text-xl text-green-500" />
+          {notifications.filter(n => n.status === "unread").length > 0 && (
+            <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+              {notifications.filter(n => n.status === "unread").length}
+            </span>
+          )}
+        </button>
+      </div>
+
+      {/* Sidebar */}
+      <aside className={`fixed top-0 left-0 h-screen bg-gray-700 p-2 flex flex-col justify-between border-r border-green-700 shadow-xl transition-transform duration-300 z-50 ${isOpen ? "translate-x-0 w-64" : "-translate-x-full w-64"}`}>
+        <div className="flex items-center p-2 justify-between">
+          <button onClick={() => setIsOpen(!isOpen)} className="text-green-500 text-3xl focus:outline-none md:hidden">
+            <FaTimes />
+          </button>
+          <h2 className="text-white text-lg font-bold"></h2>
+        </div>
+
+        {/* Logo */}
+        <div className="flex items-center justify-center">
+          <img src="/infini.png" alt="Logo" className="w-36" />
+        </div>
+
+        <nav className="mt-6 space-y-3">
+          {[
+            { path: "/todolist", label: "Dashboard", icon: <FaHome /> },
+            { path: "/Taskuser", label: "My Tasks", icon: <FaTasks /> },
+            { path: "/ProjectUser ", label: "My Project", icon: <FaProjectDiagram /> },
+            { path: "/User Profile", label: "Profile", icon: <FaUserAlt /> },
+          ].map((item, index) => (
+            <button
+              key={index}
+              onClick={() => router.push(item.path)}
+              className="relative w-full flex items-center text-left bg-gray-900 hover:bg-green-700 py-2 px-4 rounded-lg transition-transform transform hover:scale-105 shadow-md border border-green-500"
+            >
+              <span className="mr-3 text-lg text-green-500">{item.icon}</span>
+              <span className="text-white">{item.label}</span>
+            </button>
+          ))}
+        </nav>
+
+        <div className="mt-auto w-full space-y-2">
+          <button
+            onClick={() => setShowNotifications(!showNotifications)}
+            className="relative w-full bg-gray-900 hover:bg-[#1A1B1E] py-3 px-4 rounded-xl shadow-md flex items-center justify-center text-green-500 font-medium transition-all border border-green-500"
+          >
+            <FaBell className="mr-0.5 text-green-500" />
+            <span>Notifications</span>
+            {notifications.filter(n => n.status === "unread").length > 0 && (
+              <span className="absolute bottom-7 left-7 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                {notifications.filter(n => n.status === "unread").length}
+              </span>
+            )}
+          </button>
+
+          <button
+            onClick={() => setShowLogoutModal(true)}
+            className="w-full bg-gray-900 hover:bg-[#1A1B1E] py-3 px-4 rounded-xl shadow-md flex items-center justify-center text-green-500 font-medium transition-all border border-green-500"
+          >
+            <FaSignOutAlt className="mr-0.5 text-green-500" />
+            <span>Logout</span>
+          </button>
+        </div>
+      </aside>
+
+      {/* Responsive Overlay (Mobile) */}
+      {isOpen && <div className="fixed inset-0 bg-gray-700 bg-opacity-50 md:hidden" onClick={() => setIsOpen(false)}></div>}
+
       {/* Notification Panel */}
       <div className={`fixed top-14 right-2 bg-gray-800 shadow-md p-3 rounded-lg w-72 md:w-80 border border-green-700 z-50 text-white transition-transform transform ${showNotifications ? "translate-x-0" : "translate-x-full"} duration-300`}>
         <div className="flex justify-between items-center border-b pb-1 mb-2 text-green-500">
@@ -126,69 +201,6 @@ export default function Sidebar() {
         </ul>
       </div>
 
-      {/* Sidebar */}
-      <aside className={`fixed top-0 left-0 h-screen bg-gray-700 p-2 flex flex-col justify-between border-r border-green-700 shadow-xl transition-all duration-300 ${isOpen ? "w-64" : "w-16"} z-50`} style={{ position: 'sticky'}}>
-        <div className="flex items-center p-2 justify-between">
-          <button onClick={() => setIsOpen(!isOpen)} className="text-green-500 text-3xl focus:outline-none">
-            {isOpen ? <FaArrowLeft /> : <FaBars />}
-          </button>
-          {isOpen && <h2 className="text-white text-lg font-bold ml-6"></h2>}
-        </div>
-
-        {/* Logo Container */}
-        <div className="flex items-center justify-center ">
-          <img
-            src="/infini.png"
-            alt="Logo"
-            className={`transition-all duration-300 ${isOpen ? "w-36" : "w-10"}`}
-          />
-        </div>
-
-        <nav className="mt-6 space-y-3">
-          {[
-            { path: "/todolist", label: "Dashboard", icon: <FaHome /> },
-            { path: "/Taskuser", label: "My Tasks", icon: <FaTasks /> },
-            { path: "/ProjectUser  ", label: "My Project", icon: <FaProjectDiagram /> },
-            { path: "/UserProfile", label: "Profile", icon: <FaUserAlt /> }
-          ].map((item, index) => (
-            <button key={index} onClick={() => router.push(item.path)} className="relative w-full flex items-center text-left bg-gray-900 hover:bg-green-700 py-2 px-4 rounded-lg transition-transform transform hover:scale-105 shadow-md border border-green-500">
-              <span className="mr-3 text-lg text-green-500">{item.icon}</span>
-              <span className={`text-white ${isOpen ? "block" : "hidden"}`}>{item.label}</span>
-            </button>
-          ))}
-        </nav>
-
-        <div className="mt-auto w-full space-y-2">
-          <button
-            onClick={() => setShowNotifications(!showNotifications)}
-            className="relative w-full bg-gray-900 hover:bg-[#1A1B1E] py-3 px-4 rounded-xl shadow-md flex items-center justify-center text-green-500 font-medium transition-all border border-green-500"
-          >
-            <FaBell className="mr-0.5 text-green-500" />
-            <span className={`${isOpen ? "block" : "hidden"}`}>Notifications</span>
-
-            {/* Unread Notification Badge */}
-            {notifications.filter(n => n.status === "unread").length > 0 && (
-              <span className="absolute bottom-7 left-7 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">
-                {notifications.filter(n => n.status === "unread").length}
-              </span>
-            )}
-          </button>
-
-          <button
-            onClick={() => setShowLogoutModal(true)}
-            className="w-full bg-gray-900 hover:bg-[#1A1B1E] py-3 px-4 rounded-xl shadow-md flex items-center justify-center text-green-500 font-medium transition-all border border-green-500"
-          >
-            <FaSignOutAlt className="mr-0.5 text-green-500" />
-            <span className={`${isOpen ? "block" : "hidden"}`}>Logout</span>
-          </button>
-        </div>
-      </aside>
-
-      {/* Responsive overlay for mobile */}
-      {isOpen && (
-        <div className="fixed inset-0 bg-gray-700 bg-opacity-50 md:hidden" onClick={() => setIsOpen(false)}></div>
-      )}
-
       {/* Logout Modal */}
       {showLogoutModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
@@ -196,14 +208,10 @@ export default function Sidebar() {
             <h2 className="text-xl font-bold mb-4">Confirm Logout</h2>
             <p className="text-gray-300 mb-6">Are you sure you want to logout?</p>
             <div className="flex justify-end space-x-4">
-              <button
-                onClick={() => setShowLogoutModal(false)}
-                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-md">
+              <button onClick={() => setShowLogoutModal(false)} className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-md">
                 Cancel
               </button>
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-md">
+              <button onClick={handleLogout} className="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-md">
                 Logout
               </button>
             </div>
