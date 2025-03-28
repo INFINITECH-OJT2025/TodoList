@@ -92,7 +92,7 @@ export default function Sidebar() {
         <button onClick={() => setIsOpen(!isOpen)} className="text-2xl text-green-500">
           {isOpen ? <FaTimes /> : <FaBars />}
         </button>
-        <h2 className="text-lg font-bold">Infinitech</h2>
+      
         <button onClick={() => setShowNotifications(!showNotifications)} className="relative">
           <FaBell className="text-xl text-green-500" />
           {notifications.filter(n => n.status === "unread").length > 0 && (
