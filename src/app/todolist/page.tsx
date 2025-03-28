@@ -98,6 +98,9 @@ const TodoList = () => {
       {/* Sidebar */}
 
         <Sidebar />
+       <div className="sticky top-0 h-screen w-64 bg-gray-800 shadow-lg hidden md:block">
+      
+      </div>
   
       {/* Main Content */}
       <div className="flex-grow p-4 md:p-4 lg:p-8">
@@ -107,6 +110,8 @@ const TodoList = () => {
       
   
         {/* Overview Section */}
+         <br />
+        <br />
         <div className={`w-full ${isLightMode ? "bg-gray-200" : "bg-gradient-to-r from-green-500 to-gray-400"} rounded-xl p-4 mb-6 flex flex-col sm:flex-row justify-between items-center shadow-lg`}>
           <div className="text-lg font-bold text-white px-4 py-2 rounded-md bg-gradient-to-r from-green-500 to-green-400 shadow-md">
             Overview
