@@ -81,7 +81,7 @@ export default function Login() {
 
         {/* Login Box */}
         <div className="relative bg-gray-900/80 backdrop-blur-md p-6 sm:p-8 rounded-lg shadow-lg w-full max-w-sm border border-green-600">
-        <div className="flex items-center justify-center ">
+          <div className="flex items-center justify-center ">
             <img
               src="/infini.png"
               alt="Logo"
@@ -90,9 +90,7 @@ export default function Login() {
           </div>
           <br />
           <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-4 sm:mb-6">
-            
             Infini-Sign In
-
           </h2>
 
           <form onSubmit={handleLogin} className="space-y-4 sm:space-y-5">
@@ -103,7 +101,15 @@ export default function Login() {
               <input
                 type="text"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => {
+                  const inputValue = e.target.value;
+                  // Check if the input value starts with "INFINI-"
+                  if (!inputValue.startsWith("INFINI-")) {
+                    setUsername("INFINI-" + inputValue);
+                  } else {
+                    setUsername(inputValue);
+                  }
+                }}
                 className="w-full px-4 py-2 sm:py-3 border border-gray-600 bg-gray-800 text-white rounded-lg focus:ring focus:ring-green-500"
                 placeholder="Enter your username"
                 required
@@ -167,8 +173,6 @@ export default function Login() {
           </p>
         </div>
       </div>
-
-     
     </>
   );
 }
