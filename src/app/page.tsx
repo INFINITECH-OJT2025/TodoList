@@ -126,25 +126,25 @@ const HeroSection = () => {
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section className="mt-16 bg-gray-900 py-12">
+     {/* Contact Section */}
+       <section className="mt-16 bg-gray-900 py-12">
         <div className="container mx-auto text-center px-6 lg:px-12">
           <h2 className="text-4xl font-bold text-green-500">Get in Touch</h2>
           <p className="mt-4 text-lg text-gray-300">Have questions about task management? Contact us anytime.</p>
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-gray-700 p-6 rounded-lg">
               <h3 className="text-xl font-semibold text-white">Email</h3>
-              <p className="text-gray-300">Infinitech@gmail.com</p>
+              <p className="text-gray-300">infinitechcorp.ph@gmail.com</p>
             </div>
             <div className="bg-gray-700 p-6 rounded-lg">
               <h3 className="text-xl font-semibold text-white">Phone</h3>
-              <p className="text-gray-300">+63 9267772634</p>
+              <p className="text-gray-300">+63 966 751 5747</p>
             </div>
           </div>
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-gray-700 p-6 rounded-lg">
               <h3 className="text-xl font-semibold text-white">Location</h3>
-              <p className="text-gray-300">Unit 202, Campos Rueda Building, 101 Urban Ave, Makati, 1206 Metro Manila</p>
+              <p className="text-gray-300">Unit 311, Campus Rueda Bldg., Urban Avenue, Makati City, Metro Manila 1230</p>
             </div>
             <div className="bg-gray-700 p-6 rounded-lg">
               <h3 className="text-xl font-semibold text-white">Business Hours</h3>
