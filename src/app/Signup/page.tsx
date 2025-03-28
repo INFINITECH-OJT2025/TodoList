@@ -26,7 +26,7 @@ const TermsModal = ({ isOpen, onClose }) => {
 
 export default function Register() {
   const [formData, setFormData] = useState({
-    username: "",
+    username: "INFINI-", // Default prefix added
     email: "",
     password: "",
     confirmPassword: "",
@@ -41,9 +41,17 @@ export default function Register() {
   const [emailWarning, setEmailWarning] = useState("");
   const [passwordWarning, setPasswordWarning] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Loading state
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
+    // Automatically append the prefix to the username
+    if (name === "username" && !value.startsWith("INFINI-")) {
+      setFormData({ ...formData, username: "INFINI-" + value });
+      return;
+    }
+
     setFormData({ ...formData, [name]: value });
 
     // Validate username
@@ -113,6 +121,22 @@ export default function Register() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
+
+      // Validate file type and size
+      if (!file.type.startsWith("image/")) {
+        toast.error("Please upload a valid image file.");
+        setProfileImage(null);
+        setProfileImageUrl(null);
+        return;
+      }
+
+      if (file.size > 2 * 1024 * 1024) { // 2MB limit
+        toast.error("Image size should not exceed 2MB.");
+        setProfileImage(null);
+        setProfileImageUrl(null);
+        return;
+      }
+
       setProfileImage(file);
       setProfileImageUrl(URL.createObjectURL(file));
     }
@@ -124,19 +148,30 @@ export default function Register() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true); // Set loading state
+
+    // Check if a profile image is required and not uploaded
+    if (!profileImage) {
+      toast.error("Please upload a profile image.");
+      setIsLoading(false); // Reset loading state
+      return;
+    }
 
     if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords do not match");
+      setIsLoading(false); // Reset loading state
       return;
     }
 
     if (!isTermsChecked) {
       toast.error("You must agree to the terms and conditions.");
+      setIsLoading(false); // Reset loading state
       return;
     }
 
     if (usernameWarning || emailWarning || passwordWarning) {
       toast.error("Please fix the errors before submitting.");
+      setIsLoading(false); // Reset loading state
       return;
     }
 
@@ -154,12 +189,14 @@ export default function Register() {
       });
 
       toast.success(res.data.message);
-      setFormData({ username: "", email: "", password: "", confirmPassword: "" });
+      setFormData({ username: "INFINI-", email: "", password: "", confirmPassword: "" }); // Reset username to default
       setProfileImage(null);
       setProfileImageUrl(null);
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Registration failed. Please try again.";
       toast.error(errorMessage);
+    } finally {
+      setIsLoading(false); // Reset loading state
     }
   };
 
@@ -174,25 +211,21 @@ export default function Register() {
         className="absolute top-0 left-0 w-full h-full opacity-20"
       />
       <div className="relative bg-gray-800/80 backdrop-blur-md p-6 rounded-lg shadow-lg w-full max-w-md border border-green-600">
-      <div className="flex items-center justify-center ">
-            <img
-              src="/infini.png"
-              alt="Logo"
-              className="w-28"
-            />
-          </div>
-          <br />
-          
-      
+        <div className="flex items-center justify-center ">
+          <img
+            src="/infini.png"
+            alt="Logo"
+            className="w-28"
+          />
+        </div>
+        <br />
+        
         <h2 className="text-2xl font-bold text-white text-center mb-6">Register</h2>
         
-   
-          <br />
+        <br />
         
-
         <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
-          
-        <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center">
             <label className="block text-gray-300 text-sm font-medium mb-2">Profile Image</label>
             <input
               type="file"
@@ -285,7 +318,6 @@ export default function Register() {
             </div>
           </div>
 
-
           <div className="flex items-center">
             <input
               type="checkbox"
@@ -300,8 +332,8 @@ export default function Register() {
           </div>
 
           <div>
-            <button type="submit" className="w-full bg-green-600 hover:bg-green-500 text-white py-2 rounded-lg transition">
-              Register
+            <button type="submit" className={`w-full ${isLoading ? "bg-gray-600" : "bg-green-600 hover:bg-green-500"} text-white py-2 rounded-lg transition`} disabled={isLoading}>
+              {isLoading ? "Registering..." : "Register"}
             </button>
           </div>
 
