@@ -388,6 +388,11 @@ const ActivityPage = () => {
         
         {/* Main Content Div */}
         <div className="flex-1 p-4 md:p-6 lg:p-8">
+          <br />
+        <br />
+        <h1 className="text-3xl md:text-5xl font-extrabold mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 drop-shadow-lg">
+              PERSONAL TASK
+            </h1>
           <div className="mt-4">
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center space-x-3">
@@ -455,8 +460,7 @@ const ActivityPage = () => {
 
 
 </div>
-                     <br />
-      <br />
+                
      
 {/* Plus Button (Centered on Small Screens) */}
 <div className="flex justify-center w-full">
@@ -491,9 +495,7 @@ const ActivityPage = () => {
               </div>
             </div>
   
-            <h1 className="text-3xl md:text-5xl font-extrabold mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 drop-shadow-lg">
-              PERSONAL TASK
-            </h1>
+     
             <br />
             <ProgressBar percentage={completionPercentage} />
             <br />
