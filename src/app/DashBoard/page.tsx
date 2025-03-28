@@ -156,47 +156,44 @@ const Dashboard = () => {
   const COLORS = ['#FFBB28', '#00C49F', '#FF4C4C'];
 
   return (
-    <div className="flex min-h-screen bg-gray-900 text-white">
-      <ToastContainer />
-      <Adminbar />
-
-      <main className="flex-1 flex flex-col items-center p-5 w-full">
-        <h1 className="text-3xl font-bold mb-4 text-green-300">Admin Dashboard</h1>
-
+    <div className="flex h-screen bg-gray-900 text-white">
+        <Adminbar />
+      {/* Sidebar / Adminbar */}
+      <div className="sticky top-0 h-screen w-64 bg-gray-800 shadow-lg hidden md:block">
+      
+      </div>
+  
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col min-h-screen p-9 w-full overflow-auto">
+        <ToastContainer />
+        
+        <h1 className="text-3xl font-bold mb-4 text-green-300 text-center">Admin Dashboard</h1>
+  
+        {/* Current Time */}
         <div className="text-center mb-6">
           <p className="text-lg font-semibold text-green-200">{currentTime.toLocaleDateString()}</p>
           <p className="text-2xl font-bold text-green-400">{currentTime.toLocaleTimeString()}</p>
         </div>
-
-        <div className="w-full flex justify-center gap-6 mb-5 flex-wrap">
-          <div className="bg-gray-700 p-6 rounded-xl shadow-lg text-center w-48">
-            <h2 className="text-xl font-semibold text-gray-200">Total Tasks</h2>
-            <p className="text-4xl font-bold text-gray-300">{taskCount}</p>
-          </div>
-
-          <div className="bg-gray-700 p-6 rounded-xl shadow-lg text-center w-48">
-            <h2 className="text-xl font-semibold text-gray-200">Pending</h2>
-            <p className="text-4xl font-bold text-yellow-400">{pendingCount}</p>
-          </div>
-
-          <div className="bg-gray-700 p-6 rounded-xl shadow-lg text-center w-48">
-            <h2 className="text-xl font-semibold text-gray-200">Completed</h2>
-            <p className="text-4xl font-bold text-gray-500">{completedCount}</p>
-          </div>
-
-          <div className="bg-gray-700 p-6 rounded-xl shadow-lg text-center w-48">
-            <h2 className="text-xl font-semibold text-gray-200">Overdue</h2>
-            <p className="text-4xl font-bold text-red-400">{overdueCount}</p>
-          </div>
-
-          <div className="bg-gray-700 p-6 rounded-xl shadow-lg text-center w-48">
-            <h2 className="text-xl font-semibold text-gray-200">Total Users</h2>
-            <p className="text-4xl font-bold text-blue-400">{userCount}</p>
-          </div>
+  
+        {/* Dashboard Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 mb-5">
+          {[
+            { label: "Total Tasks", count: taskCount, color: "text-gray-300" },
+            { label: "Pending", count: pendingCount, color: "text-yellow-400" },
+            { label: "Completed", count: completedCount, color: "text-gray-500" },
+            { label: "Overdue", count: overdueCount, color: "text-red-400" },
+            { label: "Total Users", count: userCount, color: "text-blue-400" },
+          ].map((item, index) => (
+            <div key={index} className="bg-gray-700 p-6 rounded-xl shadow-lg text-center">
+              <h2 className="text-xl font-semibold text-gray-200">{item.label}</h2>
+              <p className={`text-4xl font-bold ${item.color}`}>{item.count}</p>
+            </div>
+          ))}
         </div>
-
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div className="bg-gray-800 p-2 rounded-xl shadow-lg w-full flex flex-col items-center">
+  
+        {/* Charts & Task List */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="bg-gray-800 p-2 rounded-xl shadow-lg flex flex-col items-center">
             <h2 className="text-lg font-semibold text-center mb-2 text-green-300">Task Progress</h2>
             <ResponsiveContainer width="100%" height={350}>
               <PieChart>
@@ -218,11 +215,12 @@ const Dashboard = () => {
               </PieChart>
             </ResponsiveContainer>
           </div>
-
+  
           {/* Task List Component */}
           <TaskList tasks={taskData} />
         </div>
-
+  
+        {/* Users per Date Chart */}
         <div className="bg-gray-800 p-4 rounded-xl shadow-lg w-full mt-6">
           <h2 className="text-lg font-semibold text-center mb-2 text-green-300">Users per Date</h2>
           <ResponsiveContainer width="100%" height={300}>
@@ -236,7 +234,7 @@ const Dashboard = () => {
             </LineChart>
           </ResponsiveContainer>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
