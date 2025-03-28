@@ -59,7 +59,7 @@ const SidebarNavigation = () => {
   
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 min-h-full bg-gray-700 shadow-2xl border-4 border-green-500 transition-transform duration-300 z-50 
+        className={`fixed top-0 left-0 min-h-full bg-gray-700 shadow-2xl border-4 border-green-800 transition-transform duration-300 z-50 
         ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 w-64 md:w-20 lg:w-64 flex flex-col items-center md:items-start pt-10`}
       >
         {/* Logo Container */}
