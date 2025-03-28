@@ -3,11 +3,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import axios from "axios";
-import { LogOut, LayoutDashboard, List, UserPlus, Users, MessageCircle } from "lucide-react";
+import { LogOut, LayoutDashboard, List, UserPlus, Users, MessageCircle, Menu, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const SidebarNavigation = () => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const router = useRouter();
 
   const menuItems = [
@@ -23,7 +24,6 @@ const SidebarNavigation = () => {
     try {
       const token = sessionStorage.getItem("authToken");
       if (!token) {
-        console.error("No token found, redirecting to login.");
         router.push("/login");
         return;
       }
@@ -40,65 +40,83 @@ const SidebarNavigation = () => {
   };
 
   return (
-    <aside className="relative min-h-full w-30 flex flex-col justify-between items-center bg-gray-700 rounded-lg shadow-lg overflow-hidden">
-      {/* Gradient Border */}
-      <div
-        className="absolute inset-0 rounded-lg border-4 border-transparent"
-        style={{
-          background: "linear-gradient(135deg, #FFD700, #32CD32)",
-          WebkitMask: "linear-gradient(white, white) content-box, linear-gradient(transparent, transparent)",
-          mask: "linear-gradient(white, white) content-box, linear-gradient(transparent, transparent)",
-          zIndex: -1,
-        }}
-      ></div>
-
-      <div className="flex items-center justify-center mb-7 w-36 h-36 rounded-full overflow-hidden bg-gray-900 -top-7 z-50 -left- absolute">
-        <img src="/infini.png" alt="Logo" className="w-full h-full object-cover" />
-      </div>
-
-      <ul className="text-white space-y-4 w-full pt-32">
-        {menuItems.map((item) => (
-          <li key={item.name} className="w-full flex flex-col items-center">
-            <Link href={item.path} legacyBehavior>
-              <a className="flex flex-col items-center p-3 w-full transition duration-200 border-b border-gray-600 hover:bg-gray-600 rounded-md">
-                <div className="flex items-center justify-center w-12 h-12 bg-gray-800 rounded-full mb-1 hover:bg-green-600 transition duration-200">
-                  {item.icon}
-                </div>
-                <span className="text-sm">{item.name}</span>
-              </a>
-            </Link>
+    <>
+      {/* Hamburger Menu Button */}
+      <button
+        className="md:hidden p-3 fixed top-4 right-4 z-50 bg-gray-700 rounded-lg"
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+      >
+        {isSidebarOpen ? <X size={24} color="white" /> : <Menu size={24} color="white" />}
+      </button>
+  
+      {/* Overlay to close menu when clicked */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        ></div>
+      )}
+  
+      {/* Sidebar */}
+      <aside
+        className={`fixed top-0 left-0 min-h-full bg-gray-700 shadow-lg border-2 border-green-500 transition-transform duration-300 z-50 
+        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 w-60 md:w-20 lg:w-60 flex flex-col items-center md:items-start pt-10`}
+      >
+        {/* Logo Container */}
+        <div className="flex flex-col items-center justify-center w-full mb-6">
+          <img
+            src="/infini.png"
+            alt="Logo"
+            className="w-20 h-20 rounded-full"
+          />
+          <span className="text-white text-lg font-bold mt-2">INFINITASK-ADMIIN</span>
+        </div>
+  
+        {/* Sidebar Menu */}
+        <ul className="text-white space-y-4 w-full">
+          {menuItems.map((item) => (
+            <li key={item.name} className="w-full">
+              <Link href={item.path} legacyBehavior>
+                <a className="flex items-center p-3 w-full transition duration-200 border-b border-gray-600 hover:bg-gray-600 rounded-md">
+                  <div className="flex items-center justify-center w-12 h-12 bg-gray-800 rounded-full mr-3">
+                    {item.icon}
+                  </div>
+                  <span className={`text-sm transition-all duration-300 ${isSidebarOpen ? "inline" : "hidden md:inline"}`}>
+                    {item.name}
+                  </span>
+                </a>
+              </Link>
+            </li>
+          ))}
+  
+          <li className="w-full">
+            <a
+              href="https://dashboard.tawk.to/#/dashboard/67e365c14f39121902671651"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center p-3 w-full rounded-md transition duration-200 border-b border-gray-600 hover:bg-gray-600"
+            >
+              <div className="flex items-center justify-center w-12 h-12 bg-gray-800 rounded-full mr-3">
+                <MessageCircle size={24} />
+              </div>
+              <span className="text-sm">Tawk Admin</span>
+            </a>
           </li>
-        ))}
-
-        {/* Tawk Admin Button */}
-        <li className="w-full flex flex-col items-center">
-          <a
-            href="https://dashboard.tawk.to/#/dashboard/67e3a3defdf8c219086c03df"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex flex-col items-center p-3 w-full rounded-md transition duration-200 border-b border-gray-600 hover:bg-gray-600"
-          >
-            <div className="flex items-center justify-center w-12 h-12 bg-gray-800 rounded-full mb-1 hover:bg-green-600 transition duration-200">
-              <MessageCircle size={24} />
-            </div>
-            <span className="text-sm">Tawk Admin</span>
-          </a>
-        </li>
-
-        {/* Logout Button */}
-        <li className="w-full flex flex-col items-center">
-          <button
-            className="flex flex-col items-center p-3 w-full rounded-md transition duration-200 border-b border-gray-600 hover:bg-gray-600"
-            onClick={confirmLogout}
-          >
-            <div className="flex items-center justify-center w-12 h-12 bg-gray-800 rounded-full mb-1 hover:bg-green-600 transition duration-200">
-              <LogOut size={24} />
-            </div>
-            <span className="text-sm">Logout</span>
-          </button>
-        </li>
-      </ul>
-
+  
+          <li className="w-full">
+            <button
+              className="flex items-center p-3 w-full rounded-md transition duration-200 border-b border-gray-600 hover:bg-gray-600"
+              onClick={confirmLogout}
+            >
+              <div className="flex items-center justify-center w-12 h-12 bg-gray-800 rounded-full mr-3">
+                <LogOut size={24} />
+              </div>
+              <span className="text-sm">Logout</span>
+            </button>
+          </li>
+        </ul>
+      </aside>
+  
       {/* Logout Confirmation Modal */}
       {showLogoutModal && (
         <div className="fixed z-50 inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
@@ -118,8 +136,10 @@ const SidebarNavigation = () => {
           </div>
         </div>
       )}
-    </aside>
+    </>
   );
+  
+  
 };
 
 export default SidebarNavigation;
