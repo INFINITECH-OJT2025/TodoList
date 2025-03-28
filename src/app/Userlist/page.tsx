@@ -362,7 +362,7 @@ const UsersTable = () => {
     }
   };
 
-  return (
+ return (
     <>
       <Head>
         <title>Users List | Infi-Admin</title>
@@ -370,10 +370,13 @@ const UsersTable = () => {
       </Head>
 
       <div className="flex min-h-screen bg-gray-900 text-gray-100">
-        <div>
+      
           <Adminbar />
-        </div>
-
+      
+        <div className="sticky top-0 h-screen w-64 bg-gray-800 shadow-lg hidden md:block">
+      
+      </div>
+        <div className="flex-1 flex flex-col min-h-screen p-9 w-full overflow-auto">
         <div className="flex-1 flex flex-col items-center p-5 sm:p-10">
           <h2 className="text-2xl sm:text-3xl font-bold text-green-500 text-center mb-4 sm:mb-6 drop-shadow-lg">
             User List
@@ -419,7 +422,7 @@ const UsersTable = () => {
                     <div className="flex flex-col sm:flex-row items-center mb-3">
   <div className="img border-4 border-gradient-to-r from-green-400 to-gold rounded-lg shadow-lg overflow-hidden">
     <img
-      src={filteredUsers[currentPage].profile_image ? `https://infinitech-api5.site/${filteredUsers[currentPage].profile_image}` : "/default-profile.png"}
+      src={filteredUsers[currentPage].profile_image ? `http://127.0.0.1:8000/${filteredUsers[currentPage].profile_image}` : "/default-profile.png"}
       alt="Profile"
       className="w-32 h-32 object-cover sm:w-40 sm:h-40" // Adjusted size for larger screens
     />
@@ -546,6 +549,7 @@ const UsersTable = () => {
             </>
           )}
         </div>
+      </div>
       </div>
 
       {/* Edit Modal */}
