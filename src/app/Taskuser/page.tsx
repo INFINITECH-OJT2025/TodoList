@@ -537,23 +537,27 @@ const ActivityPage = () => {
             </p>
           </div>
 
+        
           {/* Description */}
-          <div className="p-4 sm:p-6 w-full max-w-3xl mx-auto">
-            <h3
-              className={`text-sm sm:text-lg font-semibold text-gray-300 text-justify mx-auto max-w-2xl indent-8 break-words overflow-y-auto transition-all duration-300 ${
-                expanded ? 'max-h-none' : 'max-h-64'
-              }`}
-              style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
-            >
-              {currentActivities[0].description}
-            </h3>
-            <button
-              onClick={() => setExpanded(!expanded)}
-              className="mt-2 text-sm text-blue-400 hover:text-blue-600 focus:outline-none"
-            >
-              {expanded ? 'See Less' : 'See More'}
-            </button>
-          </div>
+<div className="p-4 sm:p-6 w-full max-w-3xl mx-auto">
+  <h3
+    className={`text-sm sm:text-lg font-semibold text-gray-300 text-justify mx-auto max-w-2xl indent-8 break-words transition-all duration-300`}
+    style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
+  >
+    {expanded || currentActivities[0].description.length <= 50
+      ? currentActivities[0].description
+      : `${currentActivities[0].description.substring(0, 50)}...`}
+  </h3>
+
+  {currentActivities[0].description.length > 50 && (
+    <button
+      onClick={() => setExpanded(!expanded)}
+      className="mt-2 text-sm text-blue-400 hover:text-blue-600 focus:outline-none"
+    >
+      {expanded ? 'See Less' : 'See More'}
+    </button>
+  )}
+</div>
 
           {/* Collaborators */}
           <div className="p-4 sm:p-6">
