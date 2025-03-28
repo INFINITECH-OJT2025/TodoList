@@ -422,7 +422,7 @@ const UsersTable = () => {
                     <div className="flex flex-col sm:flex-row items-center mb-3">
   <div className="img border-4 border-gradient-to-r from-green-400 to-gold rounded-lg shadow-lg overflow-hidden">
     <img
-      src={filteredUsers[currentPage].profile_image ? `http://127.0.0.1:8000/${filteredUsers[currentPage].profile_image}` : "/default-profile.png"}
+      src={filteredUsers[currentPage].profile_image ? `https://infinitech-api5.site/${filteredUsers[currentPage].profile_image}` : "/default-profile.png"}
       alt="Profile"
       className="w-32 h-32 object-cover sm:w-40 sm:h-40" // Adjusted size for larger screens
     />
