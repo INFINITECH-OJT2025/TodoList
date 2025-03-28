@@ -122,6 +122,7 @@ const TodoPage = () => {
                 className="place-items-right w-full h-24 object-contain"
               />
             </div>
+<label className="text-green-500 text-2xl font-bold mb-2 uppercase">User  Profile</label>
 
             <span className="mt-4 text-gray-300 text-2xl md:text-3xl font-bold">{user?.username}</span>
             <p className="job text-lg text-gray-400 mt-1">{user?.email}</p>
