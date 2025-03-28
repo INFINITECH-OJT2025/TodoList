@@ -39,14 +39,14 @@ const SidebarNavigation = () => {
     }
   };
 
-  return (
+ return (
     <>
       {/* Hamburger Menu Button */}
       <button
-        className="md:hidden p-3 fixed top-4 right-4 z-50 bg-gray-700 rounded-lg"
+        className="md:hidden p-4 fixed top-4 right-4 z-50 bg-gray-700 border border-gray-500 shadow-lg transform active:scale-95"
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
       >
-        {isSidebarOpen ? <X size={24} color="white" /> : <Menu size={24} color="white" />}
+        {isSidebarOpen ? <X size={28} color="white" /> : <Menu size={28} color="white" />}
       </button>
   
       {/* Overlay to close menu when clicked */}
@@ -59,29 +59,29 @@ const SidebarNavigation = () => {
   
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 min-h-full bg-gray-700 shadow-lg border-2 border-green-500 transition-transform duration-300 z-50 
-        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 w-60 md:w-20 lg:w-60 flex flex-col items-center md:items-start pt-10`}
+        className={`fixed top-0 left-0 min-h-full bg-gray-700 shadow-2xl border-4 border-green-500 transition-transform duration-300 z-50 
+        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 w-64 md:w-20 lg:w-64 flex flex-col items-center md:items-start pt-10`}
       >
         {/* Logo Container */}
         <div className="flex flex-col items-center justify-center w-full mb-6">
           <img
             src="/infini.png"
             alt="Logo"
-            className="w-20 h-20 rounded-full"
+            className="w-20 h-20 rounded-md  "
           />
-          <span className="text-white text-lg font-bold mt-2">INFINITASK-ADMIIN</span>
+          <span className="text-white text-xl font-bold mt-2">INFINITASK-ADMIN</span>
         </div>
   
         {/* Sidebar Menu */}
-        <ul className="text-white space-y-4 w-full">
+        <ul className="text-white space-y-4 w-full px-4">
           {menuItems.map((item) => (
             <li key={item.name} className="w-full">
               <Link href={item.path} legacyBehavior>
-                <a className="flex items-center p-3 w-full transition duration-200 border-b border-gray-600 hover:bg-gray-600 rounded-md">
-                  <div className="flex items-center justify-center w-12 h-12 bg-gray-800 rounded-full mr-3">
+                <a className="flex items-center p-4 w-full transition duration-200 border-b border-gray-600 hover:bg-gray-600 rounded-md shadow-md">
+                  <div className="flex items-center justify-center w-14 h-14 bg-gray-800 shadow-lg border border-gray-600 mr-3">
                     {item.icon}
                   </div>
-                  <span className={`text-sm transition-all duration-300 ${isSidebarOpen ? "inline" : "hidden md:inline"}`}>
+                  <span className={`text-lg transition-all duration-300 ${isSidebarOpen ? "inline" : "hidden md:inline"}`}>
                     {item.name}
                   </span>
                 </a>
@@ -94,24 +94,24 @@ const SidebarNavigation = () => {
               href="https://dashboard.tawk.to/#/dashboard/67e365c14f39121902671651"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center p-3 w-full rounded-md transition duration-200 border-b border-gray-600 hover:bg-gray-600"
+              className="flex items-center p-4 w-full rounded-md transition duration-200 border-b border-gray-600 hover:bg-gray-600 shadow-md"
             >
-              <div className="flex items-center justify-center w-12 h-12 bg-gray-800 rounded-full mr-3">
-                <MessageCircle size={24} />
+              <div className="flex items-center justify-center w-14 h-14 bg-gray-800 shadow-lg border border-gray-600 mr-3">
+                <MessageCircle size={28} />
               </div>
-              <span className="text-sm">Tawk Admin</span>
+              <span className="text-lg">Tawk Admin</span>
             </a>
           </li>
   
           <li className="w-full">
             <button
-              className="flex items-center p-3 w-full rounded-md transition duration-200 border-b border-gray-600 hover:bg-gray-600"
+              className="flex items-center p-4 w-full rounded-md transition duration-200 border-b border-gray-600 hover:bg-gray-600 shadow-md"
               onClick={confirmLogout}
             >
-              <div className="flex items-center justify-center w-12 h-12 bg-gray-800 rounded-full mr-3">
-                <LogOut size={24} />
+              <div className="flex items-center justify-center w-14 h-14 bg-gray-800 shadow-lg border border-gray-600 mr-3">
+                <LogOut size={28} />
               </div>
-              <span className="text-sm">Logout</span>
+              <span className="text-lg">Logout</span>
             </button>
           </li>
         </ul>
@@ -120,16 +120,16 @@ const SidebarNavigation = () => {
       {/* Logout Confirmation Modal */}
       {showLogoutModal && (
         <div className="fixed z-50 inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-gray-800 p-6 rounded-md shadow-lg text-center">
-            <p className="mb-4 text-lg">Are you sure you want to log out?</p>
-            <div className="flex justify-center gap-4">
+          <div className="bg-gray-800 p-8 rounded-md shadow-2xl text-center">
+            <p className="mb-6 text-xl font-bold">Are you sure you want to log out?</p>
+            <div className="flex justify-center gap-6">
               <button
-                className="bg-gray-500 text-white px-4 py-2 rounded-md"
+                className="bg-gray-500 text-white px-6 py-3 rounded-md shadow-md hover:bg-gray-600"
                 onClick={() => setShowLogoutModal(false)}
               >
                 Cancel
               </button>
-              <button className="bg-green-600 text-white px-4 py-2 rounded-md" onClick={handleLogout}>
+              <button className="bg-green-600 text-white px-6 py-3 rounded-md shadow-md hover:bg-green-700" onClick={handleLogout}>
                 Logout
               </button>
             </div>
@@ -138,7 +138,6 @@ const SidebarNavigation = () => {
       )}
     </>
   );
-  
   
 };
 
