@@ -53,9 +53,6 @@ const TodoPage = () => {
     return () => clearInterval(interval); // Cleanup on unmount
   }, [userId]);
 
-  const completedTasks = tasks.filter((t) => t.status === "complete").length;
-  const progress = tasks.length > 0 ? (completedTasks / tasks.length) * 100 : 0;
-
   const fetchTasks = async (userId) => {
     try {
       const response = await axios.get(`https://infinitech-api5.site/api/tasks/${userId}`);
@@ -109,7 +106,14 @@ const TodoPage = () => {
     }
   };
 
-  const totalPages = Math.ceil(tasks.length / itemsPerPage);
+  const totalTasks = tasks.length;
+  const completedTasks = tasks.filter((t) => t.status === "complete").length;
+  const overdueTasks = tasks.filter((t) => t.status === "overdue").length;
+  const pendingTasks = totalTasks - completedTasks - overdueTasks;
+
+  const progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+
+  const totalPages = Math.ceil(totalTasks / itemsPerPage);
   const currentTask = tasks[(currentPage - 1) * itemsPerPage];
 
   // State to manage the expanded/collapsed state of the description
@@ -120,17 +124,36 @@ const TodoPage = () => {
       <ToastContainer position="top-right" autoClose={3000} /> {/* ToastContainer for notifications */}
 
       <Sidebar />
- <div className="sticky top-0 h-screen w-64 bg-gray-800 shadow-lg hidden md:block">
+      <div className="sticky top-0 h-screen w-64 bg-gray-800 shadow-lg hidden md:block">
       
       </div>
-      <div className="flex-1 p-9 flex flex-col items-center">
-           <br />
-      <br />
-  
+      
+     
+
+      <div className="flex-1 p-4 md:p-9 flex flex-col items-center">
         <h1 className="text-2xl font-extrabold mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-gray-500 drop-shadow-lg">
           ADMIN TASK
         </h1>
-        <br />
+
+        {/* Dashboard Section */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8 w-full">
+          <div className="bg-green-600 p-4 rounded-lg shadow-lg text-white text-center">
+            <h2 className="text-lg font-bold">Completed</h2>
+            <p className="text-2xl">{completedTasks}</p>
+          </div>
+          <div className="bg-yellow-600 p-4 rounded-lg shadow-lg text-white text-center">
+            <h2 className="text-lg font-bold">Pending</h2>
+            <p className="text-2xl">{pendingTasks}</p>
+          </div>
+          <div className="bg-red-600 p-4 rounded-lg shadow-lg text-white text-center">
+            <h2 className="text-lg font-bold">Overdue</h2>
+            <p className="text-2xl">{overdueTasks}</p>
+          </div>
+          <div className="bg-gray-600 p-4 rounded-lg shadow-lg text-white text-center">
+            <h2 className="text-lg font-bold">Total Tasks</h2>
+            <p className="text-2xl">{totalTasks}</p>
+          </div>
+        </div>
 
         <div className="relative w-full h-6 bg-gray-800 rounded-lg shadow-lg overflow-hidden">
           {/* 3D Background Layer */}
@@ -150,7 +173,6 @@ const TodoPage = () => {
           </span>
         </div>
         <br />
-        <br />
 
         {loading ? (
           <p>Loading tasks...</p>
@@ -158,7 +180,7 @@ const TodoPage = () => {
           <p className="text-red-500">{error}</p>
         ) : (
           currentTask && (
-            <div className="relative border-2 border-gray-700 bg-gray-800 p-4 shadow-lg transition-all rounded-lg flex flex-col items-center text-white text-center">
+            <div className="relative border-2 border-gray-700 bg-gray-800 p-4 shadow-lg transition-all rounded-lg flex flex-col items-center text-white text-center w-full md:w-3/4 lg:w-1/2">
               {currentTask.tags && (
                 <div
                   className={`absolute top-2 left-2 text-white text-xs font-bold px-2 py-1 rounded-lg shadow-lg ${
@@ -176,7 +198,7 @@ const TodoPage = () => {
 
               <div className="absolute top-2 right-2">
                 <span
-                  className={`px-3 py-1 rounded-full text-sm font-bold tracking-wide ${
+                  className={`px-3 py-1 rounded-full text-sm font-bold ${
                     currentTask.status === "complete"
                       ? "bg-green-200 text-green-800"
                       : currentTask.status === "overdue"
