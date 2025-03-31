@@ -132,10 +132,12 @@ const HeroSection = () => {
           <h2 className="text-4xl font-bold text-green-500">Get in Touch</h2>
           <p className="mt-4 text-lg text-gray-300">Have questions about task management? Contact us anytime.</p>
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-gray-700 p-6 rounded-lg">
-              <h3 className="text-xl font-semibold text-white">Email</h3>
-              <p className="text-gray-300">infinitechcorp.ph@gmail.com</p>
-            </div>
+             <a href="mailto:infinitechcorp.ph@gmail.com" className="block">
+  <div className="bg-gray-700 p-6 rounded-lg">
+    <h3 className="text-xl font-semibold text-white">Email</h3>
+    <p className="text-blue-300">infinitechcorp.ph@gmail.com</p>
+  </div>
+</a>
             <div className="bg-gray-700 p-6 rounded-lg">
               <h3 className="text-xl font-semibold text-white">Phone</h3>
               <p className="text-gray-300">+63 966 751 5747</p>
