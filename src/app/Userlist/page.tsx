@@ -204,7 +204,7 @@ const UsersTable = () => {
     }
   };
 
-  // Filter users based on search input
+
   const filteredUsers = users.filter(user =>
     Object.values(user).some(value =>
       value.toString().toLowerCase().includes(searchId.toLowerCase())
