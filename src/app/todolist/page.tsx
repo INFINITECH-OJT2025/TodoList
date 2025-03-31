@@ -12,8 +12,8 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
-import authUser from "../utils/authUser";
-import { ToastContainer, toast } from "react-toastify";
+import authUser  from "../utils/authUser";
+import { ToastContainer } from "react-toastify";
 
 interface Activity {
   id: number;
@@ -45,6 +45,20 @@ const TodoList = () => {
     return () => clearInterval(clockInterval);
   }, []);
 
+  // Injecting the chat bot script
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://embed.tawk.to/67e3a3defdf8c219086c03df/1in8jg7nt";
+    script.async = true;
+    script.charset = "UTF-8";
+    script.setAttribute("crossorigin", "*");
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
   const fetchActivities = async () => {
     try {
       const authToken = sessionStorage.getItem("authToken");
@@ -63,7 +77,6 @@ const TodoList = () => {
     }
   };
 
- 
   const pendingCount = activities.filter((activity) => activity.status === "pending" && !activity.archive).length;
   const completeCount = activities.filter((activity) => activity.status === "complete" && !activity.archive).length;
   const overdueCount = activities.filter((activity) => activity.status === "overdue" && !activity.archive).length;
@@ -94,23 +107,18 @@ const TodoList = () => {
 
   return (
     <div className="relative flex min-h-screen bg-gray-900 text-gray-900">
-
       {/* Sidebar */}
+      <Sidebar />
+      <div className="sticky top-0 h-screen w-64 bg-gray-800 shadow-lg hidden md:block"></div>
 
-        <Sidebar />
-       <div className="sticky top-0 h-screen w-64 bg-gray-800 shadow-lg hidden md:block">
-      
-      </div>
-  
       {/* Main Content */}
       <div className="flex-grow p-4 md:p-4 lg:p-8">
         <ToastContainer />
-  
+
         {/* Header Section */}
-      
-  
+
         {/* Overview Section */}
-         <br />
+        <br />
         <br />
         <div className={`w-full ${isLightMode ? "bg-gray-200" : "bg-gradient-to-r from-green-500 to-gray-400"} rounded-xl p-4 mb-6 flex flex-col sm:flex-row justify-between items-center shadow-lg`}>
           <div className="text-lg font-bold text-white px-4 py-2 rounded-md bg-gradient-to-r from-green-500 to-green-400 shadow-md">
@@ -120,20 +128,18 @@ const TodoList = () => {
             📅 {currentDate} | ⏰ {currentTime}
           </div>
         </div>
-  
+
         {/* Task Completion Bar */}
         <div className="w-full bg-gray-300 rounded-xl p-4 mb-6 shadow-lg">
-          
           <div className="text-lg font-bold mb-2"> Task Completion</div>
           <div className="w-full bg-gray-400 rounded-full h-6 overflow-hidden">
             <div className="h-full bg-green-900 transition-all" style={{ width: `${completionPercentage}%` }}></div>
-            
           </div>
           <div className="text-right text-sm text-gray-700 mt-1">
             {completionPercentage.toFixed(2)}% Completed
           </div>
         </div>
-  
+
         {/* Task Status Overview */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xl">
           {[{ label: "Pending", count: pendingCount, icon: "🕒" },
@@ -153,7 +159,7 @@ const TodoList = () => {
           ))}
         </div>
         <br />
-  
+
         {/* Task Status Chart */}
         <div className="w-full bg-gray-300 rounded-xl p-4 mb-3 shadow-lg">
           <div className="text-lg font-bold mb-4">Task Status Over Time</div>
@@ -172,7 +178,6 @@ const TodoList = () => {
       </div>
     </div>
   );
-  
 };
 
-export default authUser(TodoList);
+export default authUser (TodoList);
