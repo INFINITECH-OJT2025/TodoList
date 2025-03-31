@@ -20,6 +20,16 @@ const TodoPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 1;
 
+  // Initialize the alarm sound
+  const alarmSound = new Audio("/alarm-sound.mp3");
+
+  const playAlarm = () => {
+    alarmSound.currentTime = 0;
+    alarmSound.play().catch(error => {
+      console.error("Error playing alarm sound:", error);
+    });
+  };
+
   useEffect(() => {
     const authenticateUser  = async () => {
       try {
@@ -119,16 +129,39 @@ const TodoPage = () => {
   // State to manage the expanded/collapsed state of the description
   const [isExpanded, setIsExpanded] = useState(false);
 
+  useEffect(() => {
+    const checkAlarms = setInterval(() => {
+      const now = new Date();
+      for (const task of tasks) {
+        const taskTime = new Date(task.deadline);
+        if (task.status === 'pending') {
+          if (taskTime < now) {
+            updateTaskStatus(task.id, "overdue");
+          } else {
+            if (
+              taskTime.getFullYear() === now.getFullYear() &&
+              taskTime.getMonth() === now.getMonth() &&
+              taskTime.getDate() === now.getDate() &&
+              taskTime.getHours() === now.getHours() &&
+              taskTime.getMinutes() - 1 === now.getMinutes()
+            ) {
+              playAlarm(); // Trigger alarm at exact time
+            }
+          }
+        }
+      }
+    }, 500);
+
+    return () => clearInterval(checkAlarms);
+  }, [tasks]);
+
   return (
     <div className="flex min-h-screen bg-gray-900 text-gray-100">
       <ToastContainer position="top-right" autoClose={3000} /> {/* ToastContainer for notifications */}
 
       <Sidebar />
       <div className="sticky top-0 h-screen w-64 bg-gray-800 shadow-lg hidden md:block">
-      
       </div>
-      
-     
 
       <div className="flex-1 p-4 md:p-9 flex flex-col items-center">
         <h1 className="text-2xl font-extrabold mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-gray-500 drop-shadow-lg">
