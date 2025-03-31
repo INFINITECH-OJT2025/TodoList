@@ -606,78 +606,99 @@ const ActivityPage = () => {
             {editId ? "EDIT" : "ADD"} TASK
           </h2>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-            <input
-              type="text"
-              name="title"
-              placeholder="Title"
-              value={formData.title}
-              onChange={handleChange}
-              className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
-              required
-            />
+         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+  <div className="flex flex-col">
+    <label className="text-white text-lg font-bold" htmlFor="title">Title</label>
+    <input
+      type="text"
+      id="title"
+      name="title"
+      placeholder="Title"
+      value={formData.title}
+      onChange={handleChange}
+      className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
+      required
+    />
+  </div>
 
-            <textarea
-              name="description"
-              placeholder="Description"
-              value={formData.description}
-              onChange={handleChange}
-              className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
-            ></textarea>
+  <div className="flex flex-col">
+    <label className="text-white text-lg font-bold" htmlFor="description">Description</label>
+    <textarea
+      id="description"
+      name="description"
+      placeholder="Description"
+      value={formData.description}
+      onChange={handleChange}
+      className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
+    ></textarea>
+  </div>
 
-            <input
-              type="date"
-              name="date_started"
-              value={formData.date_started}
-              onChange={handleChange}
-              className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
-              required
-            />
+  <div className="flex flex-col">
+    <label className="text-white text-lg font-bold" htmlFor="date_started">Date Started</label>
+    <input
+      type="date"
+      id="date_started"
+      name="date_started"
+      value={formData.date_started}
+      onChange={handleChange}
+      className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
+      required
+    />
+  </div>
 
-            <input
-              type="datetime-local"
-              name="due_date"
-              value={formData.due_date}
-              onChange={handleChange}
-              className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
-              required
-            />
+  <div className="flex flex-col">
+    <label className="text-white text-lg font-bold" htmlFor="due_date">Due Date</label>
+    <input
+      type="datetime-local"
+      id="due_date"
+      name="due_date"
+      value={formData.due_date}
+      onChange={handleChange}
+      className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
+      required
+    />
+  </div>
 
-            <input
-              type="text"
-              name="tags"
-              placeholder="Tags"
-              value={formData.tags}
-              onChange={handleChange}
-              className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
-            />
+  <div className="flex flex-col">
+    <label className="text-white text-lg font-bold" htmlFor="tags">Tags</label>
+    <input
+      type="text"
+      id="tags"
+      name="tags"
+      placeholder="Tags"
+      value={formData.tags}
+      onChange={handleChange}
+      className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
+    />
+  </div>
 
-            <div className="flex flex-col gap-2">
-              <label className="text-white text-lg font-bold">Collaborators</label>
-              <select
-                name="collaborators"
-                value={formData.collaborators?.[0] || ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, collaborators: [parseInt(e.target.value)] })
-                }
-                className="bg-gray-800 text-white text-lg p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 font-bold"
-              >
-                <option value="" disabled>Select a collaborator</option>
-                {users.filter((user) => user.id !== Number(userId)).map(user => (
-                  <option key={user.id} value={user.id}>
-                    {user.username}
-                  </option>
-                ))}
-              </select>
-            </div>
+  <div className="flex flex-col gap-2">
+    <label className="text-white text-lg font-bold" htmlFor="collaborators">Collaborators</label>
+    <select
+      id="collaborators"
+      name="collaborators"
+      value={formData.collaborators?.[0] || ""}
+      onChange={(e) =>
+        setFormData({ ...formData, collaborators: [parseInt(e.target.value)] })
+      }
+      className="bg-gray-800 text-white text-lg p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 font-bold"
+    >
+      <option value="" disabled>Select a collaborator</option>
+      {users.filter((user) => user.id !== Number(userId)).map(user => (
+        <option key={user.id} value={user.id}>
+          {user.username}
+        </option>
+      ))}
+    </select>
+  </div>
 
-            <button
-              type="submit"
-              className="bg-green-600 text-white text-lg font-bold py-3 rounded-lg shadow-md hover:bg-green-700 transition-all"
-            >
-              {editId ? "Update" : "Add"} Activity
-            </button>
-          </form>
+  <button
+    type="submit"
+    className="bg-green-600 text-white text-lg font-bold py-3 rounded-lg shadow-md hover:bg-green-700 transition-all"
+  >
+    {editId ? "Update" : "Add"} Activity
+  </button>
+</form>
         </div>
       </div>
     </div>
