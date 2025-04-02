@@ -450,7 +450,7 @@ const ActivityPage = () => {
           <ProgressBar percentage={completionPercentage} />
           <br />
           <div className="flex justify-center w-full px-4 sm:px-6">
-            <div className="w-full max-w-6xl p-4 sm:p-6 rounded-lg shadow-lg border border-green-500">
+            <div className=" min-w-full max-w-6xl p-4 sm:p-6 rounded-lg shadow-lg border border-green-500">
               {currentActivities.length > 0 && (
                 <div
                   key={currentActivities[0].id}
