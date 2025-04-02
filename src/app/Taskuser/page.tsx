@@ -363,9 +363,13 @@ const ActivityPage = () => {
       <br />
       <br />
       
-        <h1 className="text-3xl md:text-5xl font-extrabold mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 drop-shadow-lg">
-          PERSONAL TASK
-        </h1>
+     <div className="flex items-center justify-center mb-6">
+  <div className="flex-grow border-t border-gray-600"></div>
+  <span className="mx-10 text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-800 to-gray-600">
+    DASHBOARD
+  </span>
+  <div className="flex-grow border-t border-gray-600"></div>
+</div>
         <div className="mt-4">
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center space-x-3">
