@@ -218,7 +218,7 @@ ADMIN TASK
           <p className="text-red-500">{error}</p>
         ) : (
           currentTask && (
-            <div className="relative border-2 border-gray-700 bg-gray-800 p-4 shadow-lg transition-all rounded-lg flex flex-col items-center text-white text-center w-full md:w-3/4 lg:w-1/2">
+            <div className="relative min-w-full border-2 border-gray-700 bg-gray-800 p-4 shadow-lg transition-all rounded-lg flex flex-col items-center text-white text-center w-full md:w-3/4 lg:w-1/2">
               {currentTask.tags && (
                 <div
                   className={`absolute top-2 left-2 text-white text-xs font-bold px-2 py-1 rounded-lg shadow-lg ${
