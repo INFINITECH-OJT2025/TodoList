@@ -181,7 +181,13 @@ const Dashboard = () => {
   
         {/* Current Time */}
         <div className="text-center mb-6">
-          <p className="text-lg font-semibold text-green-200">{currentTime.toLocaleDateString()}</p>
+         <p className="text-lg font-semibold text-green-200">
+    {currentTime.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })}
+  </p>
           <p className="text-2xl font-bold text-green-400">{currentTime.toLocaleTimeString()}</p>
         </div>
   
