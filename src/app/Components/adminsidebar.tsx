@@ -39,16 +39,25 @@ const SidebarNavigation = () => {
     }
   };
 
- return (
+  return (
     <>
-      {/* Hamburger Menu Button */}
-      <button
-        className="md:hidden p-4 fixed top-4 right-4 z-50 bg-gray-700 border border-gray-500 shadow-lg transform active:scale-95"
-        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-      >
-        {isSidebarOpen ? <X size={28} color="white" /> : <Menu size={28} color="white" />}
-      </button>
-  
+      {/* Navigation Bar for Mobile */}
+      <div className="md:hidden flex justify-between items-center bg-gray-700 p-2 fixed top-0 left-0 right-0 z-50">
+        <button
+          className="p-2 bg-gray-700 border border-gray-500 shadow-lg transform active:scale-95"
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        >
+          {isSidebarOpen ? <X size={20} color="white" /> : <Menu size={20} color="white" />}
+        </button>
+        <span className="text-white font-bold">INFINITASK-ADMIN</span>
+        <button
+          className="p-2 text-white"
+          onClick={confirmLogout}
+        >
+          <LogOut size={20} />
+        </button>
+      </div>
+
       {/* Overlay to close menu when clicked */}
       {isSidebarOpen && (
         <div
@@ -56,7 +65,7 @@ const SidebarNavigation = () => {
           onClick={() => setIsSidebarOpen(false)}
         ></div>
       )}
-  
+
       {/* Sidebar */}
       <aside
         className={`fixed top-0 left-0 min-h-full bg-gray-700 shadow-2xl border-4 border-green-800 transition-transform duration-300 z-50 
@@ -67,11 +76,10 @@ const SidebarNavigation = () => {
           <img
             src="/infini.png"
             alt="Logo"
-            className="w-20 h-20 rounded-md  "
+            className="w-20 h-20 rounded-md"
           />
-          <span className="text-white text-xl font-bold mt-2">INFINITASK-ADMIN</span>
         </div>
-  
+
         {/* Sidebar Menu */}
         <ul className="text-white space-y-4 w-full px-4">
           {menuItems.map((item) => (
@@ -88,7 +96,7 @@ const SidebarNavigation = () => {
               </Link>
             </li>
           ))}
-  
+
           <li className="w-full">
             <a
               href="https://dashboard.tawk.to/#/dashboard/67e365c14f39121902671651"
@@ -102,21 +110,22 @@ const SidebarNavigation = () => {
               <span className="text-lg">Tawk Admin</span>
             </a>
           </li>
-  
-          <li className="w-full">
-            <button
-              className="flex items-center p-4 w-full rounded-md transition duration-200 border-b border-gray-600 hover:bg-gray-600 shadow-md"
-              onClick={confirmLogout}
-            >
-              <div className="flex items-center justify-center w-14 h-14 bg-gray-800 shadow-lg border border-gray-600 mr-3">
-                <LogOut size={28} />
-              </div>
-              <span className="text-lg">Logout</span>
-            </button>
-          </li>
         </ul>
+
+        {/* Logout Button at the Bottom (Visible only on Desktop) */}
+        <div className="mt-auto w-full hidden md:block">
+          <button
+            className="flex items-center p-4 w-full rounded-md transition duration-200 border-t border-gray-600 hover:bg-gray-600 shadow-md"
+            onClick={confirmLogout}
+          >
+            <div className="flex items-center justify-center w-14 h-14 bg-gray-800 shadow-lg border border-gray-600 mr-3">
+              <LogOut size={28} />
+            </div>
+            <span className="text-lg">Logout</span>
+          </button>
+        </div>
       </aside>
-  
+
       {/* Logout Confirmation Modal */}
       {showLogoutModal && (
         <div className="fixed z-50 inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
@@ -138,7 +147,6 @@ const SidebarNavigation = () => {
       )}
     </>
   );
-  
 };
 
 export default SidebarNavigation;
