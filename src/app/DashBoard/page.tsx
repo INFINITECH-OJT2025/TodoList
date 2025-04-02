@@ -61,7 +61,15 @@ const TaskList = ({ tasks = [] }) => {
         </td>
         <td className="px-8 py-4 whitespace-nowrap text-lg text-gray-200 border border-gray-600">{task.user_id}</td>
         <td className="px-8 py-4 whitespace-nowrap text-lg text-gray-200 border border-gray-600">{task.status}</td>
-        <td className="px-8 py-4 whitespace-nowrap text-lg text-gray-200 border border-gray-600">{task.deadline}</td>
+  <td className="px-8 py-4 whitespace-nowrap text-lg text-gray-200 border border-gray-600">
+  {(() => {
+    const date = new Date(task.deadline);
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    const formattedDate = date.toLocaleDateString('en-US', options);
+    const [month, day, year] = formattedDate.split(' ');
+    return `${day}-${month}-${year}`;
+  })()}
+</td>
       </tr>
     ))}
   </tbody>
