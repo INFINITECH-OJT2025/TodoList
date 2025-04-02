@@ -164,10 +164,15 @@ const TodoPage = () => {
       </div>
 
       <div className="flex-1 p-4 md:p-9 flex flex-col items-center">
-        <h1 className="text-2xl font-extrabold mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-gray-500 drop-shadow-lg">
-          ADMIN TASK
-        </h1>
-
+          <br />
+        <br />
+       <div className="flex items-center justify-center mb-6">
+  <div className="flex-grow border-t border-gray-600"></div>
+  <span className="mx-10 text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-800 to-gray-600">
+ADMIN TASK
+  </span>
+  <div className="flex-grow border-t border-gray-600"></div>
+</div>
         {/* Dashboard Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8 w-full">
           <div className="bg-green-600 p-4 rounded-lg shadow-lg text-white text-center">
