@@ -39,7 +39,7 @@ const SidebarNavigation = () => {
     }
   };
 
-  return (
+   return (
     <>
       {/* Navigation Bar for Mobile */}
       <div className="md:hidden flex justify-between items-center bg-gray-700 p-2 fixed top-0 left-0 right-0 z-50">
@@ -57,7 +57,7 @@ const SidebarNavigation = () => {
           <LogOut size={20} />
         </button>
       </div>
-
+  
       {/* Overlay to close menu when clicked */}
       {isSidebarOpen && (
         <div
@@ -65,11 +65,11 @@ const SidebarNavigation = () => {
           onClick={() => setIsSidebarOpen(false)}
         ></div>
       )}
-
+  
       {/* Sidebar */}
       <aside
         className={`fixed top-0 left-0 min-h-full bg-gray-700 shadow-2xl border-4 border-green-800 transition-transform duration-300 z-50 
-        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 w-64 md:w-20 lg:w-64 flex flex-col items-center md:items-start pt-10`}
+        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 w-64 md:w-20 lg:w-64 flex flex-col items-center md:items-start pt-10 p-4`}  
       >
         {/* Logo Container */}
         <div className="flex flex-col items-center justify-center w-full mb-6">
@@ -79,7 +79,7 @@ const SidebarNavigation = () => {
             className="w-20 h-20 rounded-md"
           />
         </div>
-
+  
         {/* Sidebar Menu */}
         <ul className="text-white space-y-4 w-full px-4">
           {menuItems.map((item) => (
@@ -96,7 +96,7 @@ const SidebarNavigation = () => {
               </Link>
             </li>
           ))}
-
+  
           <li className="w-full">
             <a
               href="https://dashboard.tawk.to/#/dashboard/67e365c14f39121902671651"
@@ -111,7 +111,7 @@ const SidebarNavigation = () => {
             </a>
           </li>
         </ul>
-
+  
         {/* Logout Button at the Bottom (Visible only on Desktop) */}
         <div className="mt-auto w-full hidden md:block">
           <button
@@ -125,7 +125,7 @@ const SidebarNavigation = () => {
           </button>
         </div>
       </aside>
-
+  
       {/* Logout Confirmation Modal */}
       {showLogoutModal && (
         <div className="fixed z-50 inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
@@ -138,7 +138,10 @@ const SidebarNavigation = () => {
               >
                 Cancel
               </button>
-              <button className="bg-green-600 text-white px-6 py-3 rounded-md shadow-md hover:bg-green-700" onClick={handleLogout}>
+              <button
+                className="bg-green-600 text-white px-6 py-3 rounded-md shadow-md hover:bg-green-700"
+                onClick={handleLogout}
+              >
                 Logout
               </button>
             </div>
