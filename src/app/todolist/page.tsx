@@ -159,23 +159,29 @@ const TodoList = () => {
         </div>
 
         {/* Task Status Overview */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xl">
-          {[{ label: "Pending", count: pendingCount, icon: "🕒" },
-            { label: "Complete", count: completeCount, icon: "✅" },
-            { label: "Overdue", count: overdueCount, icon: "⚠️" },
-            { label: "Archived", count: archiveCount, icon: "📦" },
-          ].map((item, index) => (
-            <div key={index} className="p-4 bg-gray-300 rounded-2xl shadow-md flex items-center space-x-4">
-              <div className="p-4 bg-green-900 rounded-full flex items-center justify-center">
-                <span className="text-white text-2xl">{item.icon}</span>
-              </div>
-              <div>
-                <div className="text-xl font-bold">{item.count}</div>
-                <div className="text-gray-700 text-lg">{item.label}</div>
-              </div>
-            </div>
-          ))}
-        </div>
+      {/* Task Status Overview */}
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xl">
+  {[
+    { label: "Pending", count: pendingCount, icon: "🕒", color: "from-yellow-400 to-yellow-600 shadow-yellow-500/50" },
+    { label: "Complete", count: completeCount, icon: "✅", color: "from-green-400 to-green-600 shadow-green-500/50" },
+    { label: "Overdue", count: overdueCount, icon: "⚠️", color: "from-red-400 to-red-600 shadow-red-500/50" },
+    { label: "Archived", count: archiveCount, icon: "📦", color: "from-blue-400 to-blue-600 shadow-blue-500/50" },
+  ].map((item, index) => (
+    <div 
+      key={index} 
+      className={`p-6 bg-gradient-to-b ${item.color} rounded-2xl shadow-xl transform transition-all duration-300 hover:scale-105 hover:shadow-2xl flex items-center space-x-4`}
+    >
+      <div className="p-4 bg-gray-900 rounded-full flex items-center justify-center shadow-lg">
+        <span className="text-white text-3xl">{item.icon}</span>
+      </div>
+      <div>
+        <div className="text-3xl font-bold text-white">{item.count}</div>
+        <div className="text-gray-300 text-lg">{item.label}</div>
+      </div>
+    </div>
+  ))}
+</div>
+
         <br />
 
         {/* Task Status Chart */}
