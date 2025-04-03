@@ -437,9 +437,13 @@ const ActivityPage = () => {
               >
                 {activity.status.toUpperCase()}
               </td>
-              <td className="py-2 px-4 sm:px-6">
-                {new Date(activity.due_date).toLocaleDateString("en-US")}
-              </td>
+             <td className="py-2 px-4 sm:px-6">
+  {new Date(activity.due_date).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  }).replace(" ", "-")}
+</td>
             </tr>
           ))}
         </tbody>
