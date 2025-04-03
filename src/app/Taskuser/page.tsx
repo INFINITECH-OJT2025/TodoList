@@ -475,9 +475,12 @@ const ActivityPage = () => {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 p-4 sm:p-6 bg-gray-800 rounded-lg shadow-lg w-full">
                     <div className="p-4 sm:p-6">
-                      <p className="mb-2 sm:mb-4 text-green-300 text-sm sm:text-lg font-semibold text-center">
-                        📅 Due: {currentActivities[0].due_date}
-                      </p>
+ <p className="mb-2 sm:mb-4 text-green-300 text-sm sm:text-lg font-semibold text-center">
+  📅 Due: {new Date(currentActivities[0].due_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric',  year: 'numeric' })
+    .toUpperCase()
+    .replace(/, /g, '-')
+    .replace(/ /g, '-')}
+</p>
                       <p className="mb-2 sm:mb-4 text-green-300 text-sm sm:text-lg font-semibold text-center">
                         🏷️ Tags: {currentActivities[0].tags}
                       </p>
