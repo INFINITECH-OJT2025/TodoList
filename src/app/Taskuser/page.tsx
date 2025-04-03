@@ -400,7 +400,7 @@ const ActivityPage = () => {
     borderRadius: "10px",
   }}
 >
-  {isOpen ? "EDIT" : "CREATE "}
+  {isOpen ? "CANCEL" : "CREATE "}
 </button>
 
               </div>
