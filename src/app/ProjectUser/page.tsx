@@ -275,13 +275,29 @@ ADMIN TASK
                 {isExpanded ? 'See Less' : 'See More'}
               </button>
 
+            <br />
               <p
-                className={`font-bold ${
-                  currentTask.status === "overdue" ? "text-red-500" : "text-gray-300"
-                }`}
-              >
-                <strong>Deadline:</strong> {new Date(currentTask.deadline).toLocaleString()}
-              </p>
+  className={`font-bold ${
+    currentTask.status === "overdue" ? "text-red-500" : "text-gray-300"
+  }`}
+>
+  <strong>Deadline:</strong> {(() => {
+    const date = new Date(currentTask.deadline);
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    
+    // Format the date
+    const formattedDate = date.toLocaleDateString('en-US', options)
+      .toUpperCase()
+      .replace(/, /g, '-')
+      .replace(/ /g, '-');
+
+    // Format the time
+    const formattedTime = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+
+    // Combine date and time
+    return `${formattedDate}-${formattedTime}`;
+  })()}
+</p>
 
               {currentTask.status !== "complete" && currentTask.status !== "overdue" && (
                 <button
