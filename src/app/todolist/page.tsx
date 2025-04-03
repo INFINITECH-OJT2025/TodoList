@@ -132,9 +132,19 @@ const TodoList = () => {
           <div className="text-lg font-bold text-white px-4 py-2 rounded-md bg-gradient-to-r from-green-500 to-green-400 shadow-md">
             Overview
           </div>
-          <div className="text-lg font-bold text-center sm:text-right">
-            📅 {currentDate} | ⏰ {currentTime}
-          </div>
+<div className="text-lg font-bold text-center sm:text-right">
+  📅 {(() => {
+    const date = new Date();
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    return date.toLocaleDateString('en-US', options)
+      .toUpperCase()
+      .replace(/, /g, '-')
+      .replace(/ /g, '-');
+  })()} | ⏰ {(() => {
+    const date = new Date();
+    return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+  })()}
+</div>
         </div>
 
         {/* Task Completion Bar */}
