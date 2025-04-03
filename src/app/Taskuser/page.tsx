@@ -66,7 +66,7 @@ const ActivityPage = () => {
   const [editId, setEditId] = useState<number | null>(null);
   const [selectedStatus, setSelectedStatus] = useState("all"); // Set default to "all"
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 3; // Set to 3 items per page
+  const itemsPerPage = 1;
   const router = useRouter();
   const [dependencies, setDependencies] = useState<Activity[]>([]);
   const [users, setUsers] = useState<{ id: number; username: string }[]>([]); // New state for users
@@ -331,6 +331,7 @@ const ActivityPage = () => {
       <div className="flex-1 p-4 md:p-6 lg:p-8">
         <div className="flex items-center h-24 justify-center mb-6">
           <div className="flex-grow border-t border-gray-600"></div>
+          
           <span className="mx-10 text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-800 to-gray-600">
             PERSONAL TASK
           </span>
@@ -392,17 +393,16 @@ const ActivityPage = () => {
               </div>
 
               <div className="flex justify-center w-full md:w-auto">
-              <button
-  onClick={() => setIsOpen((prev) => !prev)}
-  className="flex items-center justify-center px-4 py-2 text-lg font-bold text-white bg-green-700 border-2 border-gray-500 shadow-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-green-600 hover:border-gray-400 hover:shadow-xl active:bg-green-500 active:shadow-none active:translate-y-1 w-full md:w-auto mx-auto"
-  style={{
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.2)",
-    borderRadius: "10px",
-  }}
->
-  {isOpen ? "CANCEL" : "CREATE "}
-</button>
-
+                <button
+                  onClick={() => setIsOpen((prev) => !prev)}
+                  className="flex items-center justify-center px-4 py-2 text-lg font-bold text-white bg-green-700 border-2 border-gray-500 shadow-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-green-600 hover:border-gray-400 hover:shadow-xl active:bg-green-500 active:shadow-none active:translate-y-1 w-full md:w-auto"
+                  style={{
+                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.2)",
+                    borderRadius: "10px",
+                  }}
+                >
+                  {isOpen ? "CANCEL" : "CREATE"}
+                </button>
               </div>
             </div>
           </div>
@@ -413,42 +413,44 @@ const ActivityPage = () => {
           <div className="flex justify-center w-full px-4 sm:px-6">
             <div className="min-w-full max-w-6xl p-4 sm:p-6 rounded-lg shadow-lg border border-green-500">
               {selectedStatus === "all" ? (
-                  <div className="overflow-x-auto w-full">
-      <table className="w-full bg-gray-800 text-gray-300 rounded-lg overflow-hidden text-sm sm:text-base">
-        <thead>
-          <tr className="bg-gray-900">
-            <th className="py-3 px-4 sm:px-6 text-left">Title</th>
-            <th className="py-3 px-4 sm:px-6 text-left">Status</th>
-            <th className="py-3 px-4 sm:px-6 text-left">Due Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {activities.map((activity) => (
-            <tr key={activity.id} className="border-b border-gray-700">
-              <td className="py-2 px-4 sm:px-6 break-words max-w-xs">{activity.title}</td>
-              <td
-                className={`py-2 px-4 sm:px-6 font-semibold ${
-                  activity.status === "complete"
-                    ? "text-green-500"
-                    : activity.status === "overdue"
-                    ? "text-red-500"
-                    : "text-yellow-500"
-                }`}
-              >
-                {activity.status.toUpperCase()}
-              </td>
-             <td className="py-2 px-4 sm:px-6">
-  {new Date(activity.due_date).toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  }).replace(" ", "-")}
-</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          <div className="max-h-[400px] overflow-y-auto overflow-x-auto">
+          <table className="w-full border-collapse border border-gray-700 text-gray-300">
+            <thead className="bg-gray-900 text-left sticky top-0">
+              <tr>
+                <th className="border border-gray-700 p-3">Title</th>
+                <th className="border border-gray-700 p-3">Status</th>
+                <th className="border border-gray-700 p-3">Due Date</th>
+              </tr>
+            </thead>
+            <tbody className="bg-gray-800">
+              {activities.map((activity) => (
+                <tr key={activity.id} className="border-b border-gray-700">
+                  <td className="border border-gray-700 p-3">{activity.title}</td>
+                  <td
+                    className={`border border-gray-700 p-3 font-semibold ${
+                      activity.status === "complete"
+                        ? "text-green-500"
+                        : activity.status === "overdue"
+                        ? "text-red-500"
+                        : "text-yellow-500"
+                    }`}
+                  >
+                    {activity.status.toUpperCase()}
+                  </td>
+                  <td className="border border-gray-700 p-3">
+                    {new Date(activity.due_date).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        
+           
               ) : (
                 currentActivities.length > 0 && (
                   <div
