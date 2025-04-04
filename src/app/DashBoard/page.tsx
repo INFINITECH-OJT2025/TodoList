@@ -163,36 +163,32 @@ const Dashboard = () => {
 
   const COLORS = ['#FFBB28', '#00C49F', '#FF4C4C'];
 
-  return (
-    <div className="flex h-screen bg-gray-900 text-white">
-        <Adminbar />
-      {/* Sidebar / Adminbar */}
-      <div className="sticky top-0 h-screen w-64 bg-gray-800 shadow-lg hidden md:block">
+return (
+    <div className="flex flex-col h-screen bg-gray-900 text-white">
+      <Adminbar />
       
-      </div>
+      {/* Sidebar / Adminbar */}
+      <div className="sticky top-0 h-screen w-64 bg-gray-800 shadow-lg hidden md:block"></div>
   
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-h-screen p-9 w-full overflow-auto">
+      <div className="flex-1 flex flex-col min-h-screen p-4 md:p-9 w-full overflow-auto">
         <ToastContainer />
-              <br />
-        
-        
         <h1 className="text-3xl font-bold mb-4 text-green-300 text-center">Admin Dashboard</h1>
   
         {/* Current Time */}
         <div className="text-center mb-6">
-         <p className="text-lg font-semibold text-green-200">
-    {currentTime.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    })}
-  </p>
+          <p className="text-lg font-semibold text-green-200">
+            {currentTime.toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}
+          </p>
           <p className="text-2xl font-bold text-green-400">{currentTime.toLocaleTimeString()}</p>
         </div>
   
         {/* Dashboard Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 mb-5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-5">
           {[
             { label: "Total Tasks", count: taskCount, color: "text-gray-300" },
             { label: "Pending", count: pendingCount, color: "text-yellow-400" },
@@ -200,16 +196,16 @@ const Dashboard = () => {
             { label: "Overdue", count: overdueCount, color: "text-red-400" },
             { label: "Total Users", count: userCount, color: "text-blue-400" },
           ].map((item, index) => (
-            <div key={index} className="bg-gray-700 p-6 rounded-xl shadow-lg text-center">
-              <h2 className="text-xl font-semibold text-gray-200">{item.label}</h2>
-              <p className={`text-4xl font-bold ${item.color}`}>{item.count}</p>
+            <div key={index} className="bg-gray-700 p-4 rounded-xl shadow-lg text-center">
+              <h2 className="text-lg font-semibold text-gray-200">{item.label}</h2>
+              <p className={`text-3xl font-bold ${item.color}`}>{item.count}</p>
             </div>
           ))}
         </div>
   
         {/* Charts & Task List */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div className="bg-gray-800 p-2 rounded-xl shadow-lg flex flex-col items-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="bg-gray-800 p-4 rounded-xl shadow-lg flex flex-col items-center">
             <h2 className="text-lg font-semibold text-center mb-2 text-green-300">Task Progress</h2>
             <ResponsiveContainer width="100%" height={350}>
               <PieChart>
