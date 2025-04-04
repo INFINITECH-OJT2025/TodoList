@@ -90,20 +90,15 @@ const TodoPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-900 text-gray-900">
+    <div className="flex flex-col min-h-screen bg-gray-900 text-gray-900">
       <Sidebar />
-               <div className="sticky top-0 h-screen w-64 bg-gray-800 shadow-lg hidden md:block">
-      
-      </div>
+      <div className="sticky top-0 h-screen w-64 bg-gray-800 shadow-lg hidden md:block"></div>
       <div className={`flex-1 flex items-center justify-center p-4 md:p-6 transition-transform duration-300 ${editing ? 'translate-x-[-300px]' : ''}`}>
-  
         <div className="card w-full max-w-4xl h-auto bg-gray-900 rounded-xl shadow-2xl p-6 flex flex-col md:flex-row border-4 border-green-900 relative">
-       
-
           <div className="img-container w-full md:w-2/4 h-auto p-4 bg-gray-900 rounded-xl overflow-hidden flex items-center justify-center border-4 border-gray-700 mt-8">
             {user?.profile_image ? (
               <img
-          className="w-62 h-52 object-cover rounded-xl"
+                className="w-62 h-52 object-cover rounded-xl"
                 src={`https://infinitech-api5.site/${user.profile_image}`}
                 alt="Profile"
               />
@@ -113,7 +108,7 @@ const TodoPage = () => {
               </div>
             )}
           </div>
-
+  
           <div className="info-container w-full md:w-2/3 flex flex-col items-center justify-center text-center pl-0 md:pl-6 mt-4 md:mt-0">
             <div className="logo-container mb-4">
               <img
@@ -122,8 +117,7 @@ const TodoPage = () => {
                 className="place-items-right w-full h-24 object-contain"
               />
             </div>
-<label className="text-green-500 text-2xl font-bold mb-2 uppercase">User  Profile</label>
-
+            <label className="text-green-500 text-2xl font-bold mb-2 uppercase">User  Profile</label>
             <span className="mt-4 text-gray-300 text-2xl md:text-3xl font-bold">{user?.username}</span>
             <p className="job text-lg text-gray-400 mt-1">{user?.email}</p>
             <br />
@@ -137,9 +131,9 @@ const TodoPage = () => {
                     setImagePreview(`https://infinitech-api5.site/${user.profile_image}`); // Set default image preview when editing starts
                   }
                 }}
-                className="w-[120px] h-[40px] rounded-full border border-white/40 bg-black flex items-center justify-center cursor-pointer transition-all duration-300 overflow-hidden relative group"
+                className="w-full max-w-[120px] h-[40px] rounded-full border border-white/40 bg-black flex items-center justify-center cursor-pointer transition-all duration-300 overflow-hidden relative"
               >
-                <span className="w-[110px] h-[30px] bg-gradient-to-b from-green-400 to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 group-hover:w-[100px]">
+                <span className="w-full max-w-[110px] h-[30px] bg-gradient-to-b from-green-400 to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 group-hover:w-[100px]">
                   <FaEdit className="text-white text-lg mr-2 transition-all duration-300" />
                   <span className="text-white text-sm transition-all duration-300">
                     {editing ? "Close" : "Edit"}
@@ -150,71 +144,73 @@ const TodoPage = () => {
           </div>
         </div>
       </div>
-
+  
       {/* Sliding Edit Form */}
       <div
-        className={`fixed top-0 right-0 h-full w-96 bg-gray-800 p-6 transition-transform transform ${
-          editing ? "translate-x-0" : "translate-x-full"
-        } shadow-lg z-50 flex flex-col items-center justify-center border-2 border-gray-500 rounded-l-lg`}
-      >
-        <h2 className="text-xl font-bold text-center text-gray-300 mb-4">Edit Profile</h2>
-        
-        {/* Image Preview */}
-        {imagePreview && (
-          <div className="mb-4">
-            <img
-              src={imagePreview}
-              alt="Preview"
-              className="w-24 h-24 object-cover rounded-full border-2 border-green-400"
-            />
-          </div>
-        )}
+  className={`fixed top-0 right-0 h-full w-80 md:w-96 bg-gray-800 p-6 transition-transform transform ${
+    editing ? "translate-x-0" : "translate-x-full"
+  } shadow-lg z-50 flex flex-col items-center justify-center border-2 border-gray-500 rounded-l-lg`}
+>
+  <h2 className="text-xl font-bold text-center text-gray-300 mb-4">Edit Profile</h2>
+  
+  {/* Image Preview */}
+  {imagePreview && (
+    <div className="mb-4">
+      <img
+        src={imagePreview}
+        alt="Preview"
+        className="w-24 h-24 object-cover rounded-full border-2 border-green-400"
+      />
+    </div>
+  )}
 
-        <div className="flex flex-col mb-4 w-full">
-          <label className="text-gray-300" htmlFor="username">Employee Name:</label>
-          <input
-            id="username"
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="p-2 rounded-md bg-gray-700 text-gray-300 border border-green-400 focus:outline-none focus:ring focus:ring-green-500"
-            placeholder="Username"
-          />
-        </div>
-        <div className="flex flex-col mb-4 w-full">
-          <label className="text-gray-300" htmlFor="email">Personal Email:</label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="p-2 rounded-md bg-gray-700 text-gray-300 border border-green-400 focus:outline-none focus:ring focus:ring-green-500"
-            placeholder="Email"
-          />
-        </div>
-        <div className="flex flex-col mb-4 w-full">
-          <label className="text-gray-300" htmlFor="profileImage">Profile Image:</label>
-          <input
-            type="file"
-            onChange={handleImageChange}
-            className="p-2 rounded-md bg-gray-700 text-gray-300 border border-green-400 focus:outline-none focus:ring focus:ring-green-500"
-          />
-        </div>
-        <div className="flex justify-between mt-4 w-full">
-          <button
-            onClick={handleSave}
-            className="bg-green-500 hover:bg-green-400 py-2 px-4 rounded-md text-lg font-bold transition duration-200"
-          >
-            <FaSave className="mr-2 inline" /> Save
-          </button>
-          <button
-            onClick={() => setEditing(false)}
-            className="bg-red-500 hover:bg-red-400 py-2 px-4 rounded-md text-lg font-bold transition duration-200"
-          >
-            Cancel
-          </button>
-        </div>
-      </div>
+  <div className="flex flex-col mb-4 w-full">
+    <label className="text-gray-300" htmlFor="username">Employee Name:</label>
+    <input
+      id="username"
+      type="text"
+      value={username}
+      onChange={(e) => setUsername(e.target.value)}
+      className="p-2 rounded-md bg-gray-700 text-gray-300 border border-green-400 focus:outline-none focus:ring focus:ring-green-500"
+      placeholder="Username"
+    />
+  </div>
+  <div className="flex flex-col mb-4 w-full">
+    <label className="text-gray-300" htmlFor="email">Personal Email:</label>
+    <input
+      id="email"
+      type="email"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      className="p-2 rounded-md bg-gray-700 text-gray-300 border border-green-400 focus:outline-none focus:ring focus:ring-green-500"
+      placeholder="Email"
+    />
+  </div>
+  <div className="flex flex-col mb-4 w-full">
+    <label className="text-gray-300" htmlFor="profileImage">Profile Image:</label>
+    <input
+      type="file"
+      onChange={handleImageChange}
+      className="p-2 rounded-md bg-gray-700 text-gray-300 border border-green-400 focus:outline-none focus:ring focus:ring-green-500"
+    />
+  </div>
+  <div className="flex flex-col mt-4 w-full">
+    <div className="flex justify-between w-full">
+      <button
+        onClick={handleSave}
+        className="bg-green-500 hover:bg-green-400 py-2 px-4 rounded-md text-lg font-bold transition duration-200 w-full mr-2"
+      >
+        <FaSave className="mr-2 inline" /> Save
+      </button>
+      <button
+        onClick={() => setEditing(false)}
+        className="bg-red-500 hover:bg-red-400 py-2 px-4 rounded-md text-lg font-bold transition duration-200 w-full"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
     </div>
   );
 };
