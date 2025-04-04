@@ -376,16 +376,16 @@ const ActivityPage = () => {
               <div className="flex items-center justify-between w-full px-4 gap-4">
                 <div className="relative inline-block">
                   <div className="flex justify-center w-full">
-                    <button
-                      onClick={() => setOpen(!open)}
-                      className="flex items-center justify-center px-5 py-2 text-lg font-bold text-white bg-green-700 border-2 border-gray-500 shadow-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-green-600 hover:border-gray-400 hover:shadow-xl active:bg-green-500 active:shadow-none active:translate-y-1"
-                      style={{
-                        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4), inset 0 2px 5px rgba(255, 255, 255, 0.2)",
-                        borderRadius: "8px",
-                      }}
-                    >
-                      STATUS
-                    </button>
+                        <button
+    onClick={() => setOpen(!open)}
+    className="w-full max-w-xs flex items-center justify-center px-7 py-1 text-lg font-bold text-white bg-green-700 border-2 border-gray-500 shadow-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-green-600 hover:border-gray-400 hover:shadow-xl active:bg-green-500 active:shadow-none active:translate-y-1"
+    style={{
+      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4), inset 0 2px 5px rgba(255, 255, 255, 0.2)",
+      borderRadius: "8px",
+    }}
+  >
+    STATUS
+  </button>
                   </div>
 
                   {open && (
@@ -427,16 +427,16 @@ const ActivityPage = () => {
                 </div>
 
                 <div className="flex justify-center w-full">
-                  <button
-                    onClick={() => setIsOpen((prev) => !prev)}
-                    className="flex items-center justify-center px-4 py-2 text-lg font-bold text-white bg-green-700 border-2 border-gray-500 shadow-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-green-600 hover:border-gray-400 hover:shadow-xl active:bg-green-500 active:shadow-none active:translate-y-1"
-                    style={{
-                      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.2)",
-                      borderRadius: "10px",
-                    }}
-                  >
-                    {isOpen ? "ADD TASK" : "ADD TASK"}
-                  </button>
+                   <button
+    onClick={() => setIsOpen((prev) => !prev)}
+    className="w-full max-w-xs flex items-center justify-center px-6 py-1 text-lg font-bold text-white bg-green-700 border-2 border-gray-500 shadow-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-green-600 hover:border-gray-400 hover:shadow-xl active:bg-green-500 active:shadow-none active:translate-y-1"
+    style={{
+      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.2)",
+      borderRadius: "10px",
+    }}
+  >
+    {isOpen ? "CANCEL" : "CREATE"}
+  </button>
                 </div>
               </div>
             </div>
