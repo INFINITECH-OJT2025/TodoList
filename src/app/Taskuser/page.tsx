@@ -630,7 +630,7 @@ const ActivityPage = () => {
         type="text"
         id="title"
         name="title"
-        placeholder="Title"
+        placeholder="Add title here"
         value={formData.title}
         onChange={handleChange}
         className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
@@ -643,7 +643,7 @@ const ActivityPage = () => {
       <textarea
         id="description"
         name="description"
-        placeholder="Description"
+        placeholder="List of task"
         value={formData.description}
         onChange={handleChange}
         className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
@@ -682,7 +682,7 @@ const ActivityPage = () => {
         type="text"
         id="tags"
         name="tags"
-        placeholder="Tags"
+        placeholder="Add tags here"
         value={formData.tags}
         onChange={handleChange}
         className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
@@ -713,7 +713,7 @@ const ActivityPage = () => {
       type="submit"
       className="bg-green-600 text-white text-lg font-bold py-3 rounded-lg shadow-md hover:bg-green-700 transition-all"
     >
-      {editId ? "Update" : "Add"} Activity
+      {editId ? "UPDATE" : "ADD"} TASK
     </button>
   </form>
 </div>
