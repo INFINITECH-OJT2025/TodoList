@@ -352,95 +352,105 @@ const ActivityPage = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
-return (
-    <div className="relative flex flex-col min-h-screen bg-gray-900 text-gray-100">
+ return (
+    <div className="relative flex min-h-screen bg-gray-900 text-gray-100">
       <ToastContainer position="top-right" autoClose={3000} />
       <Sidebar />
-      <div className="sticky top-0 h-screen w-64 bg-gray-800 shadow-lg hidden md:block"></div>
-      <div className="flex-1 p-4 md:p-6 lg:p-8">
-        <br />
-        <br />
-        <div className="flex items-center justify-center mb-6">
-          <div className="flex-grow border-t border-gray-600"></div>
-          <span className="mx-10 text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-800 to-gray-600">
-            PERSONAL TASK
-          </span>
-          <div className="flex-grow border-t border-gray-600"></div>
-        </div>
+      <div className="sticky top-0 h-screen w-64 bg-gray-800 shadow-lg hidden md:block">
+      
+      </div>
+      <div className="flex-1 p-4 md:p-6 lg:p-8"><br />
+      <br />
+      <br />
+      
+     <div className="flex items-center justify-center mb-6">
+  <div className="flex-grow border-t border-gray-600"></div>
+  <span className="mx-10 text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-800 to-gray-600">
+    PERSONAL TASK
+  </span>
+  <div className="flex-grow border-t border-gray-600"></div>
+</div>
         <div className="mt-4">
-          <div className="flex flex-col md:flex-row justify-between items-center mb-4">
-            <div className="flex items-center space-x-3 w-full">
-              <div className="relative inline-block w-full">
+          <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center justify-between w-full px-4 gap-4">
+                <div className="relative inline-block">
+                  <div className="flex justify-center w-full">
+                    <button
+                      onClick={() => setOpen(!open)}
+                      className="flex items-center justify-center px-5 py-2 text-lg font-bold text-white bg-green-700 border-2 border-gray-500 shadow-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-green-600 hover:border-gray-400 hover:shadow-xl active:bg-green-500 active:shadow-none active:translate-y-1"
+                      style={{
+                        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4), inset 0 2px 5px rgba(255, 255, 255, 0.2)",
+                        borderRadius: "8px",
+                      }}
+                    >
+                      STATUS
+                    </button>
+                  </div>
+
+                  {open && (
+                    <div
+                      className={`absolute bg-gray-800 p-2 rounded-lg shadow-lg z-50 border border-green-500 transition-transform duration-300 ease-in-out 
+                        ${isMobile 
+                          ? "top-full left-1/2 transform -translate-x-1/2 mt-3 w-full"  // Mobile: Centered dropdown
+                          : "top-0 left-full w-[500px] translate-x-3"}  // Full Screen: Wider & Slides Right
+                      `}
+                    >
+                      <div className={`grid ${isMobile ? "grid-cols-1" : "grid-cols-4"} gap-2`}>
+                        {statuses.map((status) => (
+                          <button
+                            key={status}
+                            className={`p-3 rounded-md bg-gray-800 text-green-500 hover:bg-gray-800 transition flex items-center justify-center 
+                              ${isMobile ? "w-full" : "w-[120px]"}`}  // Full screen: Wider buttons
+                            onClick={() => {
+                              setSelectedStatus(status.toLowerCase());
+                              setOpen(false);
+                            }}
+                          >
+                            <span className="text-2xl">
+                              {status === "Pending"
+                                ? "⏳"
+                                : status === "Complete"
+                                ? "✅"
+                                : status === "Overdue"
+                                ? "❌"
+                                : status === "Archived"
+                                ? "📦"
+                                : "❓"}
+                            </span>
+                            {!isMobile && <span className="ml-2">{status}</span>}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 <div className="flex justify-center w-full">
                   <button
-                    onClick={() => setOpen(!open)}
-                    className="flex items-center justify-center px-5 py-2 text-lg font-bold text-white bg-green-700 border-2 border-gray-500 shadow-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-green-600 hover:border-gray-400 hover:shadow-xl active:bg-green-500 active:shadow-none active:translate-y-1 w-full"
+                    onClick={() => setIsOpen((prev) => !prev)}
+                    className="flex items-center justify-center px-4 py-2 text-lg font-bold text-white bg-green-700 border-2 border-gray-500 shadow-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-green-600 hover:border-gray-400 hover:shadow-xl active:bg-green-500 active:shadow-none active:translate-y-1"
                     style={{
-                      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.4), inset 0 2px 5px rgba(255, 255, 255, 0.2)",
-                      borderRadius: "8px",
+                      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.2)",
+                      borderRadius: "10px",
                     }}
                   >
-                    STATUS
+                    {isOpen ? "ADD TASK" : "ADD TASK"}
                   </button>
                 </div>
-  
-                {open && (
-                  <div
-                    className={`absolute bg-gray-800 p-2 rounded-lg shadow-lg z-50 border border-green-500 transition-transform duration-300 ease-in-out 
-                      ${isMobile 
-                        ? "top-full left-1/2 transform -translate-x-1/2 mt-3 w-full"  
-                        : "top-0 left-full w-[500px] translate-x-3"}  
-                    `}
-                  >
-                    <div className={`grid ${isMobile ? "grid-cols-1" : "grid-cols-4"} gap-2`}>
-                      {statuses.map((status) => (
-                        <button
-                          key={status}
-                          className={`p-3 rounded-md bg-gray-800 text-green-500 hover:bg-gray-800 transition flex items-center justify-center 
-                            ${isMobile ? "w-full" : "w-[120px]"}`}  
-                          onClick={() => {
-                            setSelectedStatus(status.toLowerCase());
-                            setOpen(false);
-                          }}
-                        >
-                          <span className="text-2xl">
-                            {status === "Pending"
-                              ? "⏳"
-                              : status === "Complete"
-                              ? "✅"
-                              : status === "Overdue"
-                              ? "❌"
-                              : status === "Archived"
-                              ? "📦"
-                              : "❓"}
-                          </span>
-                          {!isMobile && <span className="ml-2">{status}</span>}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-  
-              <div className="flex justify-center w-full">
-                <button
-                  onClick={() => setIsOpen((prev) => !prev)}
-                  className="flex items-center justify-center px-4 py-2 text-lg font-bold text-white bg-green-700 border-2 border-gray-500 shadow-lg transition-all duration-300 ease-in-out cursor-pointer hover:bg-green-600 hover:border-gray-400 hover:shadow-xl active:bg-green-500 active:shadow-none active:translate-y-1 w-full"
-                  style={{
-                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.2)",
-                    borderRadius: "10px",
-                  }}
-                >
-                  {isOpen ? "ADD TASK" : "ADD TASK"}
-                </button>
               </div>
             </div>
+
+            <div className="text-lg font-bold"></div>
+
+            <div className="flex items-center gap-2"></div>
           </div>
-  
+
+          <br />
           <ProgressBar percentage={completionPercentage} />
           <br />
           <div className="flex justify-center w-full px-4 sm:px-6">
-            <div className="min-w-full max-w-6xl p-4 sm:p-6 rounded-lg shadow-lg border border-green-500">
+            <div className=" min-w-full max-w-6xl p-4 sm:p-6 rounded-lg shadow-lg border border-green-500">
               {currentActivities.length > 0 && (
                 <div
                   key={currentActivities[0].id}
@@ -457,34 +467,35 @@ return (
                   >
                     📌 {currentActivities[0].status.toUpperCase()}
                   </span>
-  
+
                   <h1 className="text-2xl sm:text-6xl font-bold mt-6 sm:mt-8 mb-3 sm:mb-4 bg-gradient-to-r from-green-400 to-gray-600 bg-clip-text text-transparent">
                     {currentActivities[0].title}
                   </h1>
-  
+                  <br />
+
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 p-4 sm:p-6 bg-gray-800 rounded-lg shadow-lg w-full">
                     <div className="p-4 sm:p-6">
-                      <p className="mb-2 sm:mb-4 text-green-300 text-sm sm:text-lg font-semibold text-center">
-                        📅 Due: {new Date(currentActivities[0].due_date).toLocaleDateString('en-US', { 
-                            month: 'long', 
-                            day: 'numeric',  
-                            year: 'numeric' 
-                          }).toUpperCase()
-                          .replace(/, /g, '-')
-                          .replace(/ /g, '-')
-                      }  
-                      ⏰ {new Date(currentActivities[0].due_date).toLocaleTimeString('en-US', { 
-                          hour: '2-digit', 
-                          minute: '2-digit', 
-                          hour12: true 
-                        })}
-                      </p>
-  
+                        <p className="mb-2 sm:mb-4 text-green-300 text-sm sm:text-lg font-semibold text-center">
+                          📅 Due: {new Date(currentActivities[0].due_date).toLocaleDateString('en-US', { 
+                              month: 'long', 
+                              day: 'numeric',  
+                              year: 'numeric' 
+                            }).toUpperCase()
+                              .replace(/, /g, '-')
+                              .replace(/ /g, '-')
+                          }  
+                          ⏰ {new Date(currentActivities[0].due_date).toLocaleTimeString('en-US', { 
+                              hour: '2-digit', 
+                              minute: '2-digit', 
+                              hour12: true 
+                            })}
+                        </p>
+
                       <p className="mb-2 sm:mb-4 text-green-300 text-sm sm:text-lg font-semibold text-center">
                         🏷️ Tags: {currentActivities[0].tags}
                       </p>
                     </div>
-  
+
                     <div className="p-4 sm:p-6 w-full max-w-3xl mx-auto">
                       <h3
                         className={`text-sm sm:text-lg font-semibold text-gray-300 text-justify mx-auto max-w-2xl indent-8 break-words transition-all duration-300`}
@@ -494,7 +505,7 @@ return (
                           ? currentActivities[0].description
                           : `${currentActivities[0].description.substring(0, 50)}...`}
                       </h3>
-  
+
                       {currentActivities[0].description.length > 50 && (
                         <button
                           onClick={() => setExpanded(!expanded)}
@@ -504,16 +515,17 @@ return (
                         </button>
                       )}
                     </div>
-  
+
                     <div className="p-4 sm:p-6">
                       <p className="mb-2 sm:mb-4 text-green-300 text-sm sm:text-lg font-semibold text-center">
                         👥 Collaborators: {currentActivities[0].collaborator_name}
                       </p>
                     </div>
                   </div>
-  
+
                   {/* Buttons Section */}
                   <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mt-4 sm:mt-6">
+                    {/* Conditionally render the Edit button only if the activity is not overdue */}
                     {currentActivities[0].status !== 'overdue' && (
                       <button
                         onClick={() => handleEdit(currentActivities[0])}
@@ -522,7 +534,7 @@ return (
                         ✏️ Edit
                       </button>
                     )}
-  
+
                     {currentActivities[0].status === 'pending' && !currentActivities[0].archive && (
                       <button
                         onClick={() => handleMarkAsDone(currentActivities[0].id)}
@@ -531,7 +543,7 @@ return (
                         ✅ Done
                       </button>
                     )}
-  
+
                     {currentActivities[0].archive ? (
                       <button
                         onClick={() => handleRestore(currentActivities[0].id)}
@@ -547,7 +559,7 @@ return (
                         📁 Archive
                       </button>
                     )}
-  
+
                     <button
                       onClick={() => handleDeleteClick(currentActivities[0].id)}
                       className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-lg rounded-full text-white bg-red-600 transition hover:bg-red-500"
@@ -555,7 +567,7 @@ return (
                       🗑️ Delete
                     </button>
                   </div>
-  
+
                   {/* Confirmation Modals */}
                   <Confirmation
                     isOpen={isModalOpen}
@@ -575,7 +587,7 @@ return (
               )}
             </div>
           </div>
-  
+
           {/* Pagination Controls */}
           <div className="flex justify-between items-center mt-4">
             <button
@@ -597,114 +609,114 @@ return (
             </button>
           </div>
         </div>
-  
+
         {/* Right Sidebar for Adding/Editing Activity */}
         <div className={`fixed inset-y-0 right-0 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'} bg-gray-800 w-full max-w-md p-6 sm:p-10 shadow-2xl rounded-l-lg z-50 border border-gray-500`}>
-          <button
-            onClick={() => resetForm()}
-            className="absolute top-4 right-4 text-white text-2xl font-bold hover:text-gray-400"
-          >
-            ×
-          </button>
-  
-          <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center text-green-500">
-            {editId ? "EDIT" : "ADD"} TASK
-          </h2>
-  
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-6">
-            <div className="flex flex-col">
-              <label className="text-white text-lg font-bold" htmlFor="title">Title</label>
-              <input
-                type="text"
-                id="title"
-                name="title"
-                placeholder="Title"
-                value={formData.title}
-                onChange={handleChange}
-                className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
-                required
-              />
-            </div>
-  
-            <div className="flex flex-col">
-              <label className="text-white text-lg font-bold" htmlFor="description">Description</label>
-              <textarea
-                id="description"
-                name="description"
-                placeholder="Description"
-                value={formData.description}
-                onChange={handleChange}
-                className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
-              ></textarea>
-            </div>
-  
-            <div className="flex flex-col">
-              <label className="text-white text-lg font-bold" htmlFor="date_started">Date Started</label>
-              <input
-                type="date"
-                id="date_started"
-                name="date_started"
-                value={formData.date_started}
-                onChange={handleChange}
-                className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
-                required
-              />
-            </div>
-  
-            <div className="flex flex-col">
-              <label className="text-white text-lg font-bold" htmlFor="due_date">Due Date</label>
-              <input
-                type="datetime-local"
-                id="due_date"
-                name="due_date"
-                value={formData.due_date}
-                onChange={handleChange}
-                className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
-                required
-              />
-            </div>
-  
-            <div className="flex flex-col">
-              <label className="text-white text-lg font-bold" htmlFor="tags">Tags</label>
-              <input
-                type="text"
-                id="tags"
-                name="tags"
-                placeholder="Tags"
-                value={formData.tags}
-                onChange={handleChange}
-                className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
-              />
-            </div>
-  
-            <div className="flex flex-col gap-2">
-              <label className="text-white text-lg font-bold" htmlFor="collaborators">Collaborators</label>
-              <select
-                id="collaborators"
-                name="collaborators"
-                value={formData.collaborators?.[0] || ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, collaborators: [parseInt(e.target.value)] })
-                }
-                className="bg-gray-800 text-white text-lg p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 font-bold"
-              >
-                <option value="" disabled>Select a collaborator</option>
-                {users.filter((user) => user.id !== Number(userId)).map(user => (
-                  <option key={user.id} value={user.id}>
-                    {user.username}
-                  </option>
-                ))}
-              </select>
-            </div>
-  
-            <button
-              type="submit"
-              className="bg-green-600 text-white text-lg font-bold py-3 rounded-lg shadow-md hover:bg-green-700 transition-all"
-            >
-              {editId ? "Update" : "Add"} Activity
-            </button>
-          </form>
-        </div>
+  <button
+    onClick={() => resetForm()}
+    className="absolute top-4 right-4 text-white text-2xl font-bold hover:text-gray-400"
+  >
+    ×
+  </button>
+
+  <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center text-green-500">
+    {editId ? "EDIT" : "ADD"} TASK
+  </h2>
+
+  <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-6">
+    <div className="flex flex-col">
+      <label className="text-white text-lg font-bold" htmlFor="title">Title</label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+        placeholder="Title"
+        value={formData.title}
+        onChange={handleChange}
+        className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
+        required
+      />
+    </div>
+
+    <div className="flex flex-col">
+      <label className="text-white text-lg font-bold" htmlFor="description">Description</label>
+      <textarea
+        id="description"
+        name="description"
+        placeholder="Description"
+        value={formData.description}
+        onChange={handleChange}
+        className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
+      ></textarea>
+    </div>
+
+    <div className="flex flex-col">
+      <label className="text-white text-lg font-bold" htmlFor="date_started">Date Started</label>
+      <input
+        type="date"
+        id="date_started"
+        name="date_started"
+        value={formData.date_started}
+        onChange={handleChange}
+        className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
+        required
+      />
+    </div>
+
+    <div className="flex flex-col">
+      <label className="text-white text-lg font-bold" htmlFor="due_date">Due Date</label>
+      <input
+        type="datetime-local"
+        id="due_date"
+        name="due_date"
+        value={formData.due_date}
+        onChange={handleChange}
+        className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
+        required
+      />
+    </div>
+
+    <div className="flex flex-col">
+      <label className="text-white text-lg font-bold" htmlFor="tags">Tags</label>
+      <input
+        type="text"
+        id="tags"
+        name="tags"
+        placeholder="Tags"
+        value={formData.tags}
+        onChange={handleChange}
+        className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
+      />
+    </div>
+
+    <div className="flex flex-col gap-2">
+      <label className="text-white text-lg font-bold" htmlFor="collaborators">Collaborators</label>
+      <select
+        id="collaborators"
+        name="collaborators"
+        value={formData.collaborators?.[0] || ""}
+        onChange={(e) =>
+          setFormData({ ...formData, collaborators: [parseInt(e.target.value)] })
+        }
+        className="bg-gray-800 text-white text-lg p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 font-bold"
+      >
+        <option value="" disabled>Select a collaborator</option>
+        {users.filter((user) => user.id !== Number(userId)).map(user => (
+          <option key={user.id} value={user.id}>
+            {user.username}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    <button
+      type="submit"
+      className="bg-green-600 text-white text-lg font-bold py-3 rounded-lg shadow-md hover:bg-green-700 transition-all"
+    >
+      {editId ? "Update" : "Add"} Activity
+    </button>
+  </form>
+</div>
       </div>
     </div>
   );
