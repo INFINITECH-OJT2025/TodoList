@@ -9,20 +9,6 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-const chatBotScript = `<!--Start of Tawk.to Script-->
-<script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/67e365c14f39121902671651/1in84avhr';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();
-</script>
-<!--End of Tawk.to Script-->`;
-
 const HeroSection = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -44,8 +30,11 @@ const HeroSection = () => {
     };
   }, []);
 
-
-  
+  // Function to open Tawk.to chat
+  const openChat = () => {
+    const Tawk_API = window.Tawk_API || {};
+    Tawk_API.toggle(); // This will toggle the chat window
+  };
 
   return (
     <div className="bg-gray-900 text-gray-300"> 
@@ -84,8 +73,6 @@ const HeroSection = () => {
         </div>
       </section>
 
-      {/* Vlogs Section (Carousel) */}
-     
       {/* Features Section */}
       <section className="mt-16 bg-gray-800 py-12">
         <div className="container mx-auto text-center px-6 lg:px-12">
@@ -108,39 +95,46 @@ const HeroSection = () => {
       </section>
 
       {/* Contact Section */}
-<section className="mt-16 bg-gray-900 py-12">
-  <div className="container mx-auto text-center px-6 lg:px-12">
-    <h2 className="text-4xl font-bold text-green-500">Get in Touch</h2>
-    <p className="mt-4 text-lg text-gray-300">Have questions about task management? Contact us anytime.</p>
-    <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-       <div className="bg-gray-900 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl">
-        <h3 className="text-xl font-semibold text-white">Location</h3>
-        <p className="text-gray-300">Unit 311, Campus Rueda Bldg., Urban Avenue, Makati City, Metro Manila 1230</p>
-      </div>
-      <div className="bg-gray-900 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl">
-        <h3 className="text-xl font-semibold text-white">Phone</h3>
-        <p className="text-gray-300">+63 966 751 5747</p>
-      </div>
-     
-      <a href="mailto:infinitechcorp.ph@gmail.com" className="block">
-        <div className="bg-gray-900 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl">
-          <h3 className="text-xl font-semibold text-white">Email</h3>
-          <p className="text-blue-300 underline">infinitechcorp.ph@gmail.com</p>
+      <section className="mt-16 bg-gray-900 py-12">
+        <div className="container mx-auto text-center px-6 lg:px-12">
+          <h2 className="text-4xl font-bold text-green-500">Get in Touch</h2>
+          <p className="mt-4 text-lg text-gray-300">Have questions about task management? Contact us anytime.</p>
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            <div className="bg-gray-900 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl h-full">
+              <h3 className="text-xl font-semibold text-white">Location</h3>
+              <p className="text-gray-300">Unit 311, Campus Rueda Bldg., Urban Avenue, Makati City, Metro Manila 1230</p>
+            </div>
+            <div className="bg-gray-900 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl h-full">
+              <h3 className="text-xl font-semibold text-white">Phone</h3>
+              <p className="text-gray-300">+63 966 751 5747</p>
+            </div>
+            <a href="mailto:infinitechcorp.ph@gmail.com" className="block">
+              <div className="bg-gray-900 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl h-full">
+                <h3 className="text-xl font-semibold text-white">Email</h3>
+                <p className="text-blue-300 underline">infinitechcorp.ph@gmail.com</p>
+              </div>
+            </a>
+            <div className="bg-gray-900 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl h-full">
+              <h3 className="text-xl font-semibold text-white">Business Hours</h3>
+              <p className="text-gray-300">Mon-Fri: 8 AM - 5 PM</p>
+            </div>
+            <div className="bg-gray-900 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl h-full">
+              <h3 className="text-xl font-semibold text-white">Chat with Us</h3>
+              <button 
+                onClick={openChat} 
+                className="mt-4 px-4 py-2 bg-gray-900 text-white rounded hover:bg-gray-600 transition"
+              >
+                Open Chat
+              </button>
+            </div>
+          </div>
         </div>
-      </a>
-      <div className="bg-gray-900 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl">
-        <h3 className="text-xl font-semibold text-white">Business Hours</h3>
-        <p className="text-gray-300">Mon-Fri: 8 AM - 5 PM</p>
-      </div>
-    </div>
-  </div>
-</section>
+      </section>
 
       {/* Footer Section */}
       <footer className="bg-gray-800 py-6">
         <div className="container mx-auto text-center">
           <p className="text-gray-400">© {new Date().getFullYear()} InfiniTask. All rights reserved.</p>
-        
         </div>
       </footer>
     </div>
