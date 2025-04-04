@@ -17,27 +17,29 @@ const TaskTable = ({ tasks }) => {
     return <p className="text-gray-400">No tasks available for this user.</p>;
   }
 
-  return (
-    <table className="min-w-full bg-gray-800 border border-gray-700">
-      <thead>
-        <tr>
-          <th className="py-2 px-4 border-b border-gray-700">Task ID</th>
-          <th className="py-2 px-4 border-b border-gray-700">Title</th>
-          <th className="py-2 px-4 border-b border-gray-700">Status</th>
-          <th className="py-2 px-4 border-b border-gray-700">Due Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        {tasks.map((task) => (
-          <tr key={task.id} className="hover:bg-gray-700">
-            <td className="py-2 px-4 border-b border-gray-700">{task.id}</td>
-            <td className="py-2 px-4 border-b border-gray-700">{task.title}</td>
-            <td className="py-2 px-4 border-b border-gray-700">{task.status}</td>
-            <td className="py-2 px-4 border-b border-gray-700">{task.deadline}</td>
+return (
+    <div className="overflow-x-auto">
+      <table className="min-w-full bg-gray-800 border border-gray-700">
+        <thead>
+          <tr>
+            <th className="py-2 px-2 sm:px-4 border-b border-gray-700 text-left text-sm sm:text-base">Task ID</th>
+            <th className="py-2 px-2 sm:px-4 border-b border-gray-700 text-left text-sm sm:text-base">Title</th>
+            <th className="py-2 px-2 sm:px-4 border-b border-gray-700 text-left text-sm sm:text-base">Status</th>
+            <th className="py-2 px-2 sm:px-4 border-b border-gray-700 text-left text-sm sm:text-base">Due Date</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {tasks.map((task) => (
+            <tr key={task.id} className="hover:bg-gray-700">
+              <td className="py-2 px-2 sm:px-4 border-b border-gray-700 text-sm sm:text-base">{task.id}</td>
+              <td className="py-2 px-2 sm:px-4 border-b border-gray-700 text-sm sm:text-base">{task.title}</td>
+              <td className="py-2 px-2 sm:px-4 border-b border-gray-700 text-sm sm:text-base">{task.status}</td>
+              <td className="py-2 px-2 sm:px-4 border-b border-gray-700 text-sm sm:text-base">{task.deadline}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 
