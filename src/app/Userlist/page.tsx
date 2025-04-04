@@ -60,33 +60,33 @@ const EditModal = ({ isOpen, onClose, onUpdate, username, setUsername, email, se
 
   return (
     <div className={`fixed inset-0 flex items-center justify-end bg-black bg-opacity-50 transition-opacity ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-      <div className={`fixed inset-y-0 right-0 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'} bg-gray-800 w-[90%] sm:w-[400px] p-9 shadow-2xl rounded-l-lg z-50 border border-green-500`}>
-        <h2 className="text-xl font-bold mb-4 text-green-500">Edit User</h2>
-        <div className="mb-4">
-          <label className="block text-gray-300">Username</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className={`border ${errors.username ? 'border-red-500' : 'border-gray-300'} p-2 w-full bg-gray-700 text-gray-200`}
-          />
-          {errors.username && <p className="text-red-500 text-sm">{errors.username}</p>}
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-300">Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className={`border ${errors.email ? 'border-red-500' : 'border-gray-300'} p-2 w-full bg-gray-700 text-gray-200`}
-          />
-          {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-        </div>
-        <div className="flex justify-end">
-          <button onClick={onClose} className="mr-2 bg-gray-600 p-2 rounded">Cancel</button>
-          <button onClick={handleUpdate} className="bg-green-500 text-white p-2 rounded">Update</button>
-        </div>
-      </div>
+     <div className={`fixed inset-y-0 right-0 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'} bg-gray-800 w-full max-w-[90%] sm:max-w-[400px] p-6 sm:p-9 shadow-2xl rounded-l-lg z-60 border border-green-500 overflow-y-auto`} style={{ top: '64px' }}>
+  <h2 className="text-xl font-bold mb-4 text-green-500">Edit User</h2>
+  <div className="mb-4">
+    <label className="block text-gray-300">Username</label>
+    <input
+      type="text"
+      value={username}
+      onChange={(e) => setUsername(e.target.value)}
+      className={`border ${errors.username ? 'border-red-500' : 'border-gray-300'} p-2 w-full bg-gray-700 text-gray-200`}
+    />
+    {errors.username && <p className="text-red-500 text-sm">{errors.username}</p>}
+  </div>
+  <div className="mb-4">
+    <label className="block text-gray-300">Email</label>
+    <input
+      type="email"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      className={`border ${errors.email ? 'border-red-500' : 'border-gray-300'} p-2 w-full bg-gray-700 text-gray-200`}
+    />
+    {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+  </div>
+  <div className="flex justify-end">
+    <button onClick={onClose} className="mr-2 bg-gray-600 p-2 rounded">Cancel</button>
+    <button onClick={handleUpdate} className="bg-green-500 text-white p-2 rounded">Update</button>
+  </div>
+</div>
 
       {/* Confirmation Modal */}
       {showConfirmation && (
