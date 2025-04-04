@@ -611,112 +611,112 @@ const ActivityPage = () => {
         </div>
 
         {/* Right Sidebar for Adding/Editing Activity */}
-        <div className={`fixed inset-y-0 right-0 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'} bg-gray-800 w-[430px] p-10 shadow-2xl rounded-l-lg z-50  border border-gray-500`}>
-          <button
-            onClick={() => resetForm()}
-            className="absolute top-4 right-4 text-white text-2xl font-bold hover:text-gray-400"
-          >
-            ×
-          </button>
-
-          <h2 className="text-2xl font-bold mb-6 text-center text-green-500">
-            {editId ? "EDIT" : "ADD"} TASK
-          </h2>
-
-         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-  <div className="flex flex-col">
-    <label className="text-white text-lg font-bold" htmlFor="title">Title</label>
-    <input
-      type="text"
-      id="title"
-      name="title"
-      placeholder="Title"
-      value={formData.title}
-      onChange={handleChange}
-      className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
-      required
-    />
-  </div>
-
-  <div className="flex flex-col">
-    <label className="text-white text-lg font-bold" htmlFor="description">Description</label>
-    <textarea
-      id="description"
-      name="description"
-      placeholder="Description"
-      value={formData.description}
-      onChange={handleChange}
-      className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
-    ></textarea>
-  </div>
-
-  <div className="flex flex-col">
-    <label className="text-white text-lg font-bold" htmlFor="date_started">Date Started</label>
-    <input
-      type="date"
-      id="date_started"
-      name="date_started"
-      value={formData.date_started}
-      onChange={handleChange}
-      className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
-      required
-    />
-  </div>
-
-  <div className="flex flex-col">
-    <label className="text-white text-lg font-bold" htmlFor="due_date">Due Date</label>
-    <input
-      type="datetime-local"
-      id="due_date"
-      name="due_date"
-      value={formData.due_date}
-      onChange={handleChange}
-      className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
-      required
-    />
-  </div>
-
-  <div className="flex flex-col">
-    <label className="text-white text-lg font-bold" htmlFor="tags">Tags</label>
-    <input
-      type="text"
-      id="tags"
-      name="tags"
-      placeholder="Tags"
-      value={formData.tags}
-      onChange={handleChange}
-      className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
-    />
-  </div>
-
-  <div className="flex flex-col gap-2">
-    <label className="text-white text-lg font-bold" htmlFor="collaborators">Collaborators</label>
-    <select
-      id="collaborators"
-      name="collaborators"
-      value={formData.collaborators?.[0] || ""}
-      onChange={(e) =>
-        setFormData({ ...formData, collaborators: [parseInt(e.target.value)] })
-      }
-      className="bg-gray-800 text-white text-lg p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 font-bold"
-    >
-      <option value="" disabled>Select a collaborator</option>
-      {users.filter((user) => user.id !== Number(userId)).map(user => (
-        <option key={user.id} value={user.id}>
-          {user.username}
-        </option>
-      ))}
-    </select>
-  </div>
-
+<div className={`fixed inset-y-0 right-0 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'} bg-gray-800 w-full max-w-md p-6 sm:p-10 shadow-2xl rounded-l-lg z-50 border border-gray-500`}>
   <button
-    type="submit"
-    className="bg-green-600 text-white text-lg font-bold py-3 rounded-lg shadow-md hover:bg-green-700 transition-all"
+    onClick={() => resetForm()}
+    className="absolute top-4 right-4 text-white text-2xl font-bold hover:text-gray-400"
   >
-    {editId ? "Update" : "Add"} Activity
+    ×
   </button>
-</form>
-        </div>
+
+  <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center text-green-500">
+    {editId ? "EDIT" : "ADD"} TASK
+  </h2>
+
+  <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-6">
+    <div className="flex flex-col">
+      <label className="text-white text-lg font-bold" htmlFor="title">Title</label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+        placeholder="Title"
+        value={formData.title}
+        onChange={handleChange}
+        className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
+        required
+      />
+    </div>
+
+    <div className="flex flex-col">
+      <label className="text-white text-lg font-bold" htmlFor="description">Description</label>
+      <textarea
+        id="description"
+        name="description"
+        placeholder="Description"
+        value={formData.description}
+        onChange={handleChange}
+        className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
+      ></textarea>
+    </div>
+
+    <div className="flex flex-col">
+      <label className="text-white text-lg font-bold" htmlFor="date_started">Date Started</label>
+      <input
+        type="date"
+        id="date_started"
+        name="date_started"
+        value={formData.date_started}
+        onChange={handleChange}
+        className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
+        required
+      />
+    </div>
+
+    <div className="flex flex-col">
+      <label className="text-white text-lg font-bold" htmlFor="due_date">Due Date</label>
+      <input
+        type="datetime-local"
+        id="due_date"
+        name="due_date"
+        value={formData.due_date}
+        onChange={handleChange}
+        className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
+        required
+      />
+    </div>
+
+    <div className="flex flex-col">
+      <label className="text-white text-lg font-bold" htmlFor="tags">Tags</label>
+      <input
+        type="text"
+        id="tags"
+        name="tags"
+        placeholder="Tags"
+        value={formData.tags}
+        onChange={handleChange}
+        className="bg-transparent border-b-2 border-gray-400 text-white text-lg p-2 focus:outline-none focus:border-green-500 font-bold"
+      />
+    </div>
+
+    <div className="flex flex-col gap-2">
+      <label className="text-white text-lg font-bold" htmlFor="collaborators">Collaborators</label>
+      <select
+        id="collaborators"
+        name="collaborators"
+        value={formData.collaborators?.[0] || ""}
+        onChange={(e) =>
+          setFormData({ ...formData, collaborators: [parseInt(e.target.value)] })
+        }
+        className="bg-gray-800 text-white text-lg p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 font-bold"
+      >
+        <option value="" disabled>Select a collaborator</option>
+        {users.filter((user) => user.id !== Number(userId)).map(user => (
+          <option key={user.id} value={user.id}>
+            {user.username}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    <button
+      type="submit"
+      className="bg-green-600 text-white text-lg font-bold py-3 rounded-lg shadow-md hover:bg-green-700 transition-all"
+    >
+      {editId ? "Update" : "Add"} Activity
+    </button>
+  </form>
+</div>
       </div>
     </div>
   );
