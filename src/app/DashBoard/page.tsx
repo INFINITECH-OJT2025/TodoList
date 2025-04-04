@@ -163,88 +163,90 @@ const Dashboard = () => {
 
   const COLORS = ['#FFBB28', '#00C49F', '#FF4C4C'];
 
-return (
-    <div className="flex flex-col h-screen bg-gray-900 text-white">
+ return (
+    <div className="flex flex-col max-h-full bg-gray-900 text-white">
       <Adminbar />
-      
-      {/* Sidebar / Adminbar */}
-      <div className="sticky top-0 h-screen w-64 bg-gray-800 shadow-lg hidden md:block"></div>
   
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col min-h-screen p-4 md:p-9 w-full overflow-auto">
-        <ToastContainer />
-        <h1 className="text-3xl font-bold mb-4 text-green-300 text-center">Admin Dashboard</h1>
+      <div className="flex flex-1">
+        {/* Sidebar / Adminbar */}
+        <div className="sticky top-0 h-screen w-64 bg-gray-800 shadow-lg hidden md:block"></div>
   
-        {/* Current Time */}
-        <div className="text-center mb-6">
-          <p className="text-lg font-semibold text-green-200">
-            {currentTime.toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-            })}
-          </p>
-          <p className="text-2xl font-bold text-green-400">{currentTime.toLocaleTimeString()}</p>
-        </div>
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col min-h-screen p-4 md:p-9 w-full overflow-auto">
+          <ToastContainer />
+          <h1 className="text-3xl font-bold mb-4 text-green-300 text-center">Admin Dashboard</h1>
   
-        {/* Dashboard Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-5">
-          {[
-            { label: "Total Tasks", count: taskCount, color: "text-gray-300" },
-            { label: "Pending", count: pendingCount, color: "text-yellow-400" },
-            { label: "Completed", count: completedCount, color: "text-gray-500" },
-            { label: "Overdue", count: overdueCount, color: "text-red-400" },
-            { label: "Total Users", count: userCount, color: "text-blue-400" },
-          ].map((item, index) => (
-            <div key={index} className="bg-gray-700 p-4 rounded-xl shadow-lg text-center">
-              <h2 className="text-lg font-semibold text-gray-200">{item.label}</h2>
-              <p className={`text-3xl font-bold ${item.color}`}>{item.count}</p>
-            </div>
-          ))}
-        </div>
-  
-        {/* Charts & Task List */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="bg-gray-800 p-4 rounded-xl shadow-lg flex flex-col items-center">
-            <h2 className="text-lg font-semibold text-center mb-2 text-green-300">Task Progress</h2>
-            <ResponsiveContainer width="100%" height={350}>
-              <PieChart>
-                <Pie
-                  data={data}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={80}
-                  outerRadius={120}
-                  paddingAngle={5}
-                  dataKey="value"
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                >
-                  {data.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
+          {/* Current Time */}
+          <div className="text-center mb-6">
+            <p className="text-lg font-semibold text-green-200">
+              {currentTime.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}
+            </p>
+            <p className="text-2xl font-bold text-green-400">{currentTime.toLocaleTimeString()}</p>
           </div>
   
-          {/* Task List Component */}
-          <TaskList tasks={taskData} />
-        </div>
+          {/* Dashboard Cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-5">
+            {[
+              { label: "Total Tasks", count: taskCount, color: "text-gray-300" },
+              { label: "Pending", count: pendingCount, color: "text-yellow-400" },
+              { label: "Completed", count: completedCount, color: "text-gray-500" },
+              { label: "Overdue", count: overdueCount, color: "text-red-400" },
+              { label: "Total Users", count: userCount, color: "text-blue-400" },
+            ].map((item, index) => (
+              <div key={index} className="bg-gray-700 p-4 rounded-xl shadow-lg text-center">
+                <h2 className="text-lg font-semibold text-gray-200">{item.label}</h2>
+                <p className={`text-3xl font-bold ${item.color}`}>{item.count}</p>
+              </div>
+            ))}
+          </div>
   
-        {/* Users per Date Chart */}
-        <div className="bg-gray-800 p-4 rounded-xl shadow-lg w-full mt-6">
-          <h2 className="text-lg font-semibold text-center mb-2 text-green-300">Users per Date</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={userData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis />
-              <RechartsTooltip />
-              <Legend />
-              <Line type="monotone" dataKey="users" stroke="#00C49F" activeDot={{ r: 8 }} />
-            </LineChart>
-          </ResponsiveContainer>
+          {/* Charts & Task List */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="bg-gray-800 p-4 rounded-xl shadow-lg flex flex-col items-center">
+              <h2 className="text-lg font-semibold text-center mb-2 text-green-300">Task Progress</h2>
+              <ResponsiveContainer width="100%" height={350}>
+                <PieChart>
+                  <Pie
+                    data={data}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={80}
+                    outerRadius={120}
+                    paddingAngle={5}
+                    dataKey="value"
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  >
+                    {data.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+  
+            {/* Task List Component */}
+            <TaskList tasks={taskData} />
+          </div>
+  
+          {/* Users per Date Chart */}
+          <div className="bg-gray-800 p-4 rounded-xl shadow-lg w-full mt-6">
+            <h2 className="text-lg font-semibold text-center mb-2 text-green-300">Users per Date</h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={userData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <RechartsTooltip />
+                <Legend />
+                <Line type="monotone" dataKey="users" stroke="#00C49F" activeDot={{ r: 8 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
     </div>
