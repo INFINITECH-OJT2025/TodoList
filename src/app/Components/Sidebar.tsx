@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { FaBars, FaTimes, FaHome, FaTasks, FaUserAlt, FaProjectDiagram, FaSignOutAlt, FaBell,FaLink } from "react-icons/fa";
+import { FaBars, FaTimes, FaHome, FaTasks, FaUserAlt, FaProjectDiagram, FaSignOutAlt, FaBell ,FaLink} from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import Pusher from 'pusher-js';
 
@@ -121,9 +121,9 @@ export default function Sidebar() {
           {[
             { path: "/todolist", label: "Dashboard", icon: <FaHome /> },
             { path: "/Taskuser", label: "My Tasks", icon: <FaTasks /> },
-            { path: "/ProjectUser  ", label: "My Project", icon: <FaProjectDiagram /> },
+            { path: "/ProjectUser ", label: "My Project", icon: <FaProjectDiagram /> },
             { path: "/UserProfile", label: "Profile", icon: <FaUserAlt /> },
-            { path: "https://tawk.to/chat/67e3a3defdf8c219086c03df/1in8jg7nt", label: "Chat with us ", icon: <FaLink /> }, // New button added here
+            { path: "https://tawk.to/chat/67e3a3defdf8c219086c03df/1in8jg7nt", label: "Chat with us", icon: <FaLink /> },
           ].map((item, index) => (
             <button
               key={index}
