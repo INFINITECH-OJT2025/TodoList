@@ -122,7 +122,7 @@ export default function Sidebar() {
             { path: "/todolist", label: "Dashboard", icon: <FaHome /> },
             { path: "/Taskuser", label: "My Tasks", icon: <FaTasks /> },
             { path: "/ProjectUser ", label: "My Project", icon: <FaProjectDiagram /> },
-            { path: "/User Profile", label: "Profile", icon: <FaUserAlt /> },
+            { path: "/UserProfile", label: "Profile", icon: <FaUserAlt /> },
           ].map((item, index) => (
             <button
               key={index}
