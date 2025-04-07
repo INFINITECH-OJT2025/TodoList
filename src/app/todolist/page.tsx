@@ -115,23 +115,23 @@ const TodoList = () => {
           </span>
           <div className="flex-grow border-t border-gray-600"></div>
         </div>
-        <div className={`w-full ${isLightMode ? "bg-gray-200" : "bg-gradient-to-r from-green-500 to-gray-400"} rounded-xl p-6 mb-6 flex flex-col sm:flex-row justify-between items-center shadow-lg transition-all duration-300`}>
+   <div className={`w-full ${isLightMode ? "bg-gray-200" : "bg-gradient-to-r from-green-500 to-gray-400"} rounded-xl p-6 mb-6 flex flex-col sm:flex-row justify-between items-center shadow-lg transition-all duration-300`}>
   <div className="flex items-center mb-4 sm:mb-0">
-    <div className="text-lg font-bold text-white px-4 py-2 rounded-md bg-gradient-to-r from-green-500 to-green-400 shadow-md mr-4">
+    <div className="text-lg font-bold text-black px-4 py-2 rounded-md bg-gradient-to-r from-green-500 to-green-400 shadow-md mr-4">
       Overview
     </div>
 
     {/* Button to Open Tawk.to Chat */}
     <button
       onClick={handleChatClick}
-      className="flex items-center px-7 py-3 bg-green-900 text-white rounded-md hover:bg-green-700 transition duration-200 shadow-md"
+      className={`flex items-center px-7 py-3 text-black rounded-md shadow-md transition duration-200 ${isLightMode ? "bg-gray-300 hover:bg-gray-400" : "bg-gradient-to-r from-green-500 to-gray-400 hover:from-green-400 hover:to-gray-300"}`}
     >
       <span className="">💬</span> {/* Optional chat icon */}
       Chat with admin 
     </button>
   </div>
 
-  <div className="text-lg font-bold text-center sm:text-right text-white">
+  <div className="text-lg font-bold text-center sm:text-right text-black">
     📅 {(() => {
       const date = new Date();
       const options = { day: 'numeric', month: 'long', year: 'numeric' };
@@ -145,6 +145,7 @@ const TodoList = () => {
     })()}
   </div>
 </div>
+        
         
 
         {/* Task Completion Bar */}
