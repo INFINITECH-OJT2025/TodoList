@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import authUser  from "./utils/authUser";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
@@ -16,24 +16,8 @@ const HeroSection = () => {
     setMenuOpen(!menuOpen);
   };
 
-  // Use effect to inject the chat bot script into the document
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://embed.tawk.to/67e3a3defdf8c219086c03df/1in8jg7nt";
-    script.async = true;
-    script.charset = "UTF-8";
-    script.setAttribute("crossorigin", "*");
-    document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
-  // Function to open Tawk.to chat
   const openChat = () => {
-    const Tawk_API = window.Tawk_API || {};
-    Tawk_API.toggle(); // This will toggle the chat window
+    window.open("https://tawk.to/chat/67e3a3defdf8c219086c03df/1in8jg7nt", "_blank");
   };
 
   return (
@@ -119,15 +103,17 @@ const HeroSection = () => {
               <p className="text-gray-300">Mon-Fri: 8 AM - 5 PM</p>
             </div>
             <div className="bg-gray-900 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl h-full">
-              <h3 className="text-xl font-semibold text-white">Chat with Us</h3>
-              <button 
-                onClick={openChat} 
-                className="mt-4 px-4 py-2 bg-gray-900 text-white rounded hover:bg-gray-600 transition"
-              >
-                Open Chat
-              </button>
-            </div>
+  <h3 className="text-xl font-semibold text-white">Chat with us</h3>
+  <br />
+  <button 
+    onClick={openChat} 
+    className="px-6 py-1 text-lg font-semibold rounded bg-gray-900 text-white hover:bg-gray-900 transition"
+  >
+    Click it
+  </button>
+</div>
           </div>
+         
         </div>
       </section>
 
