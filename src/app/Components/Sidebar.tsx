@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { FaBars, FaTimes, FaHome, FaTasks, FaUserAlt, FaProjectDiagram, FaSignOutAlt, FaBell } from "react-icons/fa";
+import { FaBars, FaTimes, FaHome, FaTasks, FaUserAlt, FaProjectDiagram, FaSignOutAlt, FaBell,FaLink } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import Pusher from 'pusher-js';
 
@@ -60,20 +60,6 @@ export default function Sidebar() {
     };
   }, []);
 
-  // Tawk.to integration
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://embed.tawk.to/67e3a3defdf8c219086c03df/1in8jg7nt"; // Replace with your Tawk.to script
-    script.async = true;
-    script.charset = "UTF-8";
-    script.setAttribute("crossorigin", "*");
-    document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
   const handleLogout = () => {
     sessionStorage.removeItem("authToken");
     router.push("/login");
@@ -96,13 +82,6 @@ export default function Sidebar() {
       setNotifications(notifications.map(n => ({ ...n, status: "read" })));
     } catch (error) {
       console.error("Error marking all notifications as read:", error);
-    }
-  };
-
-  // Function to open Tawk.to chat widget
-  const openChat = () => {
-    if (window.Tawk_API) {
-      window.Tawk_API.toggle(); // This will toggle the chat widget
     }
   };
 
@@ -142,8 +121,9 @@ export default function Sidebar() {
           {[
             { path: "/todolist", label: "Dashboard", icon: <FaHome /> },
             { path: "/Taskuser", label: "My Tasks", icon: <FaTasks /> },
-            { path: "/ProjectUser ", label: "My Project", icon: <FaProjectDiagram /> },
+            { path: "/ProjectUser  ", label: "My Project", icon: <FaProjectDiagram /> },
             { path: "/UserProfile", label: "Profile", icon: <FaUserAlt /> },
+            { path: "https://tawk.to/chat/67e3a3defdf8c219086c03df/1in8jg7nt", label: "Chat with us ", icon: <FaLink /> }, // New button added here
           ].map((item, index) => (
             <button
               key={index}
@@ -157,14 +137,6 @@ export default function Sidebar() {
         </nav>
 
         <div className="mt-auto w-full space-y-2">
-          {/* Tawk.to Chat Button */}
-          <button
-            onClick={openChat}
-            className="w-full bg-gray-900 hover:bg-[#1A1B1E] py-3 px-4 rounded-xl shadow-md flex items-center justify-center text-green-500 font-medium transition-all border border-green-500"
-          >
-            <span>Chat with Us</span>
-          </button>
-
           <button
             onClick={() => setShowNotifications(!showNotifications)}
             className="relative w-full bg-gray-900 hover:bg-[#1A1B1E] py-3 px-4 rounded-xl shadow-md flex items-center justify-center text-green-500 font-medium transition-all border border-green-500"
@@ -233,7 +205,7 @@ export default function Sidebar() {
       {/* Logout Modal */}
       {showLogoutModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
-                  <div className="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-96">
+          <div className="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-xl font-bold mb-4">Confirm Logout</h2>
             <p className="text-gray-300 mb-6">Are you sure you want to logout?</p>
             <div className="flex justify-end space-x-4">
