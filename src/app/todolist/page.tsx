@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -43,20 +43,6 @@ const TodoList = () => {
       setCurrentDate(new Date().toLocaleDateString());
     }, 1000);
     return () => clearInterval(clockInterval);
-  }, []);
-
-  // Injecting the chat bot script
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://embed.tawk.to/67e3a3defdf8c219086c03df/1in8jg7nt";
-    script.async = true;
-    script.charset = "UTF-8";
-    script.setAttribute("crossorigin", "*");
-    document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    };
   }, []);
 
   const fetchActivities = async () => {
@@ -105,6 +91,10 @@ const TodoList = () => {
   const chartData = Object.values(groupedData);
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
 
+  const handleChatClick = () => {
+    window.open("https://tawk.to/chat/67e3a3defdf8c219086c03df/1in8jg7nt", "_blank");
+  };
+
   return (
     <div className="relative flex min-h-screen bg-gray-900 text-gray-900">
       {/* Sidebar */}
@@ -116,36 +106,46 @@ const TodoList = () => {
         <ToastContainer />
 
         {/* Header Section */}
-
-        {/* Overview Section */}
         <br />
         <br />
-         {/* Header Section */}
-         <div className="flex items-center justify-center mb-6">
-  <div className="flex-grow border-t border-gray-600"></div>
-  <span className="mx-10 text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-800 to-gray-600">
-    DASHBOARD
-  </span>
-  <div className="flex-grow border-t border-gray-600"></div>
-</div>
-        <div className={`w-full ${isLightMode ? "bg-gray-200" : "bg-gradient-to-r from-green-500 to-gray-400"} rounded-xl p-4 mb-6 flex flex-col sm:flex-row justify-between items-center shadow-lg`}>
-          <div className="text-lg font-bold text-white px-4 py-2 rounded-md bg-gradient-to-r from-green-500 to-green-400 shadow-md">
-            Overview
-          </div>
-<div className="text-lg font-bold text-center sm:text-right">
-  📅 {(() => {
-    const date = new Date();
-    const options = { day: 'numeric', month: 'long', year: 'numeric' };
-    return date.toLocaleDateString('en-US', options)
-      .toUpperCase()
-      .replace(/, /g, '-')
-      .replace(/ /g, '-');
-  })()} | ⏰ {(() => {
-    const date = new Date();
-    return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-  })()}
-</div>
+        <div className="flex items-center justify-center mb-6">
+          <div className="flex-grow border-t border-gray-600"></div>
+          <span className="mx-10 text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-800 to-gray-600">
+            DASHBOARD
+          </span>
+          <div className="flex-grow border-t border-gray-600"></div>
         </div>
+        <div className={`w-full ${isLightMode ? "bg-gray-200" : "bg-gradient-to-r from-green-500 to-gray-400"} rounded-xl p-6 mb-6 flex flex-col sm:flex-row justify-between items-center shadow-lg transition-all duration-300`}>
+  <div className="flex items-center mb-4 sm:mb-0">
+    <div className="text-lg font-bold text-white px-4 py-2 rounded-md bg-gradient-to-r from-green-500 to-green-400 shadow-md mr-4">
+      Overview
+    </div>
+
+    {/* Button to Open Tawk.to Chat */}
+    <button
+      onClick={handleChatClick}
+      className="flex items-center px-7 py-3 bg-green-900 text-white rounded-md hover:bg-green-700 transition duration-200 shadow-md"
+    >
+      <span className="">💬</span> {/* Optional chat icon */}
+      Chat with admin 
+    </button>
+  </div>
+
+  <div className="text-lg font-bold text-center sm:text-right text-white">
+    📅 {(() => {
+      const date = new Date();
+      const options = { day: 'numeric', month: 'long', year: 'numeric' };
+      return date.toLocaleDateString('en-US', options)
+        .toUpperCase()
+        .replace(/, /g, '-')
+        .replace(/ /g, '-');
+    })()} | ⏰ {(() => {
+      const date = new Date();
+      return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+    })()}
+  </div>
+</div>
+        
 
         {/* Task Completion Bar */}
         <div className="w-full bg-gray-300 rounded-xl p-4 mb-6 shadow-lg">
@@ -159,7 +159,6 @@ const TodoList = () => {
         </div>
 
         {/* Task Status Overview */}
-    {/* Task Status Overview */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xl">
           {[{ label: "Pending", count: pendingCount, icon: "🕒" },
             { label: "Complete", count: completeCount, icon: "✅" },
