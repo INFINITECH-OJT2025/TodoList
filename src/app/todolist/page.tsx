@@ -124,7 +124,7 @@ const TodoList = () => {
     {/* Button to Open Tawk.to Chat */}
     <button
       onClick={handleChatClick}
-      className={`flex items-center px-7 py-3 text-black rounded-md shadow-md transition duration-200 ${isLightMode ? "bg-gray-300 hover:bg-gray-400" : "bg-gradient-to-r from-green-500 to-gray-400 hover:from-green-400 hover:to-gray-300"}`}
+      className={`flex items-center px-7 py-3 text-black rounded-md shadow-md transition duration-200 ${isLightMode ? "bg-gray-300 hover:bg-gray-400" : "bg-gradient-to-r from-green-500 to-green-400 hover:from-green-400 hover:to-green-300"}`}
     >
       <span className="">💬</span> {/* Optional chat icon */}
       Chat with admin 
