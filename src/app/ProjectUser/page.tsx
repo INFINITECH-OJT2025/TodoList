@@ -264,16 +264,23 @@ ADMIN TASK
                 className="w-30 h-30 mt-3"
               />
 
+        
               {/* Scrollable Description with See More functionality */}
-              <div className={`overflow-y-auto ${isExpanded ? 'h-64' : 'h-40'} w-full border border-gray-800 p-4`}>
-                {isExpanded ? currentTask.description : currentTask.description.substring(0, 300) + (currentTask.description.length > 50 ? '...' : '')}
-              </div>
-              <button
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="mt-2 text-blue-400 hover:underline"
-              >
-                {isExpanded ? 'See Less' : 'See More'}
-              </button>
+         <div className={`overflow-y-auto ${isExpanded ? 'h-64' : 'h-40'} w-full border border-gray-800 p-4`}>
+  {isExpanded 
+    ? currentTask.description 
+    : currentTask.description.length > 100 
+      ? currentTask.description.substring(0, 100) + '...' 
+      : currentTask.description}
+</div>
+{currentTask.description.length > 100 && (
+  <button
+    onClick={() => setIsExpanded(!isExpanded)}
+    className="mt-2 text-blue-400 hover:underline"
+  >
+    {isExpanded ? 'Show Less' : 'Show More'}
+  </button>
+)}
 
             <br />
               <p
